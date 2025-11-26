@@ -1,0 +1,22 @@
+{
+    "name": "@spysec/shared",
+    "version": "1.0.0",
+    "description": "Utilidades e lógica core compartilhada para a aplicação",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsup src/index.ts --dts --minify",
+        "dev": "tsup src/index.ts --dts --watch"
+    },
+    "dependencies": {
+        "@spysec/utils": "*",
+        "tsup": "^8.5.0",
+        "uuid": "^13.0.0"
+    },
+    "keywords": [],
+    "author": "Gabriel Correia de Oliveira",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/uuid": "^10.0.0"
+    }
+}
