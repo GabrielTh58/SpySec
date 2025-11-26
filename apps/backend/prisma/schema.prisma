@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ProviderType {
+  EMAIL
+  GOOGLE
+}
+
+enum ProfileType {
+  PERSONAL
+  CORPORATE
+}
+
+
+model User {
+  id              String       @id @default(uuid())
+  firebaseUid     String       @unique @map("firebase_uid")
+  name            String
+  email           String       @unique
+  provider        ProviderType
+  profileType     ProfileType  @map("profile_type")
+  isEmailVerified Boolean      @default(false) @map("is_email_verified")
+  imageURL        String?      @map("image_url")
+  lastLoginAt     DateTime?    @map("last_login_at")
+  createdAt       DateTime     @default(now()) @map("created_at")
+  updatedAt       DateTime     @updatedAt @map("updated_at")
+
+  @@map("users")
+}
