@@ -1,0 +1,12 @@
+{
+    "name": "@spysec/auth-adapter",
+    "version": "1.0.0",
+    "description": "Módulo core de autenticação",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "dependencies": {
+        "@spysec/auth": "*"
+    },
+    "keywords": [],
+    "author": "gabriel"
+}
