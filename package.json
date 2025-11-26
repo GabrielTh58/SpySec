@@ -1,5 +1,5 @@
 {
-  "name": "Spysec",
+  "name": "spysec",
   "private": true,
   "scripts": {
     "build": "turbo run build",
@@ -20,6 +20,13 @@
   "workspaces": [
     "apps/*",
     "packages/*",
-    "packages/*/*"
-  ]
+    "packages/*/*",
+    "packages/*/*/*"
+  ],
+  "dependencies": {
+    "@types/jest": "^30.0.0",
+    "jest": "^30.2.0",
+    "ts-jest": "^29.4.5",
+    "uuid": "^13.0.0"
+  }
 }
