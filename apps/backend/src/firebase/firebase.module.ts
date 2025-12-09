@@ -2,7 +2,7 @@ import { DynamicModule, Global, Module } from '@nestjs/common';
 import { FirebaseConfigService } from './firebase-config.service';
 import { ConfigService } from '@nestjs/config';
 import * as firebaseAdmin from 'firebase-admin';
-
+import { FirebaseService } from './firebase.service';
 
 @Global()
 @Module({})
@@ -25,24 +25,27 @@ export class FirebaseModule {
         provide: 'FIREBASE_ADMIN',
         inject: [ConfigService],
         useFactory: (configService: ConfigService) => {
-            const credentials = configService.get<string>('FIREBASE_CREDENTIALS');
+            const credentials = configService.get<string>('FIREBASE_ADMIN_CREDENTIALS');
             if (!credentials) {
                 throw new Error('Firebase credentials are not configured.');
             }
 
-            const serviceAccount = JSON.parse(credentials);
-            firebaseAdmin.initializeApp({
-                credential: firebaseAdmin.credential.cert(serviceAccount),
-            });
+            const serviceAccount = JSON.parse(credentials);            
             
+            if (!firebaseAdmin.apps.length) {
+                firebaseAdmin.initializeApp({
+                    credential: firebaseAdmin.credential.cert(serviceAccount),
+                });
+            }
+
             return firebaseAdmin;
         }
     }
 
     return {
         module: FirebaseModule,
-        providers: [firebaseConfigProvider, firebaseProvider],
-        exports: [firebaseConfigProvider, firebaseProvider],
+        providers: [firebaseConfigProvider, firebaseProvider, FirebaseService],
+        exports: [firebaseConfigProvider, firebaseProvider, FirebaseService],
     }
   }
 }

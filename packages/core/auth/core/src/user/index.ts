@@ -1,17 +1,16 @@
-import { User, UserProps } from './model/User.entity';
+import { User, UserProps, ProviderType, ProfileType } from './model/User.entity';
 import { UserRepository } from './provider/User.repository';
-import { AuthProvider } from './provider/Auth.provider';
+import { AuthProvider, FirebaseUserData, AuthResult, LoginWithEmailInput, RegisterWithEmailInput} from './provider/Auth.provider';
 
 import { LoginUser, LoginInput, LoginOutput } from './usecase/Login';
 import { LoginWithgoogle, LoginWithGoogleInput, LoginWithGoogleOutput } from './usecase/Login-google';
 import { RegisterUser, RegisterUserInput, RegisterUserOutput } from './usecase/Register-user';
 import { UpdateProfileType } from './usecase/Update-profile-type';
 
-import { ProfileType } from './model/User.entity';
 
-export { User, LoginUser, LoginWithgoogle, RegisterUser, UpdateProfileType, ProfileType }
+export { User, LoginUser, LoginWithgoogle, RegisterUser, UpdateProfileType, ProfileType, ProviderType }
 
-export type {
+export type {    
     UserProps,
     UserRepository,
     AuthProvider,
@@ -20,5 +19,9 @@ export type {
     LoginInput,
     LoginOutput,
     LoginWithGoogleInput,
-    LoginWithGoogleOutput
+    LoginWithGoogleOutput,
+    FirebaseUserData,
+    AuthResult,
+    RegisterWithEmailInput,
+    LoginWithEmailInput
 }

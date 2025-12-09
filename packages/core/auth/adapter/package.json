@@ -4,9 +4,17 @@
     "description": "Módulo core de autenticação",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsup src/index.ts --dts --minify",
+        "dev": "tsup src/index.ts --dts --watch"
+    },
     "dependencies": {
         "@spysec/auth": "*"
     },
+    "devDependencies": {
+        "tsup": "^8.5.0"
+    },
     "keywords": [],
-    "author": "gabriel"
+    "author": "gabriel",
+    "license": "ISC"
 }

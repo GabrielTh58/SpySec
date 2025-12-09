@@ -3,13 +3,13 @@ import { Id, Email, UserName, Result } from "@spysec/shared";
 import { IdUnique } from "@spysec/utils";
 
 export enum ProfileType {
-    PERSONAL = 'personal',
-    CORPORATE = 'corporate',
+    PERSONAL = 'PERSONAL',
+    CORPORATE = 'CORPORATE',
 }
 
 export enum ProviderType {
-    EMAIL = 'email',
-    GOOGLE = 'google',
+    EMAIL = 'EMAIL',
+    GOOGLE = 'GOOGLE',
 }
 
 export interface UserProps extends EntityProps {

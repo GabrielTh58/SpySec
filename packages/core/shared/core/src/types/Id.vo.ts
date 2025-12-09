@@ -8,8 +8,7 @@ export class Id extends VO<string>{
     private constructor(value:string){
         super(value)
     }
-
-    // Terminar
+    
     static create(value?: string | null): Result<Id> {
         const error = Validator.notNullOrEmpty(Id.ERRO_REQUIRED, value?.trim())
 

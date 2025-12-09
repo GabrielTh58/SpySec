@@ -21,7 +21,7 @@
     "apps/*",
     "packages/*",
     "packages/*/*",
-    "packages/*/*/*"
+    "packages/*/*/*"    
   ],
   "dependencies": {
     "@types/jest": "^30.0.0",
