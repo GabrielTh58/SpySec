@@ -1,81 +1,54 @@
-import { ProfileType, ProviderType, User } from "../model/User.entity";
-import { AuthProvider } from "../provider/Auth.provider";
+import { CryptoProvider } from "../provider/Crypto.provider";
 import { UserRepository } from "../provider/User.repository";
 import { Result, UseCase } from "@spysec/shared";
+import { AuthResult, RegisterUserInput } from "./dto/usecases.dto";
+import { User } from "../model/User.entity";
 
-export interface RegisterUserInput {
-    email: string;
-    password: string;
-    name: string;
-    profileType: ProfileType;
-}
-
-export interface RegisterUserOutput{
-    user: User
-    accessToken: string
-}
-
-export class RegisterUser implements UseCase<RegisterUserInput, RegisterUserOutput>{
+export class RegisterUser implements UseCase<RegisterUserInput, AuthResult>{
     constructor(
         private readonly repo: UserRepository,
-        private readonly authProvider: AuthProvider
+        private readonly crypto: CryptoProvider
     ){}
 
-    async execute(input: RegisterUserInput): Promise<Result<RegisterUserOutput>> {
-        const emailExists = await this.repo.findByEmail(input.email);
-        if(emailExists){
+    async execute(input: RegisterUserInput): Promise<Result<AuthResult>> {
+        const {email, password, name, profileType } = input
+        
+        const user = await this.repo.findByEmail(input.email);
+        if(user){
             return Result.fail("EMAIL_ALREADY_EXISTS");
-        }
+        }         
 
-        const authResult = await Result.tryAsync(async () => {
-            return await this.authProvider.registerWithEmail({
-                email: input.email,
-                password: input.password,
-                name: input.name,
-            })
+        const userResult = User.createWithPassword({            
+            email,
+            name,
+            password,            
+            profileType: profileType,                       
         })
 
-        if(authResult.failed){
-            return Result.fail<RegisterUserOutput>(authResult.errors);
+        if(userResult.failed){            
+            return Result.fail(userResult.errors);
         }
 
-        const { accessToken, firebaseUser } = authResult.value!;
+        const userEntity = userResult.value!;
+        const hashedPassword = await this.crypto.encrypt(password)
 
-        const userResult = User.create({
-            firebaseUid: firebaseUser.uid,
-            email: input.email,
-            name: input.name,
-            provider: ProviderType.EMAIL,
-            profileType: input.profileType,
-            isEmailVerified: firebaseUser.emailVerified,
-            imageURL: firebaseUser.photoURL ?? null,
-        })
-
-        if(userResult.failed){
-            await this.authProvider.deleteAccount(firebaseUser.uid);
-            return Result.fail<RegisterUserOutput>(userResult.errors);
+        const userWithHashResult = userEntity.setEncryptedPassword(hashedPassword)    
+        if (userWithHashResult.failed) {
+            return Result.fail(userWithHashResult.errors);
         }
 
-        const user = userResult.value!;
+        const newUser = userWithHashResult.value!
 
-        const saveResult = await Result.tryAsync(async () => {
-            await this.repo.create(user);
-        });
-
-        if(saveResult.failed){
-            await this.authProvider.deleteAccount(firebaseUser.uid);
-            return saveResult as Result<RegisterUserOutput>;
-        }
-
-        this.authProvider
-            .sendEmailVerification(firebaseUser.uid)
-            .catch(() => {
-                console.log("Error sending email verification");
-            })
+        const createUserDb = await Result.tryAsync(async () => {
+            await this.repo.create(newUser);
+        })        
+        if (createUserDb.failed) {
+            return Result.fail(createUserDb.errors);
+        }                            
 
         return Result.ok({
-            user,
-            accessToken
+            user:newUser,
+            isNewUser: true
         });
     }    
 }

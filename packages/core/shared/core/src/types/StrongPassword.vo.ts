@@ -18,4 +18,12 @@ export class StrongPassword extends VO<string>{
             ? Result.fail<StrongPassword>({ type: error, value }) 
             : Result.ok(new StrongPassword(value))        
     }
+
+    static createFromHash(hash: string): Result<StrongPassword> {
+        if (!hash || hash.trim().length === 0) {
+            return Result.fail<StrongPassword>("INVALID_HASH");
+        }
+        
+        return Result.ok(new StrongPassword(hash));
+    }
 }

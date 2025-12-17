@@ -2,10 +2,10 @@ POST http://localhost:4000/auth/register
 Content-Type: application/json
 
 {
-  "name": "João Silva",
-  "email": "joao@test.com",
-  "password": "senha123",
-  "profileType": "PERSONAL"
+  "name": "test user",
+  "email": "test6@test.com",
+  "password": "#Senha123",
+  "profileType": "CORPORATE"
 }
 
 ###
@@ -14,6 +14,6 @@ POST http://localhost:4000/auth/login
 Content-Type: application/json
 
 {
-  "email": "usuario@example.com",
-  "password": "senha123"
+  "email": "joao@test.com",
+  "password": "#Senha123"
 }

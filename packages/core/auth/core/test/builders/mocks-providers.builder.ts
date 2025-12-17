@@ -1,17 +1,20 @@
+import { CryptoProvider } from "../../src";
 import { AuthProvider } from "../../src/user/provider/Auth.provider";
 import { UserRepository } from "../../src/user/provider/User.repository";
 
 export class MockProvidersBuilder {
     static createAuthProvider(): jest.Mocked<AuthProvider> {
         return {
-            registerWithEmail: jest.fn(),
-            loginWithEmail: jest.fn(),
-            loginWithGoogle: jest.fn(),
-            verifyToken: jest.fn(),
-            sendEmailVerification: jest.fn(),
-            sendPasswordReset: jest.fn(),
+            verifyGoogleToken: jest.fn(),            
             deleteAccount: jest.fn(),
-        };
+        }as unknown as jest.Mocked<AuthProvider>
+    }
+
+    static createCryptoProvider(): jest.Mocked<CryptoProvider> {
+        return {
+            encrypt: jest.fn(),
+            compare: jest.fn(),
+        } as unknown as jest.Mocked<CryptoProvider>;
     }
 
     static createUserRepository(): jest.Mocked<UserRepository> {
@@ -23,6 +26,6 @@ export class MockProvidersBuilder {
             findByFirebaseUid: jest.fn(),
             existsByEmail: jest.fn(),
             delete: jest.fn(),
-        };
+        } as unknown as jest.Mocked<UserRepository>
     }
 }

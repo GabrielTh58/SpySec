@@ -5,7 +5,10 @@ export interface EntityProps {
 }
 
 export abstract class Entity <Type, Props extends EntityProps>{
-    constructor(readonly id: Id) {} 
+    constructor(
+        readonly id: Id,
+        readonly props: Props
+    ) {} 
 
     equals(entity: Entity<Type, Props>): boolean {
         return this.id.equals(entity.id);   

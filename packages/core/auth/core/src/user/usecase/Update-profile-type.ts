@@ -1,26 +1,21 @@
 import { Result, UseCase } from "@spysec/shared";
-import { ProfileType, User } from "../model/User.entity";
+import { User } from "../model/User.entity";
 import { UserRepository } from "../provider/User.repository";
+import { UpdateProfileTypeInput } from "./dto/usecases.dto";
 
-export interface UpdateProfileTypeInput {
-    userId: string;
-    profileType: ProfileType
-}
-
-export interface UpdateProfileTypeOutput {
-    user: User;
-}
-
-export class UpdateProfileType implements UseCase<UpdateProfileTypeInput, UpdateProfileTypeOutput> {
+export class UpdateProfileType implements UseCase<UpdateProfileTypeInput, User> {
     constructor(private readonly repo: UserRepository) {}
 
-    async execute(input: UpdateProfileTypeInput): Promise<Result<UpdateProfileTypeOutput>> {
+    async execute(input: UpdateProfileTypeInput): Promise<Result<User>> {
         const user = await this.repo.findById(input.userId);
-
         if (!user) {
-            return Result.fail<UpdateProfileTypeOutput>("USER_NOT_FOUND");
+            return Result.fail<User>("USER_NOT_FOUND");
         }
 
+        if (user.profileType === input.profileType) {
+            return Result.ok(user);
+        }
+        
         const updatedUser = user.changeProfileType(input.profileType);
 
         const updateResult = await Result.tryAsync(async () => {
@@ -28,11 +23,9 @@ export class UpdateProfileType implements UseCase<UpdateProfileTypeInput, Update
         });
 
         if (updateResult.failed) {
-            return Result.fail<UpdateProfileTypeOutput>(updateResult.errors);
+            return Result.fail<User>(updateResult.errors);
         }
 
-        return Result.ok({
-            user: updatedUser,
-        });
+        return Result.ok(updatedUser);
     }
 }

@@ -1,27 +1,31 @@
 import { User, UserProps, ProviderType, ProfileType } from './model/User.entity';
+
 import { UserRepository } from './provider/User.repository';
-import { AuthProvider, FirebaseUserData, AuthResult, LoginWithEmailInput, RegisterWithEmailInput} from './provider/Auth.provider';
+import { AuthProvider, FirebaseUserData } from './provider/Auth.provider';
+import { CryptoProvider } from './provider/Crypto.provider';
 
-import { LoginUser, LoginInput, LoginOutput } from './usecase/Login';
-import { LoginWithgoogle, LoginWithGoogleInput, LoginWithGoogleOutput } from './usecase/Login-google';
-import { RegisterUser, RegisterUserInput, RegisterUserOutput } from './usecase/Register-user';
-import { UpdateProfileType } from './usecase/Update-profile-type';
+import { LoginUser } from './usecase/Login';
+import { RegisterUser } from './usecase/Register-user';
+import { LoginWithGoogle } from './usecase/Login-google'
+import { LoginWithGoogleInput, AuthResult, RegisterUserInput, LoginInput } from './usecase/dto/usecases.dto'
 
-
-export { User, LoginUser, LoginWithgoogle, RegisterUser, UpdateProfileType, ProfileType, ProviderType }
+export { 
+    User, 
+    ProfileType, 
+    ProviderType,
+    LoginUser, 
+    RegisterUser, 
+    LoginWithGoogle, 
+    UserRepository,
+    AuthProvider,
+    CryptoProvider
+}
 
 export type {    
     UserProps,
-    UserRepository,
-    AuthProvider,
-    RegisterUserInput,
-    RegisterUserOutput,
-    LoginInput,
-    LoginOutput,
-    LoginWithGoogleInput,
-    LoginWithGoogleOutput,
     FirebaseUserData,
     AuthResult,
-    RegisterWithEmailInput,
-    LoginWithEmailInput
+    RegisterUserInput,
+    LoginInput,
+    LoginWithGoogleInput,    
 }

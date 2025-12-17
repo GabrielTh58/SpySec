@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { User, UserRepository } from '@spysec/auth';
 import { PrismaService } from '../../db/prisma.service';
-import { PrismaUserMapper } from './prisma-user.mapper';
+import { PrismaUserMapper } from '../mappers/prisma-user.mapper';
 
 
 @Injectable()
@@ -9,7 +9,7 @@ export class PrismaUserRepository implements UserRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(user: User): Promise<void> {
-    const data = PrismaUserMapper.toPrismaWithTimestamps(user);
+    const data = PrismaUserMapper.toPrismaCreateInput(user);
     await this.prisma.user.create({ data });
   }
 
@@ -38,17 +38,17 @@ export class PrismaUserRepository implements UserRepository {
   }
 
   async update(user: User): Promise<void> {
-    const data = PrismaUserMapper.toPrisma(user);
+    const data = PrismaUserMapper.toPrismaUpdateInput(user);
 
     await this.prisma.user.update({
       where: { id: user.id.value },
       data: {
         ...data,
-        updatedAt: new Date(), 
+        updatedAt: user.updatedAt, 
       },
     });
   }
-
+  
   async existsByEmail(email: string): Promise<boolean> {
     const count = await this.prisma.user.count({
       where: { email },

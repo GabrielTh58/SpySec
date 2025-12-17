@@ -1,176 +1,271 @@
-import { Entity, EntityProps } from "@spysec/shared";
+import { Entity, EntityProps, StrongPassword } from "@spysec/shared";
 import { Id, Email, UserName, Result } from "@spysec/shared";
-import { IdUnique } from "@spysec/utils";
 
 export enum ProfileType {
-    PERSONAL = 'PERSONAL',
-    CORPORATE = 'CORPORATE',
+  PERSONAL = "PERSONAL",
+  CORPORATE = "CORPORATE",
 }
 
 export enum ProviderType {
-    EMAIL = 'EMAIL',
-    GOOGLE = 'GOOGLE',
+  EMAIL = "EMAIL",
+  GOOGLE = "GOOGLE",
 }
 
 export interface UserProps extends EntityProps {
-    id?: string;
-    firebaseUid: string;
-    name: string;
-    email: string;
-    provider: ProviderType;
-    profileType: ProfileType;
-    isEmailVerified: boolean;
-    imageURL?: string | null;
-    lastLoginAt?: Date;
-    createdAt?: Date;
-    updatedAt?: Date;
+  firebaseUid?: string | null;
+  name: UserName;
+  password?: StrongPassword | null;
+  email: Email;
+  provider: ProviderType;
+  profileType: ProfileType;
+  isEmailVerified?: boolean;
+  imageURL?: string | null;
+  lastLoginAt?: Date | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface RestoreUserProps {
+  id: string;
+  firebaseUid?: string | null;
+  name: string;
+  email: string;
+  password?: string | null;
+  provider: string;
+  profileType: string;
+  isEmailVerified: boolean;
+  imageURL?: string | null;
+  lastLoginAt?: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface CreateUserWithPasswordDTO {
+  name: string;
+  email: string;
+  password: string;
+  profileType: ProfileType;
+}
+
+export interface CreateUserWithGoogleDTO {
+  name: string;
+  email: string;
+  firebaseUid: string;
+  profileType: ProfileType;
+  imageURL?: string | null;
 }
 
 export class User extends Entity<User, UserProps> {
-    constructor(
-        readonly id: Id,
-        readonly firebaseUid: string,
-        readonly name: UserName,
-        readonly email: Email,
-        readonly provider: ProviderType,
-        readonly profileType: ProfileType,
-        readonly imageURL: string | null,
-        readonly isEmailVerified: boolean,
-        readonly lastLoginAt: Date | null,
-        readonly createdAt: Date,
-        readonly updatedAt: Date,
-        readonly props: UserProps
-    ) {
-        super(id);
+  constructor(props: UserProps, id: Id) {
+    super(id, props);
+  }
+
+  static createWithPassword(props: CreateUserWithPasswordDTO): Result<User> {
+    const nameResult = UserName.create(props.name);
+    const emailResult = Email.create(props.email);
+    const passResult = StrongPassword.create(props.password);
+
+    const result = Result.combine([nameResult, emailResult, passResult]);
+    if (result.failed) return Result.fail<User>(result.errors);
+
+    return Result.ok(
+      new User(
+        {
+          name: nameResult.value!,
+          email: emailResult.value!,
+          password: passResult.value!,
+          provider: ProviderType.EMAIL,
+          profileType: props.profileType,
+          isEmailVerified: false,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          firebaseUid: null,
+          imageURL: null,
+          lastLoginAt: null,
+        },
+        Id.generate()
+      )
+    );
+  }
+
+  static createWithGoogle(props: CreateUserWithGoogleDTO): Result<User> {
+    const nameResult = UserName.create(props.name);
+    const emailResult = Email.create(props.email);
+
+    const result = Result.combine([nameResult, emailResult]);
+    if (result.failed) return Result.fail<User>(result.errors);
+
+    return Result.ok(
+      new User(
+        {
+          name: nameResult.value!,
+          email: emailResult.value!,
+          password: null,
+          provider: ProviderType.GOOGLE,
+          profileType: props.profileType,
+          isEmailVerified: true,
+          firebaseUid: props.firebaseUid,
+          imageURL: props.imageURL ?? null,
+          lastLoginAt: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        Id.generate()
+      )
+    );
+  }
+
+  static restore(props: RestoreUserProps): User {
+    const nameVO = UserName.restore(props.name);
+    const emailVO = Email.restore(props.email);
+    const idVO = Id.restore(props.id);
+
+    let passwordVO: StrongPassword | null = null;
+    if (props.password) {
+      const passResult = StrongPassword.createFromHash(props.password);
+      if (passResult.succeeded) passwordVO = passResult.value!;
     }
 
-    static create(props: UserProps): Result<User> {
-        const id = Id.create(props.id ?? IdUnique.generate());
-        const email = Email.create(props.email);
-        const name = UserName.create(props.name);
+    return new User(
+      {
+        firebaseUid: props.firebaseUid ?? null,
+        name: nameVO,
+        email: emailVO,
+        password: passwordVO,
+        provider: props.provider as ProviderType,
+        profileType: props.profileType as ProfileType,
+        isEmailVerified: props.isEmailVerified,
+        imageURL: props.imageURL ?? null,
+        lastLoginAt: props.lastLoginAt ?? null,
+        createdAt: props.createdAt,
+        updatedAt: props.updatedAt,
+      },
+      idVO
+    );
+  }
 
-        const createAttributes = Result.combine([id, email, name]);
-        if (createAttributes.failed) return Result.fail<User>(createAttributes.errors);
+  private clone(changes: Partial<UserProps>): User {
+    return new User(
+      {
+        ...this.props,
+        ...changes,
+        updatedAt: new Date(),
+      },
+      this.id
+    );
+  }
 
-        const createdAt = props.createdAt ?? new Date();
-        const updatedAt = props.updatedAt ?? createdAt;
-        return Result.ok(
-            new User(
-                id.value!,
-                props.firebaseUid,
-                name.value!,
-                email.value!,
-                props.provider,
-                props.profileType,
-                props.imageURL ?? null,
-                props.isEmailVerified,
-                props.lastLoginAt ?? null,
-                createdAt,
-                updatedAt,
-                {
-                    id: id.value!.value,
-                    firebaseUid: props.firebaseUid,
-                    name: props.name,
-                    email: props.email,
-                    provider: props.provider,
-                    profileType: props.profileType,
-                    imageURL: props.imageURL,
-                    isEmailVerified: props.isEmailVerified,
-                    lastLoginAt: props.lastLoginAt,
-                    createdAt: props.createdAt,
-                    updatedAt: props.updatedAt
-                }
-            )
-        );
+  setEncryptedPassword(hashedPassword: string): Result<User> {
+    const passwordHashVO = StrongPassword.createFromHash(hashedPassword);
+
+    if (passwordHashVO.failed) {
+      return Result.fail(passwordHashVO.errors);
     }
 
-    clone(
-        changes: Partial<UserProps>,
-        voChanges?: {
-            id?: Id
-            name?: UserName
-            email?: Email
-        }
-    ): User {
-        const newProps = {
-            ...this.props,
-            ...changes,
-            updatedAt: new Date(), 
-        };
+    return Result.ok(this.clone({ password: passwordHashVO.value }));
+  }
 
-        const id = voChanges?.id ?? this.id;
-        const name = voChanges?.name ?? this.name;
-        const email = voChanges?.email ?? this.email;
+  isCorporate(): boolean {
+    return this.props.profileType === ProfileType.CORPORATE;
+  }
 
-        return new User(
-            id,
-            newProps.firebaseUid,
-            name,
-            email,
-            newProps.provider,
-            newProps.profileType,
-            newProps.imageURL ?? null,
-            newProps.isEmailVerified,
-            newProps.lastLoginAt ?? null,
-            this.createdAt, 
-            newProps.updatedAt,
-            newProps
-        );
-    }
+  isPersonal(): boolean {
+    return this.props.profileType === ProfileType.PERSONAL;
+  }
 
-    static fromPersistence(props: UserProps): Result<User> {
-        return User.create(props);
-    }
+  isOAuthUser(): boolean {
+    return this.props.provider === ProviderType.GOOGLE;
+  }
 
-    isCorporate(): boolean {
-        return this.profileType === ProfileType.CORPORATE;
-    }
+  recordLogin(): User {
+    return this.clone({ lastLoginAt: new Date() });
+  }
 
-    isPersonal(): boolean {
-        return this.profileType === ProfileType.PERSONAL;
-    }
+  setEmailVerified(): User {
+    if (this.props.isEmailVerified) return this;
 
-    isOAuthUser(): boolean {
-        return this.provider === ProviderType.GOOGLE;
-    }
+    return this.clone({
+      isEmailVerified: true,
+    });
+  }
 
-   recordLogin(): User {
-        return this.clone({
-            lastLoginAt: new Date(),
-        });
-    }
-
-    verifyEmail(): User {
-        if (this.isEmailVerified) return this;
-
-        return this.clone({
-            isEmailVerified: true,
-        });
-    }
-
-    updatePhoto(imageURL: string): User {
-        return this.clone({
-            imageURL: imageURL
-        })
-    }
-
-    changeProfileType(newType: ProfileType): User {
-        if(this.profileType === newType) return this;
-        
-       return this.clone(
-            { profileType: newType },            
-        );
-    }
-
-    updateName(newName: string): Result<User> {
-        const nameResult = UserName.create(newName);
-        if (nameResult.failed) return Result.fail<User>(nameResult.errors);
-        
-        const updatedUser = this.clone(
-            { name: newName },
-            { name: nameResult.value! }
-        )
-        return Result.ok(updatedUser);
-    }
+  updatePhoto(imageURL: string): User {
+    return this.clone({ imageURL: imageURL });
     
+  }
+
+  changeProfileType(newType: ProfileType): User {
+    if (this.props.profileType === newType) return this;
+    return this.clone({ profileType: newType });
+  }
+ 
+  linkFirebaseAccount(uid: string): User {  
+    if (this.props.firebaseUid === uid) return this;
+  
+    return this.clone({ firebaseUid: uid });
+  }
+
+  updateName(newName: string): Result<User> {
+    const nameResult = UserName.create(newName);
+    if (nameResult.failed) return Result.fail<User>(nameResult.errors);
+
+    const updatedUser = this.clone({ name: nameResult.value! });
+    return Result.ok(updatedUser);
+  }
+
+  updatePassword(newPassword: string): Result<User> {
+    const passwordResult = StrongPassword.create(newPassword);
+    if (passwordResult.failed) return Result.fail<User>(passwordResult.errors);
+
+    const updatedUser = this.clone({ password: passwordResult.value });
+    return Result.ok(updatedUser);
+  }
+
+  get idValue(): Id {
+    return this.id as Id;
+  }
+
+  get name(): UserName {
+    return this.props.name;
+  }
+
+  get email(): Email {
+    return this.props.email;
+  }
+
+  get password(): StrongPassword | null {
+    return this.props.password ?? null;
+  }
+
+  get provider(): ProviderType {
+    return this.props.provider;
+  }
+
+  get profileType(): ProfileType {
+    return this.props.profileType;
+  }
+
+  get isEmailVerified(): boolean {
+    return this.props.isEmailVerified ?? false;
+  }
+
+  get firebaseUid(): string | null {
+    return this.props.firebaseUid ?? null;
+  }
+
+  get imageURL(): string | null {
+    return this.props.imageURL ?? null;
+  }
+
+  get lastLoginAt(): Date | null {
+    return this.props.lastLoginAt ?? null;
+  }
+
+  get createdAt(): Date {
+    return this.props.createdAt!;
+  }
+
+  get updatedAt(): Date {
+    return this.props.updatedAt!;
+  }
 }

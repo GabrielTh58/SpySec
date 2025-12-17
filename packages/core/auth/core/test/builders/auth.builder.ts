@@ -1,71 +1,56 @@
-import { AuthResult, FirebaseUserData } from "../../src/user/provider/Auth.provider";
+import { FirebaseUserData } from "../../src/user/provider/Auth.provider";
 
-export class AuthResultBuilder {
-    private firebaseUser: FirebaseUserData;
-    private accessToken: string;
+export class FirebaseDataBuilder {
+    private data: FirebaseUserData;
 
-    constructor() {
-        this.firebaseUser = {
-            uid: 'firebase-test-uid',
-            email: 'test@example.com',
+    constructor() {        
+        this.data = {
+            uid: 'firebase-uid-mock',
+            email: 'test@gmail.com',
             emailVerified: true,
             displayName: 'Test User',
             photoURL: undefined,
         };
-        this.accessToken = 'mock-access-token';
     }
 
-    withFirebaseUid(uid: string): AuthResultBuilder {
-        this.firebaseUser.uid = uid;
+    withUid(uid: string): FirebaseDataBuilder {
+        this.data.uid = uid;
         return this;
     }
 
-    withEmail(email: string): AuthResultBuilder {
-        this.firebaseUser.email = email;
+    withEmail(email: string): FirebaseDataBuilder {
+        this.data.email = email;
         return this;
     }
 
-    withDisplayName(name: string | undefined): AuthResultBuilder {
-        this.firebaseUser.displayName = name;
+    withDisplayName(name: string): FirebaseDataBuilder {
+        this.data.displayName = name;
         return this;
     }
 
-    withPhotoURL(url: string | undefined): AuthResultBuilder {
-        this.firebaseUser.photoURL = url;
+    withPhotoURL(url: string): FirebaseDataBuilder {
+        this.data.photoURL = url;
         return this;
     }
 
-    withAccessToken(token: string): AuthResultBuilder {
-        this.accessToken = token;
+    verifiedEmail(): FirebaseDataBuilder {
+        this.data.emailVerified = true;
         return this;
     }
 
-    verified(): AuthResultBuilder {
-        this.firebaseUser.emailVerified = true;
+    unverifiedEmail(): FirebaseDataBuilder {
+        this.data.emailVerified = false;
         return this;
     }
 
-    unverified(): AuthResultBuilder {
-        this.firebaseUser.emailVerified = false;
+    asGoogleUser(): FirebaseDataBuilder {
+        this.data.emailVerified = true;
+        this.data.displayName = 'Google User';
+        this.data.photoURL = 'https://lh3.googleusercontent.com/a-/mock-photo';
         return this;
     }
 
-    asGoogleAuth(): AuthResultBuilder {
-        this.firebaseUser.emailVerified = true;
-        this.firebaseUser.displayName = 'Google User';
-        this.firebaseUser.photoURL = 'https://photo.url';
-        return this;
-    }
-
-    withoutDisplayName(): AuthResultBuilder {
-        this.firebaseUser.displayName = undefined;
-        return this;
-    }
-
-    build(): AuthResult {
-        return {
-            firebaseUser: this.firebaseUser,
-            accessToken: this.accessToken,
-        };
+    build(): FirebaseUserData {    
+        return { ...this.data };
     }
 }

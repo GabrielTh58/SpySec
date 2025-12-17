@@ -13,7 +13,7 @@ export class RegisterUserDTO implements RegisterUserInput {
     @ApiProperty({
         description: "Senha do usuário",        
         minLength: 6,
-        example: "senha123"
+        example: "#Senha123"
     })
     @IsString({ message: "Senha deve ser uma string" })
     @MinLength(6, { message: "Senha deve ter pelo menos 6 caracteres" })    

@@ -1,27 +1,26 @@
 import { Injectable } from '@nestjs/common';
 import { RegisterUserDTO } from './dto/register-user.dto';
 import { LoginUserDTO } from './dto/login-user.dto';
-import { PrismaUserRepository } from './adapter/prisma-user.repository';
-import { AuthFacade } from '@spysec/auth-adapter';
-import { FirebaseAuthAdapter } from './adapter/firebase-auth.adapter';
-
+import { AuthFacade, AuthResponse } from '@spysec/auth-adapter';
+import { LoginWithGoogleDTO } from './dto/login-google.dto';
 
 @Injectable()
-export class AuthService {
-    private readonly authFacade: AuthFacade;
+export class AuthService {   
 
     constructor(
-        private readonly authProvider: FirebaseAuthAdapter,
-        private readonly userRepository: PrismaUserRepository
-    ) {
-        this.authFacade = new AuthFacade(this.userRepository, this.authProvider);
-    }
+        private readonly authFacade: AuthFacade,               
+    ) {}
+    
 
-    async registerUser(data: RegisterUserDTO) {
+    async registerUser(data: RegisterUserDTO): Promise<AuthResponse> {
         return this.authFacade.register(data);
     }
 
-    async login(data: LoginUserDTO) {
+    async login(data: LoginUserDTO): Promise<AuthResponse> {
         return this.authFacade.login(data);
+    }
+
+    async loginWithGoogle(data: LoginWithGoogleDTO){
+        return this.authFacade.loginWithGoogle(data)
     }
 }

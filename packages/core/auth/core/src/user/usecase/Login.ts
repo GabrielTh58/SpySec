@@ -1,55 +1,42 @@
 import { Result, UseCase } from "@spysec/shared";
-import { AuthProvider } from "../provider/Auth.provider";
-import { User } from "../model/User.entity";
 import { UserRepository } from "../provider/User.repository";
+import { CryptoProvider } from "../provider/Crypto.provider";
+import { AuthResult, LoginInput } from "./dto/usecases.dto";
 
-export type LoginInput = {
-    email: string;
-    password: string;
-}
 
-export type LoginOutput = {
-    user: User
-    accessToken: string;
-    error?: string
-}
-
-export class LoginUser implements UseCase<LoginInput, LoginOutput> {
+export class LoginUser implements UseCase<LoginInput, AuthResult> {
     constructor(
         private readonly repo: UserRepository,
-        private readonly authProvider: AuthProvider
+        private readonly crypto: CryptoProvider
     ){}
 
-    async execute(input: LoginInput): Promise<Result<LoginOutput>> {
-        const authResult = await Result.tryAsync(async () => {
-            return await this.authProvider.loginWithEmail({
-                email: input.email,
-                password: input.password,
-            })
-        });
+    async execute(input: LoginInput): Promise<Result<AuthResult>> {
+        const { email, password } = input        
 
-        if(authResult.failed){
-            return Result.fail<LoginOutput>("INVALID_CREDENTIALS");
+        const user = await this.repo.findByEmail(email);                        
+        if(!user || !user.password) { 
+            return Result.fail("INVALID_CREDENTIALS");
+        } 
+
+        const passwordMatch = await this.crypto.compare(
+            password,             
+            user.password.value
+        );
+        if(!passwordMatch){
+            return Result.fail("INVALID_CREDENTIALS");
         }
-            
-        const { accessToken, firebaseUser } = authResult.value!;
 
-        const user = await this.repo.findByFirebaseUid(firebaseUser.uid);
-
-        if(!user){
-            return Result.fail<LoginOutput>("USER_NOT_FOUND");
-        }
-        
         const updatedUser = user.recordLogin();
         const updateResult = await Result.tryAsync(async () => {
             await this.repo.update(updatedUser);
-        })
-
-        if (updateResult.failed) {
-            console.error("Failed to update lastLoginAt:", updateResult.errors);
+        })        
+        if (updateResult.failed) {            
+            return Result.fail(updateResult.errors);
         }
-
       
-        return Result.ok({ user: updatedUser, accessToken });     
+        return Result.ok({
+            user: updatedUser,
+            isNewUser: false
+        });     
     }
 }

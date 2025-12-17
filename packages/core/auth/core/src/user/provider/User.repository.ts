@@ -1,11 +1,11 @@
 import { User } from "../model/User.entity";
 
-export interface UserRepository {
-    create(user: User ): Promise<void>;
-    findByEmail(email: string): Promise<User | null>;
-    findById(id: string): Promise<User | null>;
-    update(user: User): Promise<void>;
-    findByFirebaseUid(firebaseUid: string): Promise<User | null>
-    existsByEmail(email: string): Promise<boolean>;
-    delete(id: string): Promise<void>;
-}   
+export abstract class UserRepository {
+    abstract create(user: User): Promise<void>;
+    abstract findByEmail(email: string): Promise<User | null>;
+    abstract findById(id: string): Promise<User | null>;
+    abstract update(user: User): Promise<void>;
+    abstract findByFirebaseUid(firebaseUid: string): Promise<User | null>;
+    abstract existsByEmail(email: string): Promise<boolean>;
+    abstract delete(id: string): Promise<void>;
+  }

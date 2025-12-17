@@ -1,11 +1,11 @@
+import { LoginWithGoogle, LoginWithGoogleInput } from "../../src";
 import { ProfileType } from "../../src/user/model/User.entity";
-import { LoginWithgoogle, LoginWithGoogleInput } from "../../src/user/usecase/Login-google";
-import { AuthResultBuilder } from "../builders/auth.builder";
+import { FirebaseDataBuilder } from "../builders/auth.builder";
 import { MockProvidersBuilder } from "../builders/mocks-providers.builder";
 import { UserBuilder } from "../builders/usuario.builder";
 
 describe('LoginWithGoogle UseCase', () => {
-    let useCase: LoginWithgoogle;
+    let useCase: LoginWithGoogle;
     let mockAuthProvider: ReturnType<typeof MockProvidersBuilder.createAuthProvider>;
     let mockUserRepository: ReturnType<typeof MockProvidersBuilder.createUserRepository>;
 
@@ -13,250 +13,129 @@ describe('LoginWithGoogle UseCase', () => {
         jest.clearAllMocks();
         mockAuthProvider = MockProvidersBuilder.createAuthProvider();
         mockUserRepository = MockProvidersBuilder.createUserRepository();
-        useCase = new LoginWithgoogle(mockUserRepository, mockAuthProvider);
+        useCase = new LoginWithGoogle(mockUserRepository, mockAuthProvider);
     });
 
-    describe('Sucesso', () => {        
-        it('deve criar novo user no primeiro login', async () => {
+    describe('Success', () => {        
+        it('should create new user of the personal type on the first login', async () => {
             const input: LoginWithGoogleInput = {
                 idToken: 'valid-google-token',
             };
 
-            const authResult = new AuthResultBuilder()
-                .withEmail('maria@gmail.com')
-                .withFirebaseUid('google-123')
-                .withDisplayName('Maria Santos')
-                .asGoogleAuth()
-                .build();
-
-            mockAuthProvider.loginWithGoogle.mockResolvedValue(authResult);
-            mockUserRepository.findByFirebaseUid.mockResolvedValue(null);
-            mockUserRepository.create.mockResolvedValue(undefined);
+            const authResult = new FirebaseDataBuilder()
+                .withEmail('teste@gmail.com')
+                .withPhotoURL('photo-url-google')
+                .build()
+               
+            mockAuthProvider.verifyGoogleToken.mockResolvedValue(authResult);      
+            mockUserRepository.findByEmail.mockResolvedValue(null)
+            mockUserRepository.create.mockResolvedValue()      
 
             const result = await useCase.execute(input);
 
             expect(result.succeeded).toBe(true);
-            expect(result.value!.isNewUser).toBe(true);
-            expect(result.value!.user.email.value).toBe('maria@gmail.com');
-            expect(result.value!.user.provider).toBe('google');
+            expect(result.value!.isNewUser).toBe(true);            
+            expect(result.value!.user.provider).toBe("GOOGLE");
             expect(result.value!.user.isEmailVerified).toBe(true);
             expect(mockUserRepository.create).toHaveBeenCalled();
+
+            const userCreated = mockUserRepository.create.mock.calls[0]?.[0]
+            expect(userCreated?.profileType).toBe(ProfileType.PERSONAL);
+            expect(userCreated?.imageURL).toBe('photo-url-google');
+            
         });
 
-        it('deve fazer login de user existente', async () => {
+        
+        it('should create new user of corporate type on the first login', async () => {
             const input: LoginWithGoogleInput = {
-                idToken: 'valid-token',
+                idToken: 'valid-google-token',
             };
 
-            const authResult = new AuthResultBuilder()
-                .withEmail('pedro@gmail.com')
-                .withFirebaseUid('google-456')
-                .asGoogleAuth()
-                .build();
+            const authResult = new FirebaseDataBuilder()
+                .withEmail('teste@corporative.com')
+                .withPhotoURL('photo-url')
+                .build()
+               
+            mockAuthProvider.verifyGoogleToken.mockResolvedValue(authResult); 
+            mockUserRepository.findByEmail.mockResolvedValue(null);     
+            mockUserRepository.create.mockResolvedValue()      
 
-            mockAuthProvider.loginWithGoogle.mockResolvedValue(authResult);
+            const result = await useCase.execute(input);
+
+            expect(result.succeeded).toBe(true);
+            expect(result.value!.isNewUser).toBe(true);            
+            expect(result.value!.user.provider).toBe("GOOGLE");
+            expect(result.value!.user.isEmailVerified).toBe(true);
+            expect(mockUserRepository.create).toHaveBeenCalled();
+
+            const userCreated = mockUserRepository.create.mock.calls[0]?.[0]
+            expect(userCreated?.profileType).toBe(ProfileType.CORPORATE);
+            expect(userCreated?.imageURL).not.toBe(null);
+            
+        });
+
+        it('should make login if user exists and update the datas', async () => {  
+            const input: LoginWithGoogleInput = {
+                idToken: 'valid-google-token',
+            };
+            const commonEmail = 'test@gmail.com'
+            const firebaseUser = new FirebaseDataBuilder()
+                .withEmail(commonEmail)                                
+                .build();
 
             const existingUser = new UserBuilder()
-                .withFirebaseUid('google-456')
-                .withEmail('pedro@gmail.com')
-                .asGoogleUser()
-                .build();
-
-            mockUserRepository.findByFirebaseUid.mockResolvedValue(existingUser);
-            mockUserRepository.update.mockResolvedValue(undefined);
+                .withEmail(commonEmail)
+                .buildWithPassword()                
+                
+            
+            mockAuthProvider.verifyGoogleToken.mockResolvedValue(firebaseUser);            
+            mockUserRepository.findByEmail.mockResolvedValue(existingUser);
+            mockUserRepository.update.mockResolvedValue();
 
             const result = await useCase.execute(input);
 
             expect(result.succeeded).toBe(true);
             expect(result.value!.isNewUser).toBe(false);
+            expect(result.value!.user.email.value).toBe(commonEmail)
             expect(mockUserRepository.create).not.toHaveBeenCalled();
             expect(mockUserRepository.update).toHaveBeenCalled();
+
+            const userUpdated = mockUserRepository.update.mock.calls[0]?.[0];
+            expect(userUpdated).toBeDefined();
         });
+    })
+    describe('Failures', () => {
+        it('should fail if google token as invalid', async () => {
+            const input: LoginWithGoogleInput = { idToken: 'invalid-token' };
 
-        it('deve usar username do email se displayName undefined', async () => {
-            const input: LoginWithGoogleInput = {
-                idToken: 'valid-token',
-            };
-
-            const authResult = new AuthResultBuilder()
-                .withEmail('semnome@gmail.com')
-                .withFirebaseUid('google-789')
-                .withoutDisplayName()
-                .build();
-
-            mockAuthProvider.loginWithGoogle.mockResolvedValue(authResult);
-            mockUserRepository.findByFirebaseUid.mockResolvedValue(null);
-            mockUserRepository.create.mockResolvedValue(undefined);
+            
+            mockAuthProvider.verifyGoogleToken.mockRejectedValue(new Error('Invalid Signature'));
 
             const result = await useCase.execute(input);
 
-            expect(result.succeeded).toBe(true);
-            expect(result.value!.user.name.value).toBe('semnome');
+            expect(result.failed).toBe(true);
+            expect(result.errors[0]?.type).toBe("INVALID_GOOGLE_TOKEN");
+            
+            expect(mockUserRepository.create).not.toHaveBeenCalled();
+            expect(mockUserRepository.update).not.toHaveBeenCalled();
         });
 
-        it('deve sincronizar foto do Google', async () => {
-            const input: LoginWithGoogleInput = {
-                idToken: 'valid-token',
-            };
-
-            const authResult = new AuthResultBuilder()
-                .withEmail('test@gmail.com')
-                .withFirebaseUid('google-photo')
-                .withPhotoURL('https://photo.url')
-                .asGoogleAuth()
-                .build();
-
-            mockAuthProvider.loginWithGoogle.mockResolvedValue(authResult);
-            mockUserRepository.findByFirebaseUid.mockResolvedValue(null);
-            mockUserRepository.create.mockResolvedValue(undefined);
+        it('should fail if there is an error when saving to the database', async () => {
+            const input: LoginWithGoogleInput = { idToken: 'valid' };
+            
+            const authData = new FirebaseDataBuilder().withEmail('new@test.com').build();
+            
+            mockAuthProvider.verifyGoogleToken.mockResolvedValue(authData);
+            mockUserRepository.findByEmail.mockResolvedValue(null);
+            
+            
+            mockUserRepository.create.mockRejectedValue(new Error('DB Connection Fail'));
 
             const result = await useCase.execute(input);
 
-            expect(result.succeeded).toBe(true);
-            expect(result.value!.user.imageURL).toBe('https://photo.url');
-        });
-
-        describe('ProfileType', () => {
-            it('deve usar profileType enviado pelo frontend', async () => {
-                const input: LoginWithGoogleInput = {
-                    idToken: 'valid-token',
-                    profileType: ProfileType.CORPORATE, // ← Frontend escolheu
-                };
-
-                const authResult = new AuthResultBuilder()
-                    .withEmail('empresa@empresa.com')
-                    .withFirebaseUid('google-123')
-                    .asGoogleAuth()
-                    .build();
-
-                mockAuthProvider.loginWithGoogle.mockResolvedValue(authResult);
-                mockUserRepository.findByFirebaseUid.mockResolvedValue(null);
-                mockUserRepository.create.mockResolvedValue(undefined);
-
-            const result = await useCase.execute(input);
-
-            expect(result.succeeded).toBe(true);
-            expect(result.value!.user.profileType).toBe(ProfileType.CORPORATE);
-            });
-
-            it('deve inferir corporate de email corporativo', async () => {
-                const input: LoginWithGoogleInput = {
-                    idToken: 'valid-token',
-                };
-
-                const authResult = new AuthResultBuilder()
-                    .withEmail('user@empresa.com.br') 
-                    .withFirebaseUid('google-456')
-                    .asGoogleAuth()
-                    .build();
-
-                mockAuthProvider.loginWithGoogle.mockResolvedValue(authResult);
-                mockUserRepository.findByFirebaseUid.mockResolvedValue(null);
-                mockUserRepository.create.mockResolvedValue(undefined);
-
-                const result = await useCase.execute(input);
-
-                expect(result.succeeded).toBe(true);
-                expect(result.value!.user.profileType).toBe(ProfileType.CORPORATE);
-            });
-
-            it('deve inferir personal de Gmail', async () => {
-                const input: LoginWithGoogleInput = {
-                    idToken: 'valid-token',
-                };
-
-                const authResult = new AuthResultBuilder()
-                    .withEmail('user@gmail.com') // Gmail
-                    .withFirebaseUid('google-789')
-                    .asGoogleAuth()
-                    .build();
-
-                mockAuthProvider.loginWithGoogle.mockResolvedValue(authResult);
-                mockUserRepository.findByFirebaseUid.mockResolvedValue(null);
-                mockUserRepository.create.mockResolvedValue(undefined);
-
-                const result = await useCase.execute(input);
-
-                expect(result.succeeded).toBe(true);
-                expect(result.value!.user.profileType).toBe(ProfileType.PERSONAL);
-            });
+            expect(result.failed).toBe(true);
+            expect(mockUserRepository.create).toHaveBeenCalled();
         });
     });
-
-    describe('Falhas', () => {
-        it('deve falhar com token inválido', async () => {
-            const input: LoginWithGoogleInput = {
-                idToken: 'invalid-token',
-            };
-
-            mockAuthProvider.loginWithGoogle.mockRejectedValue(
-                new Error('auth/invalid-id-token')
-            );
-
-            const result = await useCase.execute(input);
-
-            expect(result.failed).toBe(true);
-            expect(result.errors[0]!.type).toBe('INVALID_GOOGLE_TOKEN');
-        });
-
-        it('deve falhar se validação de User falha', async () => {
-            const input: LoginWithGoogleInput = {
-                idToken: 'valid-token',
-            };
-
-            const authResult = new AuthResultBuilder()
-                .withEmail('email-invalido')
-                .build();
-
-            mockAuthProvider.loginWithGoogle.mockResolvedValue(authResult);
-            mockUserRepository.findByFirebaseUid.mockResolvedValue(null);
-
-            const result = await useCase.execute(input);
-
-            expect(result.failed).toBe(true);
-        });
-
-        it('deve falhar se DB rejeita criação', async () => {
-            const input: LoginWithGoogleInput = {
-                idToken: 'valid-token',
-            };
-
-            const authResult = new AuthResultBuilder()
-                .withFirebaseUid('google-fail')
-                .asGoogleAuth()
-                .build();
-
-            mockAuthProvider.loginWithGoogle.mockResolvedValue(authResult);
-            mockUserRepository.findByFirebaseUid.mockResolvedValue(null);
-            mockUserRepository.create.mockRejectedValue(new Error('DB Error'));
-
-            const result = await useCase.execute(input);
-
-            expect(result.failed).toBe(true);
-        });
-
-        it('não deve falhar se update falha em user existente', async () => {
-            const input: LoginWithGoogleInput = {
-                idToken: 'valid-token',
-            };
-
-            const authResult = new AuthResultBuilder()
-                .withFirebaseUid('google-update-fail')
-                .build();
-
-            mockAuthProvider.loginWithGoogle.mockResolvedValue(authResult);
-
-            const existingUser = new UserBuilder()
-                .withFirebaseUid('google-update-fail')
-                .asGoogleUser()
-                .build();
-
-            mockUserRepository.findByFirebaseUid.mockResolvedValue(existingUser);
-            mockUserRepository.update.mockRejectedValue(new Error('Update failed'));
-
-            const result = await useCase.execute(input);
-
-            expect(result.succeeded).toBe(true);
-        });
-    });
+        
 });

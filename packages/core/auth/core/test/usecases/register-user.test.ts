@@ -1,156 +1,129 @@
-import { ProfileType } from "../../src/user/model/User.entity";
-import { RegisterUser, RegisterUserInput } from "../../src/user/usecase/Register-user";
-import { AuthResultBuilder } from "../builders/auth.builder";
+import { ProfileType, RegisterUser, RegisterUserInput } from "../../src";
 import { MockProvidersBuilder } from "../builders/mocks-providers.builder";
 import { UserBuilder } from "../builders/usuario.builder";
 
-describe('RegisterUser UseCase', () => {
+
+describe('RegisterUser UseCase (Native)', () => {
     let useCase: RegisterUser;
-    let mockAuthProvider: ReturnType<typeof MockProvidersBuilder.createAuthProvider>;
+    
     let mockUserRepository: ReturnType<typeof MockProvidersBuilder.createUserRepository>;
+    let mockCryptoProvider: ReturnType<typeof MockProvidersBuilder.createCryptoProvider>;
 
     beforeEach(() => {
         jest.clearAllMocks();
-        mockAuthProvider = MockProvidersBuilder.createAuthProvider();
         mockUserRepository = MockProvidersBuilder.createUserRepository();
-        useCase = new RegisterUser(mockUserRepository, mockAuthProvider);
+        mockCryptoProvider = MockProvidersBuilder.createCryptoProvider();
+        useCase = new RegisterUser(mockUserRepository, mockCryptoProvider);
     });
 
-    describe('Sucesso', () => {
-        it('deve registrar usuário pessoal', async () => {
+    describe('Success', () => {
+        it('should register user as Personal type with valid credentials', async () => {        
             const input: RegisterUserInput = {
                 email: 'joao@test.com',
-                password: 'Senha123!',
-                name: 'João Silva',
-                profileType: ProfileType.PERSONAL,
-            };
+                password: 'SenhaForte123!',
+                name: 'Joao Silva',
+                profileType: ProfileType.PERSONAL
+            };            
+            const validHashMock = '$2b$10$FakeHashBcryptValid123'
 
-            mockUserRepository.findByEmail.mockResolvedValue(null);
-
-            const authResult = new AuthResultBuilder()
-                .withEmail('joao@test.com')
-                .withFirebaseUid('fb-123')
-                .withDisplayName('João Silva')
-                .unverified()
-                .build();
-
-            mockAuthProvider.registerWithEmail.mockResolvedValue(authResult);
-            mockUserRepository.create.mockResolvedValue(undefined);
-            mockAuthProvider.sendEmailVerification.mockResolvedValue(undefined);
-
+            mockUserRepository.findByEmail.mockResolvedValue(null);                                    
+            mockCryptoProvider.encrypt.mockResolvedValue(validHashMock);           
+            mockUserRepository.create.mockResolvedValue();
+            
             const result = await useCase.execute(input);
-
-            expect(result.succeeded).toBe(true);
-            expect(result.value!.user.email.value).toBe('joao@test.com');
-            expect(result.value!.user.profileType).toBe(ProfileType.PERSONAL);
-            expect(result.value!.accessToken).toBe('mock-access-token');
-            expect(mockUserRepository.findByEmail).toHaveBeenCalledWith('joao@test.com');
-            expect(mockAuthProvider.registerWithEmail).toHaveBeenCalledWith({
-                email: 'joao@test.com',
-                password: 'Senha123!',
-                name: 'João Silva',
-            });
+            
+            expect(result.succeeded).toBe(true); 
+            expect(result.value!.user.email.value).toBe(input.email);
+            expect(result.value!.isNewUser).toBe(true);
+            
+            expect(mockUserRepository.findByEmail).toHaveBeenCalledWith(input.email);            
+            expect(mockCryptoProvider.encrypt).toHaveBeenCalledWith(input.password); 
             expect(mockUserRepository.create).toHaveBeenCalled();
-            expect(mockAuthProvider.sendEmailVerification).toHaveBeenCalledWith('fb-123');
+                        
+            const userCreated = mockUserRepository.create.mock.calls[0]?.[0];
+            expect(userCreated?.profileType).toBe(ProfileType.PERSONAL);
+            expect(userCreated?.password?.value).toBe(validHashMock);            
         });
 
-        it('deve registrar usuário corporativo', async () => {
+        it('should register user as Corporate type', async () => {        
             const input: RegisterUserInput = {
-                email: 'ana@empresa.com',
-                password: 'Senha123!',
-                name: 'Ana Santos',
-                profileType: ProfileType.CORPORATE,
+                email: 'empresa@corp.com',
+                password: 'SenhaForte123!',
+                name: 'Empresa Ltd',
+                profileType: ProfileType.CORPORATE
             };
+            const validHashMock = '$2b$10$FakeHashBcryptValid123'
 
-            mockUserRepository.findByEmail.mockResolvedValue(null);
-
-            const authResult = new AuthResultBuilder()
-                .withEmail('ana@empresa.com')
-                .withFirebaseUid('fb-456')
-                .build();
-
-            mockAuthProvider.registerWithEmail.mockResolvedValue(authResult);
-            mockUserRepository.create.mockResolvedValue(undefined);
-            mockAuthProvider.sendEmailVerification.mockResolvedValue(undefined);
-
+            mockUserRepository.findByEmail.mockResolvedValue(null);            
+            mockCryptoProvider.encrypt.mockResolvedValue(validHashMock);
+            mockUserRepository.create.mockResolvedValue();
+            
             const result = await useCase.execute(input);
 
             expect(result.succeeded).toBe(true);
-            expect(result.value!.user.profileType).toBe(ProfileType.CORPORATE);
+            expect(result.value!.user.email.value).toBe(input.email);
+            expect(result.value!.isNewUser).toBe(true);
+            
+            expect(mockUserRepository.findByEmail).toHaveBeenCalledWith(input.email);            
+            expect(mockCryptoProvider.encrypt).toHaveBeenCalledWith(input.password); 
+            
+            const userCreated = mockUserRepository.create.mock.calls[0]?.[0];
+            expect(userCreated?.profileType).toBe(ProfileType.CORPORATE);
+            expect(userCreated?.password?.value).toBe(validHashMock)
         });
-
-        it('deve registrar usuário pessoal com imagem', async () => {
-            const input: RegisterUserInput = {
-                email: 'joao@test.com',
-                password: 'Senha123!',
-                name: 'João Silva',
-                profileType: ProfileType.PERSONAL,
-            };
-
-            mockUserRepository.findByEmail.mockResolvedValue(null);
-
-            const authResult = new AuthResultBuilder()
-                .withEmail('joao@test.com')
-                .withFirebaseUid('fb-123')
-                .withDisplayName('João Silva')
-                .unverified()
-                .build();
-
-            mockAuthProvider.registerWithEmail.mockResolvedValue(authResult);
-            mockUserRepository.create.mockResolvedValue(undefined);
-            mockAuthProvider.sendEmailVerification.mockResolvedValue(undefined);
-
-            const result = await useCase.execute(input);
-
-            expect(result.succeeded).toBe(true);
-            expect(result.value!.user.email.value).toBe('joao@test.com');
-            expect(result.value!.user.profileType).toBe(ProfileType.PERSONAL);
-            expect(result.value!.accessToken).toBe('mock-access-token');
-            expect(mockUserRepository.findByEmail).toHaveBeenCalledWith('joao@test.com');
-            expect(mockAuthProvider.registerWithEmail).toHaveBeenCalledWith({
-                email: 'joao@test.com',
-                password: 'Senha123!',
-                name: 'João Silva',
-            });
-            expect(mockUserRepository.create).toHaveBeenCalled();
-            expect(mockAuthProvider.sendEmailVerification).toHaveBeenCalledWith('fb-123');
-        })
     });
 
-    describe('Falhas', () => {
-        it('deve falhar se email já existe', async () => {
+    describe('Failures', () => {
+        it('should fail if email already exists', async () => {
             const input: RegisterUserInput = {
-                email: 'existente@test.com',
-                password: 'Senha123!',
-                name: 'Existente',
-                profileType: ProfileType.PERSONAL,
+                email: 'existe@test.com',
+                password: 'SenhaForte123!',
+                name: 'Joao',
+                profileType: ProfileType.PERSONAL
             };
 
             const existingUser = new UserBuilder()
-                .withEmail('existente@test.com')
-                .build();
+                .withEmail(input.email)
+                .buildWithPassword();
 
             mockUserRepository.findByEmail.mockResolvedValue(existingUser);
 
             const result = await useCase.execute(input);
 
             expect(result.failed).toBe(true);
-            expect(result.errors[0]!.type).toBe('EMAIL_ALREADY_EXISTS');
-            expect(mockAuthProvider.registerWithEmail).not.toHaveBeenCalled();
+            expect(result.errors[0]?.type).toBe("EMAIL_ALREADY_EXISTS");            
+           
+            expect(mockUserRepository.create).not.toHaveBeenCalled();
+            expect(mockCryptoProvider.encrypt).not.toHaveBeenCalled();
         });
 
-        it('deve falhar se Firebase rejeita', async () => {
+        it('should fail if password is weak (Domain Validation)', async () => {
             const input: RegisterUserInput = {
-                email: 'test@test.com',
+                email: 'joao@test.com',
                 password: '123',
-                name: 'Test',
-                profileType: ProfileType.PERSONAL,
+                name: 'Joao',
+                profileType: ProfileType.PERSONAL
             };
 
             mockUserRepository.findByEmail.mockResolvedValue(null);
-            mockAuthProvider.registerWithEmail.mockRejectedValue(
-                new Error('auth/weak-password')
-            );
+
+            const result = await useCase.execute(input);
+
+            expect(result.failed).toBe(true);            
+            expect(result.errors).toBeDefined(); 
+            
+            expect(mockUserRepository.create).not.toHaveBeenCalled();
+        });
+
+        it('should fail if email is invalid (Domain Validation)', async () => {
+            const input: RegisterUserInput = {
+                email: 'email-invalido', 
+                password: 'SenhaForte123!',
+                name: 'Joao',
+                profileType: ProfileType.PERSONAL
+            };
+
+            mockUserRepository.findByEmail.mockResolvedValue(null);
 
             const result = await useCase.execute(input);
 
@@ -158,50 +131,40 @@ describe('RegisterUser UseCase', () => {
             expect(mockUserRepository.create).not.toHaveBeenCalled();
         });
 
-        it('deve fazer rollback se falhar ao salvar no DB', async () => {
-            const input: RegisterUserInput = {
-                email: 'test@test.com',
-                password: 'Senha123!',
-                name: 'Test',
-                profileType: ProfileType.PERSONAL,
+        it('should fail if repository throws error', async () => {
+             const input: RegisterUserInput = {
+                email: 'joao@test.com',
+                password: 'SenhaForte123!',
+                name: 'Joao',
+                profileType: ProfileType.PERSONAL
             };
 
             mockUserRepository.findByEmail.mockResolvedValue(null);
-
-            const authResult = new AuthResultBuilder()
-                .withFirebaseUid('fb-rollback')
-                .build();
-
-            mockAuthProvider.registerWithEmail.mockResolvedValue(authResult);
+            mockCryptoProvider.encrypt.mockResolvedValue('hash');
+            
+            // Simula erro de banco de dados
             mockUserRepository.create.mockRejectedValue(new Error('DB Error'));
 
             const result = await useCase.execute(input);
 
             expect(result.failed).toBe(true);
-            expect(mockAuthProvider.deleteAccount).toHaveBeenCalledWith('fb-rollback');
         });
 
-        it('deve falhar se validação de User falha', async () => {
+        it('should fail if crypto provider throws error', async () => {
             const input: RegisterUserInput = {
-                email: 'test@test.com',
-                password: 'Senha123!',
-                name: 'Te',
-                profileType: ProfileType.PERSONAL,
+                email: 'joao@test.com',
+                password: 'SenhaForte123!',
+                name: 'Joao',
+                profileType: ProfileType.PERSONAL
             };
-
-            mockUserRepository.findByEmail.mockResolvedValue(null);
-
-            const authResult = new AuthResultBuilder()
-                .withEmail('email-invalido')
-                .build();
-
-            mockAuthProvider.registerWithEmail.mockResolvedValue(authResult);
-
-            const result = await useCase.execute(input);
-            
-            expect(result.failed).toBe(true);
-            expect(mockUserRepository.create).not.toHaveBeenCalled();
-            expect(mockAuthProvider.deleteAccount).toHaveBeenCalled();
+        
+            mockUserRepository.findByEmail.mockResolvedValue(null);                        
+            mockCryptoProvider.encrypt.mockRejectedValue(new Error('Hashing Error'));      
+          
+       
+            await expect(useCase.execute(input)).rejects.toThrow('Hashing Error');
+        
+       
         });
     });
 });

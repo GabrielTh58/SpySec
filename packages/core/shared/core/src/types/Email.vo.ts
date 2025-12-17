@@ -23,6 +23,10 @@ export class Email extends VO<string>{
             : Result.ok(new Email(value))        
     }
 
+    static restore(value: string): Email{
+        return new Email(value)
+    }
+
     getDomain(): string {
         return this.value.split('@')[1] ?? ''
     }

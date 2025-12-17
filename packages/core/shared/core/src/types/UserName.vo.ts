@@ -33,6 +33,10 @@ export class UserName extends VO<string> {
             : Result.ok(new UserName(value!))
     }
 
+    static restore(value: string): UserName {
+        return new UserName(value);
+    }
+
     initials(): string { 
         const initialsLetters = this.value?.split(" ").map((name) => name[0]).join('') ?? '';
         return initialsLetters; 

@@ -1,109 +1,105 @@
-import { Result } from "@spysec/shared";
-import { ProfileType, User, UserProps } from "../../src/user/model/User.entity";
+import { ProfileType, User } from "../../src/user/model/User.entity"; 
+
 
 export class UserBuilder {
-  private user: Partial<UserProps>;
+  
+  private props = {
+    id: "uuid-v4-padrao-para-restore",
+    name: "John Doe",
+    email: "john.doe@example.com",
+    password: "StrongPassword@123",
+    firebaseUid: "firebase-uid-123",
+    profileType: ProfileType.PERSONAL,
+    imageURL: null as string | null,
+    isEmailVerified: false,
+    provider: "EMAIL" 
+  };
 
-  constructor() {
-    this.user = {
-      firebaseUid: "firebase-uid-default",
-      name: "Test User",
-      email: "test@example.com",
-      provider: "email",
-      profileType: ProfileType.PERSONAL,
-      isEmailVerified: true,
-      imageURL: undefined,
-      lastLoginAt: undefined,
-    };
+  withName(name: string): UserBuilder {
+    this.props.name = name;
+    return this;
   }
 
-  build(): User {
-    const result = User.create(this.user as UserProps);
+  withEmail(email: string): UserBuilder {
+    this.props.email = email;
+    return this;
+  }
+
+  withPassword(password: string): UserBuilder {
+    this.props.password = password;
+    return this;
+  }
+
+  withFirebaseUid(uid: string): UserBuilder {
+    this.props.firebaseUid = uid;
+    return this;
+  }
+
+  withImageURL(url: string): UserBuilder {
+    this.props.imageURL = url;
+    return this;
+  }
+
+  withId(id: string): UserBuilder {
+    this.props.id = id;
+    return this;
+  }
+
+  asCorporate(): UserBuilder {
+    this.props.profileType = ProfileType.CORPORATE;
+    return this;
+  }
+
+  asPersonal(): UserBuilder {
+    this.props.profileType = ProfileType.PERSONAL;
+    return this;
+  }
+
+  buildWithPassword(): User {
+    const result = User.createWithPassword({
+      name: this.props.name,
+      email: this.props.email,
+      password: this.props.password,
+      profileType: this.props.profileType
+    });
+
+    if (result.failed) {  
+      throw new Error(`Build failed: ${result.errors}`);
+    }
+
+    return result.value!;
+  }
+ 
+  buildWithGoogle(): User {
+    const result = User.createWithGoogle({
+      name: this.props.name,
+      email: this.props.email,
+      firebaseUid: this.props.firebaseUid,
+      profileType: this.props.profileType,
+      imageURL: this.props.imageURL
+    });
 
     if (result.failed) {
-      result.throwIfFailed();
+      throw new Error(`Build failed: ${result.errors}`);
     }
 
     return result.value!;
   }
 
-  withFirebaseUid(uid: string): UserBuilder {
-    this.user.firebaseUid = uid;
-    return this;
-  }
-
-  withId(id: string): UserBuilder {
-    this.user.id = id;
-    return this;
-  }
-
-  withEmail(email: string): UserBuilder {
-    this.user.email = email;
-    return this;
-  }
-
-  withName(name: string): UserBuilder {
-    this.user.name = name;
-    return this;
-  }
-
-  withProvider(provider: "email" | "google"): UserBuilder {
-    this.user.provider = provider;
-    return this;
-  }
-
-  asPersonal(): UserBuilder {
-    this.user.profileType = ProfileType.PERSONAL;
-    return this;
-  }
-
-  asCorporate(): UserBuilder {
-    this.user.profileType = ProfileType.CORPORATE;
-    return this;
-  }
-
-  withEmailVerified(verified: boolean): UserBuilder {
-    this.user.isEmailVerified = verified;
-    return this;
-  }
-
-  withImageURL(url: string | null): UserBuilder {
-    this.user.imageURL = url;
-    return this;
-  }
-
-  withLastLoginAt(date: Date): UserBuilder {
-    this.user.lastLoginAt = date;
-    return this;
-  }
-
-  asGoogleUser(): UserBuilder {
-    this.user.provider = "google";
-    this.user.isEmailVerified = true; // Google sempre verifica
-    return this;
-  }
-
-  asEmailUser(): UserBuilder {
-    this.user.provider = "email";
-    return this;
-  }
-  asUnverified(): UserBuilder {
-    this.user.provider = "email";
-    this.user.isEmailVerified = false;
-    return this;
-  }
-
-  /**
-   * Constrói retornando Result (útil para testar falhas)
-   */
-  buildResult(): Result<User> {
-    return User.create(this.user as UserProps);
-  }
-
-  /**
-   * Retorna props sem construir User (útil para testar validações)
-   */
-  buildProps(): UserProps {
-    return this.user as UserProps;
+  buildRestored(): User {
+    return User.restore({
+      id: this.props.id,
+      name: this.props.name,
+      email: this.props.email,
+      password: this.props.password, 
+      firebaseUid: this.props.firebaseUid,
+      imageURL: this.props.imageURL,
+      profileType: this.props.profileType,
+      provider: this.props.provider, 
+      isEmailVerified: this.props.isEmailVerified,
+      lastLoginAt: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    });
   }
 }

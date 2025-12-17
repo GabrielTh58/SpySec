@@ -1,102 +1,88 @@
-import { Result, UseCase } from "@spysec/shared"
-import { ProfileType, ProviderType, User } from "../model/User.entity"
-import { AuthProvider } from "../provider/Auth.provider"
-import { UserRepository } from "../provider/User.repository"
+import { Result, UseCase } from "@spysec/shared";
+import { ProfileType, User } from "../model/User.entity";
+import { AuthProvider } from "../provider/Auth.provider";
+import { UserRepository } from "../provider/User.repository";
+import { AuthResult, LoginWithGoogleInput } from "./dto/usecases.dto";
 
-export interface LoginWithGoogleInput{
-    idToken: string  
-    profileType?: ProfileType
-}
-export interface LoginWithGoogleOutput{
-    user: User
-    accessToken: string
-    isNewUser: boolean
-}
-
-export class LoginWithgoogle implements UseCase<LoginWithGoogleInput, LoginWithGoogleOutput>{
+export class LoginWithGoogle implements UseCase<LoginWithGoogleInput, AuthResult> {
     constructor(
         private readonly repo: UserRepository,
         private readonly authProvider: AuthProvider
-    ){}
+    ) {}
 
-    async execute(input: LoginWithGoogleInput): Promise<Result<LoginWithGoogleOutput>> {
+    async execute(input: LoginWithGoogleInput): Promise<Result<AuthResult>> {
+        const { idToken } = input;
+        
+      
         const authResult = await Result.tryAsync(async () => {
-            return await this.authProvider.loginWithGoogle({idToken: input.idToken});
-        })
+            return await this.authProvider.verifyGoogleToken(idToken);
+        });
 
-        if(authResult.failed){
-            return Result.fail<LoginWithGoogleOutput>("INVALID_GOOGLE_TOKEN");
+        if (authResult.failed) {
+            return Result.fail("INVALID_GOOGLE_TOKEN");
         }
 
-        const { accessToken, firebaseUser } = authResult.value!;
-
-        let user = await this.repo.findByFirebaseUid(firebaseUser.uid);
+        const firebaseUser = authResult.value!; 
+        
+        let user = await this.repo.findByEmail(firebaseUser.email);
         let isNewUser = false;
 
-        if(!user){
-            const createUserResult = User.create({
-                firebaseUid: firebaseUser.uid,
-                email: firebaseUser.email,
-                name: firebaseUser.displayName ?? firebaseUser.email.split('@')[0] ?? '',
-                provider: ProviderType.GOOGLE,
-                profileType: input.profileType || this.inferProfileType(firebaseUser.email),
-                isEmailVerified: true,
-                imageURL: firebaseUser.photoURL ?? null,
-            })
+        if (!user) {            
+            const createUserResult = User.createWithGoogle({
+                firebaseUid: firebaseUser.uid!,
+                email: firebaseUser.email,  
+                name: firebaseUser.displayName,                     
+                profileType: input.profileType || this.inferProfileType(firebaseUser.email),               
+                imageURL: firebaseUser.photoURL ?? null,                
+            });
 
-            if(createUserResult.failed){
-                return Result.fail<LoginWithGoogleOutput>(createUserResult.errors);
+            if (createUserResult.failed) {
+                return Result.fail(createUserResult.errors);
             }
 
-            user = createUserResult.value!;
-
-            const saveResult = await Result.tryAsync(async () => {
-                await this.repo.create(user!);
-            })
-
-            if(saveResult.failed){
-                return Result.fail<LoginWithGoogleOutput>(saveResult.errors);
-            }   
+            user = createUserResult.value!;        
+                      
+            const result = await Result.tryAsync(async () => {
+                await this.repo.create(user!)
+            }); 
+            if (result.failed) {            
+                return Result.fail(result.errors);
+            }
 
             isNewUser = true;
-        }
-        else{
-            const updatedUser = user.recordLogin();
 
+        } else {       
+                        
+            const userUpdated = user
+                .linkFirebaseAccount(firebaseUser.uid!) 
+                .updatePhoto(user.imageURL ?? firebaseUser.photoURL ?? "")
+                .recordLogin()         
+           
             const updateResult = await Result.tryAsync(async () => {
-                await this.repo.update(updatedUser);
-            })
-
-            if(updateResult.failed){
-                console.error("Failed to update lastLoginAt:", updateResult.errors);
-            }
-
-            user = updatedUser;            
-        }    
+                await this.repo.update(userUpdated);
+            })        
+            if (updateResult.failed) {
+                return Result.fail(updateResult.errors);
+            }  
+            
+            user = userUpdated;
+        }
 
         return Result.ok({
-            user,
-            accessToken,
-            isNewUser
-        })
+            user: user,
+            isNewUser: isNewUser
+        });
     }
 
-    private inferProfileType(email: string): ProfileType{
+    private inferProfileType(email: string): ProfileType {
         const personalDomains = [
-            'gmail.com',
-            'yahoo.com',
-            'hotmail.com',
-            'outlook.com',
-            'live.com',
-            'icloud.com',
-            'protonmail.com',
+            'gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com',
+            'live.com', 'icloud.com', 'protonmail.com',
         ];
 
         const domain = email.split('@')[1]?.toLowerCase();
-        return (
-            domain && personalDomains.includes(domain) 
-                ? ProfileType.PERSONAL
-                : ProfileType.CORPORATE
-            )
+        return (domain && personalDomains.includes(domain))
+            ? ProfileType.PERSONAL
+            : ProfileType.CORPORATE;
     }
 }

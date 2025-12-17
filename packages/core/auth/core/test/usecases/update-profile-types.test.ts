@@ -1,8 +1,10 @@
 import { ProfileType } from "../../src/user/model/User.entity";
-import { UpdateProfileType, UpdateProfileTypeInput } from "../../src/user/usecase/Update-profile-type";
+import { UpdateProfileTypeInput } from "../../src/user/usecase/dto/usecases.dto";
+import { UpdateProfileType } from "../../src/user/usecase/Update-profile-type";
 import { MockProvidersBuilder } from "../builders/mocks-providers.builder";
 import { UserBuilder } from "../builders/usuario.builder";
 
+const idUserTest = 'user-123'
 describe('UpdateProfileType UseCase', () => {
     let useCase: UpdateProfileType;
     let mockUserRepository: ReturnType<typeof MockProvidersBuilder.createUserRepository>;
@@ -13,58 +15,83 @@ describe('UpdateProfileType UseCase', () => {
         useCase = new UpdateProfileType(mockUserRepository);
     });
 
-    it('deve mudar de personal para corporate', async () => {
-        const input: UpdateProfileTypeInput = {
-            userId: 'user-123',
-            profileType: ProfileType.CORPORATE,
-        };
+    describe('Success', () => {
+        it('should switch of personal to corporate', async () => {
+            const input: UpdateProfileTypeInput = {
+                userId: idUserTest,
+                profileType: ProfileType.CORPORATE,
+            };
 
-        const existingUser = new UserBuilder()
-            .withId('user-123')
-            .asPersonal()
-            .build();
+            const existingUser = new UserBuilder()
+                .withId(idUserTest)
+                .asPersonal()
+                .buildWithPassword();
 
-        mockUserRepository.findById.mockResolvedValue(existingUser);
-        mockUserRepository.update.mockResolvedValue(undefined);
+            mockUserRepository.findById.mockResolvedValue(existingUser);
+            mockUserRepository.update.mockResolvedValue();
 
-        const result = await useCase.execute(input);
+            const result = await useCase.execute(input);
 
-        expect(result.succeeded).toBe(true);
-        expect(result.value!.user.profileType).toBe(ProfileType.CORPORATE);
-        expect(mockUserRepository.update).toHaveBeenCalled();
+            expect(result.succeeded).toBe(true);
+            expect(result.value!.profileType).toBe(ProfileType.CORPORATE);
+            expect(mockUserRepository.update).toHaveBeenCalled();
+        });
+
+        it('should return success without updating if the profile type is already the same. Dont call update ', async () => {
+            const input: UpdateProfileTypeInput = {
+                userId: idUserTest,
+                profileType: ProfileType.PERSONAL,
+            };
+
+            const user = new UserBuilder()
+                .withId(idUserTest)
+                .asPersonal()
+                .buildWithPassword();
+
+            mockUserRepository.findById.mockResolvedValue(user);        
+
+            const result = await useCase.execute(input);
+
+            expect(result.succeeded).toBe(true);
+            expect(result.value!.profileType).toBe(ProfileType.PERSONAL);
+            expect(mockUserRepository.update).not.toHaveBeenCalled();
+        });
     });
 
-    it('deve ser idempotente (mesmo tipo)', async () => {
-        const input: UpdateProfileTypeInput = {
-            userId: 'user-456',
-            profileType: ProfileType.PERSONAL,
-        };
+    describe('Failures', () => {
+        it('should fail if user do not exists', async () => {
+            const input: UpdateProfileTypeInput = {
+                userId: 'inexistent',
+                profileType: ProfileType.CORPORATE,
+            };
 
-        const user = new UserBuilder()
-            .withId('user-456')
-            .asPersonal()
-            .build();
+            mockUserRepository.findById.mockResolvedValue(null);
 
-        mockUserRepository.findById.mockResolvedValue(user);
-        mockUserRepository.update.mockResolvedValue(undefined);
+            const result = await useCase.execute(input);
 
-        const result = await useCase.execute(input);
+            expect(result.failed).toBe(true);
+            expect(result.errors[0]!.type).toBe('USER_NOT_FOUND');
+        });
 
-        expect(result.succeeded).toBe(true);
-        expect(mockUserRepository.update).toHaveBeenCalled();
+        it('should fail to switch profile type if update fails', async () => {
+            const input: UpdateProfileTypeInput = {
+                userId: idUserTest,
+                profileType: ProfileType.CORPORATE,
+            };
+
+            const user = new UserBuilder()
+                .withId(idUserTest)
+                .asPersonal()
+                .buildWithPassword();
+
+            mockUserRepository.findById.mockResolvedValue(user);        
+            mockUserRepository.update.mockRejectedValue(new Error('Database Error'))
+
+            const result = await useCase.execute(input);
+
+            expect(result.failed).toBe(true);        
+            expect(mockUserRepository.update).toHaveBeenCalled();
+        });
     });
 
-    it('deve falhar se user não existe', async () => {
-        const input: UpdateProfileTypeInput = {
-            userId: 'inexistente',
-            profileType: ProfileType.CORPORATE,
-        };
-
-        mockUserRepository.findById.mockResolvedValue(null);
-
-        const result = await useCase.execute(input);
-
-        expect(result.failed).toBe(true);
-        expect(result.errors[0]!.type).toBe('USER_NOT_FOUND');
-    });
 });

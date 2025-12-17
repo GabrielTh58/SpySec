@@ -1,26 +1,11 @@
 import { DynamicModule, Global, Module } from '@nestjs/common';
-import { FirebaseConfigService } from './firebase-config.service';
 import { ConfigService } from '@nestjs/config';
 import * as firebaseAdmin from 'firebase-admin';
-import { FirebaseService } from './firebase.service';
 
 @Global()
 @Module({})
 export class FirebaseModule {
   static forRoot(): DynamicModule {
-    const firebaseConfigProvider = {
-        provide: FirebaseConfigService,
-        inject: [ConfigService],
-        useFactory: (configService: ConfigService) => {
-            const apiKey = configService.get<string>('FIREBASE_API_KEY');
-            if (!apiKey) {
-                throw new Error('Firebase API key is not configured.');
-            }
-            
-            return new FirebaseConfigService(apiKey);
-        }
-    }
-
     const firebaseProvider = {
         provide: 'FIREBASE_ADMIN',
         inject: [ConfigService],
@@ -44,8 +29,8 @@ export class FirebaseModule {
 
     return {
         module: FirebaseModule,
-        providers: [firebaseConfigProvider, firebaseProvider, FirebaseService],
-        exports: [firebaseConfigProvider, firebaseProvider, FirebaseService],
+        providers: [firebaseProvider],
+        exports: [firebaseProvider],
     }
   }
 }

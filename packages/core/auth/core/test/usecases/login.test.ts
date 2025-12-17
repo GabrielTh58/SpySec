@@ -1,141 +1,133 @@
-import { LoginInput, LoginUser } from "../../src/user/usecase/Login";
-import { AuthResultBuilder } from "../builders/auth.builder";
+import { LoginInput, LoginUser } from "../../src";
 import { MockProvidersBuilder } from "../builders/mocks-providers.builder";
 import { UserBuilder } from "../builders/usuario.builder";
 
-describe('LoginUser UseCase', () => {
+describe('LoginUser UseCase (Native)', () => {
     let useCase: LoginUser;
-    let mockAuthProvider: ReturnType<typeof MockProvidersBuilder.createAuthProvider>;
+    
     let mockUserRepository: ReturnType<typeof MockProvidersBuilder.createUserRepository>;
+    let mockCryptoProvider: ReturnType<typeof MockProvidersBuilder.createCryptoProvider>;
 
     beforeEach(() => {
         jest.clearAllMocks();
-        mockAuthProvider = MockProvidersBuilder.createAuthProvider();
+        
         mockUserRepository = MockProvidersBuilder.createUserRepository();
-        useCase = new LoginUser(mockUserRepository, mockAuthProvider);
+        mockCryptoProvider = MockProvidersBuilder.createCryptoProvider();
+        
+        useCase = new LoginUser(mockUserRepository, mockCryptoProvider);
     });
 
-    describe('Sucesso', () => {
-        it('deve fazer login com credenciais válidas', async () => {
+    describe('Success', () => {
+        it('should log in with valid credentials', async () => {
+            // ARRANGE
             const input: LoginInput = {
                 email: 'joao@test.com',
-                password: 'Senha123!',
+                password: 'SenhaForte123!',
             };
-
-            const authResult = new AuthResultBuilder()
-                .withEmail('joao@test.com')
-                .withFirebaseUid('fb-123')
-                .build();
-
-            mockAuthProvider.loginWithEmail.mockResolvedValue(authResult);
-
+            
             const existingUser = new UserBuilder()
-                .withFirebaseUid('fb-123')
                 .withEmail('joao@test.com')
-                .build();
+                .buildWithPassword(); 
 
-            mockUserRepository.findByFirebaseUid.mockResolvedValue(existingUser);
-            mockUserRepository.update.mockResolvedValue(undefined);
+            mockUserRepository.findByEmail.mockResolvedValue(existingUser);            
+            mockCryptoProvider.compare.mockResolvedValue(true);            
+            mockUserRepository.update.mockResolvedValue();
 
+            
             const result = await useCase.execute(input);
-
+            
             expect(result.succeeded).toBe(true);
             expect(result.value!.user.email.value).toBe('joao@test.com');
-            expect(result.value!.accessToken).toBe('mock-access-token');
-            expect(mockUserRepository.findByFirebaseUid).toHaveBeenCalledWith('fb-123');
+            expect(result.value!.isNewUser).toBe(false);
+
+            
+            expect(mockUserRepository.findByEmail).toHaveBeenCalledWith('joao@test.com');
+            expect(mockCryptoProvider.compare).toHaveBeenCalledWith('SenhaForte123!', expect.any(String));
             expect(mockUserRepository.update).toHaveBeenCalled();
-        });
-
-        it('deve atualizar lastLoginAt', async () => {
-            const input: LoginInput = {
-                email: 'test@test.com',
-                password: 'Senha123!',
-            };
-
-            const authResult = new AuthResultBuilder()
-                .withFirebaseUid('fb-456')
-                .build();
-
-            mockAuthProvider.loginWithEmail.mockResolvedValue(authResult);
-
-            const user = new UserBuilder()
-                .withFirebaseUid('fb-456')
-                .build();
-
-            mockUserRepository.findByFirebaseUid.mockResolvedValue(user);
-            mockUserRepository.update.mockResolvedValue(undefined);
-
-            const result = await useCase.execute(input);
-
-             expect(result.succeeded).toBe(true);
-                        
-            expect(mockUserRepository.update).toHaveBeenCalledWith(
-                expect.objectContaining({
-                    lastLoginAt: expect.any(Date)
-                })
-);
+            
+            
+            const userUpdated = mockUserRepository.update.mock.calls[0]?.[0];
+            expect(userUpdated?.lastLoginAt).toBeInstanceOf(Date);
         });
     });
 
-    describe('Falhas', () => {
-        it('deve falhar com credenciais inválidas', async () => {
+    describe('Failures', () => {
+        it('should fail if user is not found (Wrong email)', async () => {
+            const input: LoginInput = {
+                email: 'naoexiste@test.com',
+                password: '123',
+            };
+            
+            mockUserRepository.findByEmail.mockResolvedValue(null);
+
+            const result = await useCase.execute(input);
+
+            expect(result.succeeded).toBe(false);
+            expect(result.errors[0]?.type).toBe("INVALID_CREDENTIALS");
+            
+            expect(mockCryptoProvider.compare).not.toHaveBeenCalled();
+            expect(mockUserRepository.update).not.toHaveBeenCalled();
+        });
+
+        it('should fail if the password is incorrect', async () => {
             const input: LoginInput = {
                 email: 'joao@test.com',
                 password: 'senha-errada',
             };
 
-            mockAuthProvider.loginWithEmail.mockRejectedValue(
-                new Error('auth/wrong-password')
-            );
+            const existingUser = new UserBuilder()
+                .withEmail('joao@test.com')
+                .buildWithPassword();
+
+            mockUserRepository.findByEmail.mockResolvedValue(existingUser);            
+            mockCryptoProvider.compare.mockResolvedValue(false);
 
             const result = await useCase.execute(input);
 
-            expect(result.failed).toBe(true);
-            expect(result.errors[0]!.type).toBe('INVALID_CREDENTIALS');
-            expect(mockUserRepository.findByFirebaseUid).not.toHaveBeenCalled();
+            expect(result.succeeded).toBe(false);
+            expect(result.errors[0]?.type).toBe("INVALID_CREDENTIALS");
+          
+            expect(mockCryptoProvider.compare).toHaveBeenCalled();
+            expect(mockUserRepository.update).not.toHaveBeenCalled();
         });
 
-        it('deve falhar se user não existe no DB', async () => {
+        it('should fail if the user does not have a password set (Google login trying password)', async () => {
             const input: LoginInput = {
-                email: 'orfao@test.com',
-                password: 'Senha123!',
+                email: 'google@test.com',
+                password: '123',
             };
 
-            const authResult = new AuthResultBuilder()
-                .withFirebaseUid('fb-orphan')
-                .build();
+            const googleUser = new UserBuilder()
+                .withEmail('google@test.com')
+                .buildWithGoogle();
 
-            mockAuthProvider.loginWithEmail.mockResolvedValue(authResult);
-            mockUserRepository.findByFirebaseUid.mockResolvedValue(null);
+            mockUserRepository.findByEmail.mockResolvedValue(googleUser);
 
             const result = await useCase.execute(input);
 
-            expect(result.failed).toBe(true);
-            expect(result.errors[0]!.type).toBe('USER_NOT_FOUND');
+            expect(result.succeeded).toBe(false);
+            expect(result.errors[0]?.type).toBe("INVALID_CREDENTIALS"); 
+                        
+            expect(mockCryptoProvider.compare).not.toHaveBeenCalled();
         });
 
-        it('não deve falhar se update falha', async () => {
+        it('should return failure if the database errors when updating', async () => {
             const input: LoginInput = {
-                email: 'test@test.com',
-                password: 'Senha123!',
+                email: 'joao@test.com',
+                password: '123',
             };
 
-            const authResult = new AuthResultBuilder()
-                .withFirebaseUid('fb-789')
-                .build();
-
-            mockAuthProvider.loginWithEmail.mockResolvedValue(authResult);
-
-            const user = new UserBuilder()
-                .withFirebaseUid('fb-789')
-                .build();
-
-            mockUserRepository.findByFirebaseUid.mockResolvedValue(user);
-            mockUserRepository.update.mockRejectedValue(new Error('Update failed'));
+            const existingUser = new UserBuilder().buildWithPassword();
+            
+            mockUserRepository.findByEmail.mockResolvedValue(existingUser);
+            mockCryptoProvider.compare.mockResolvedValue(true);
+            
+            mockUserRepository.update.mockRejectedValue(new Error("Database Timeout"));
 
             const result = await useCase.execute(input);
 
-            expect(result.succeeded).toBe(true);
+            expect(result.succeeded).toBe(false);          
+            expect(result.failed).toBe(true);
         });
     });
 });
