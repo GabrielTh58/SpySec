@@ -11,7 +11,7 @@ import {
 } from '@spysec/auth';
 
 import { UserDTO } from '../dto/User.dto';
-import { UserMapper } from '../dto/userMapper';
+import { UserMapper } from '../dto/UserMapper';
 
 export interface AuthResponse {
     user: UserDTO;   
@@ -82,5 +82,16 @@ export class AuthFacade {
             user: userDTO,
             isNewUser: userEntity.isNewUser
         };
+    }
+
+    async getAuthenticatedUser(userId: string):Promise<UserDTO>{
+        const user = await this.repo.findById(userId)
+        if(!user){
+            throw new Error("User not found")
+        }
+
+        const userDTO = UserMapper.toDTO(user);
+
+        return userDTO
     }
 }

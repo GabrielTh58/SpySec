@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Orbitron } from 'next/font/google'
 import "./globals.css";
+import { Toaster } from "sonner";
+import { SessionProvider } from "@/data/context/SessionContext";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const orbitron = Orbitron({ subsets: ['latin'], variable: '--font-orbitron' })
@@ -20,7 +22,10 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${orbitron.variable} antialiased`}
       >
-        {children}
+        <SessionProvider>
+          {children}
+          <Toaster richColors theme="dark" position="top-right" />
+        </SessionProvider>
       </body>
     </html>
   );

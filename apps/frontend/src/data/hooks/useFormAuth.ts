@@ -1,73 +1,122 @@
-import { useEffect, useState } from 'react'
-
+import { useCallback, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { ProfileType } from '@spysec/auth'
 import { useAPI } from './useAPI'
 import { useSession } from './useSession'
+import { UserDTO } from '@spysec/auth-adapter'
+import { firebaseProvider } from '@/adapter'
+import { toast } from 'sonner'
+
+interface AuthAPIResponse {
+    accessToken: string;
+    user: UserDTO;
+    isNewUser: boolean;
+}
+
+export interface AuthFormData {
+    email: string;
+    password: string;
+    name?: string; 
+    profileType?: ProfileType;
+}
 
 export default function useFormAuth() {
     const [mode, setMode] = useState<'login' | 'register'>('login')
-
-    const [name, setName] = useState('')
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [profileType, setProfileType] = useState<ProfileType>()
+    const [loading, setLoading] = useState(false)   
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false)   
     
-    const { httpPost } = useAPI() // arrumar
+    const { httpPost } = useAPI() 
     const { user, startSession } = useSession()
-
     const router = useRouter()
     const param = useSearchParams()
 
     useEffect(() => {
         if (user?.email) {
             const destino = param.get('destino') as string
-            router.push(destino ? destino : '/')
+            router.push(destino ? destino : '/dashboard')
         }
     }, [user, router, param])
 
     function alterMode() {
-        setMode(mode === 'login' ? 'register' : 'login')
-    }
+        setMode(mode === 'login' ? 'register' : 'login')   
+    }   
 
-    async function submit() {
-        if (mode === 'login') {
-            await login()
-        } else {
-            await register()
-            await login()
+    async function submit(data: AuthFormData) {
+        setLoading(true)     
+
+        try {
+            let response: AuthAPIResponse;
+
+            if (mode === 'login') {
+                response = await httpPost<AuthAPIResponse>('auth/login', { 
+                    email: data.email, 
+                    password: data.password 
+                })
+
+                toast.success("Acesso Autorizado", {
+                    description: "Bem-vindo ao sistema, agente."
+                });
+            } else {               
+                response = await httpPost<AuthAPIResponse>('auth/register', { 
+                    name: data.name!, 
+                    email: data.email, 
+                    password: data.password, 
+                    profileType: data.profileType! 
+                })
+
+                toast.success("Identidade Criada", {
+                    description: "Seu perfil foi registrado na base de dados."
+                });            
+            }
+            
+            startSession({
+                token: response.accessToken,
+                user: response.user
+            })           
+        } catch (error: any) {
+            console.error(error)      
+            toast.error("Falha na Operação", {
+                description: error?.message || 'Erro ao conectar com o servidor.'
+            });
+        } finally {
+            setLoading(false)
         }
-        cleanForm()
     }
 
-    async function login() {
-        const token = await httpPost('auth/login', { email, password })
-        startSession(token)
+    async function loginWithGoogle(currentProfileType: ProfileType) {
+        setLoading(true);
+
+        try {            
+            const data = await firebaseProvider.loginWithGoogle(currentProfileType);
+            
+            startSession({
+                token: data.accessToken,
+                user: data.user
+            });
+            toast.success("Autenticação Google", {
+                description: "Vínculo estabelecido com sucesso."
+            });
+        } catch (error: any) {
+            console.error(error);
+            toast.error("Erro no Google Login", {
+                description: error.message
+            });
+        } finally {
+            setLoading(false);
+        }
     }
 
-    async function register() {
-        await httpPost('auth/register', { name, email, password, profileType })
-    }
-
-    function cleanForm() {
-        setName('')
-        setEmail('')
-        setPassword('')
-        setProfileType(ProfileType.PERSONAL)
-        setMode('login')
-    }
+    const handlePasswordVisible = useCallback(() =>{
+        setIsPasswordVisible((prev) => !prev)
+    }, [])
 
     return {
         mode,
-        name,
-        email,
-        password,
-        profileType,
-        alterName: setName,
-        alterEmail: setEmail,
-        alterPassword: setPassword,
-        alterProfileType: setProfileType,
+        loading,
+        isPasswordVisible,
+        ChangePasswordVisibility: handlePasswordVisible,
         alterMode,
-        submit,
+        submit,   
+        loginWithGoogle
     }
 }

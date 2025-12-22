@@ -1,6 +1,6 @@
 'use client';
 
-import { useMatrixRain } from '@/data/hooks/useMatrixRain';
+import { useMatrixRain } from '@/data/hooks/ui/useMatrixRain';
 import { useRef } from 'react';
 
 export const MatrixBackground = () => {

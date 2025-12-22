@@ -25,7 +25,6 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Fontes devem ser carregadas no layout.tsx, aqui definimos as classes */
 .font-orbitron {
   font-family: var(--font-orbitron), sans-serif;
 }

@@ -1,125 +1,104 @@
 'use client'
 
-import { createContext, useCallback, useEffect, useRef, useState } from 'react'
+import { createContext, useCallback, useEffect, useState } from 'react'
 import cookie from 'js-cookie'
-import { User } from '@spysec/auth'
+import { UserDTO } from '@spysec/auth-adapter'
 import { getLocalStorage, removeLocalStorage, setLocalStorage } from '../utils/localStorage'
-import { jwtDecode } from 'jwt-decode'
-import { FirebaseAuthProvider } from '@/adapter/auth/FirebaseAuthProvider'
+import axios, { AxiosError } from 'axios'
 
 interface Session {
     token: string | null
-    user: User | null
+    user: UserDTO | null
+}
+
+interface StartSessionInput {
+    token: string;
+    user: UserDTO;
 }
 
 interface SessionContextProps {
     loading: boolean
     token: string | null
-    user: User | null
+    user: UserDTO | null
     startSession: (input: StartSessionInput) => void
     endSession: () => void
 }
 
-interface StartSessionInput {
-    token: string;
-    user: User;
-}
+const TOKEN_COOKIE = '_spysec_token'
+const USER_STORAGE = '_spysec_user'
+const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 export const SessionContext = createContext<SessionContextProps>({} as any)
 
 export function SessionProvider(props: any) {
-    const TOKEN_COOKIE = '_spysec_token'
-    const USER_STORAGE = '_spysec_user'
-
     const [loading, setLoading] = useState(true)
     const [session, setSession] = useState<Session>({ token: null, user: null })
 
 
-    const authProviderRef = useRef<FirebaseAuthProvider | null>(null);
+    const startSession = useCallback((input: StartSessionInput) => {   
+        cookie.set(TOKEN_COOKIE, input.token, { expires: 15 }) 
+        setLocalStorage(USER_STORAGE, input.user)  
 
-    useEffect(() => {
-        if (typeof window === 'undefined') return;
-
-        authProviderRef.current = new FirebaseAuthProvider();
-        authProviderRef.current.setTokenObserver((newToken) => handleTokenUpdate(newToken))        
-
-        return () => {
-            authProviderRef.current = null;
-        };
-    }, []);
-
-    const loadSession = useCallback(function () {
-        setLoading(true)
-        try {
-            const currentSession = getSession()
-            setSession(currentSession)
-        } finally {
-            setLoading(false)
-        }
+        setSession({ 
+            token: input.token, 
+            user: input.user 
+        })
     }, [])
+    
+    const endSession = useCallback(() => {
+        cookie.remove(TOKEN_COOKIE)   
+        removeLocalStorage(USER_STORAGE)     
+        setSession({ token: null, user: null })
+    }, [])
+    
+    const validateAndRefreshUser = useCallback(async (token: string) => {
+        try {
+            const response = await axios.get(`${API_URL}/auth/me`, {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+            
+            const freshUser = response.data as UserDTO            
+      
+            setLocalStorage(USER_STORAGE, freshUser)
+            setSession({ token, user: freshUser })
+        } 
+        catch (error: any) {
+            const axiosError = error as AxiosError;
+            const status = axiosError.response?.status;
+            if (status === 401) {
+                endSession();
+            } else {
+                console.error("Error while validating, using cache")
+            }
+        }
+    }, [endSession])
 
     useEffect(() => {
-        loadSession()
-    }, [loadSession])
-
-    function startSession(input: StartSessionInput) {
-        cookie.set(TOKEN_COOKIE, input.token, { expires: 1 })
-        setLocalStorage(USER_STORAGE, input.user)
-        const currentSession = getSession()
-        setSession(currentSession)
-    }
-
-    function endSession() {
-        cookie.remove(TOKEN_COOKIE)
-        removeLocalStorage(USER_STORAGE)
-        setSession({ token: null, user: null })
-    }
-
-    function getSession(): Session {
-        const token = cookie.get(TOKEN_COOKIE)
-
-        if (!token) {
-            return { token: null, user: null };
-        }
-
-        try {
-            const payload = jwtDecode(token);
-            const isValid = payload.exp! > Date.now() / 1000;
-
-            if (!isValid) {
-                cookie.remove(TOKEN_COOKIE);
-                removeLocalStorage(USER_STORAGE);
-                return { token: null, user: null };
+        async function initialize() {
+            setLoading(true)
+            
+            const token = cookie.get(TOKEN_COOKIE)
+            const cachedUser = getLocalStorage<UserDTO>(USER_STORAGE)
+            
+            if (!token) {
+                endSession() 
+                setLoading(false)
+                return
             }
+        
+            setSession({ 
+                token, 
+                user: cachedUser || null 
+            })
 
-            const user = getLocalStorage<User>(USER_STORAGE);
-
-            if (!user) {
-                return { token: null, user: null };
-            }
-
-            return { token, user }
-
-        } catch (error) {
-            console.error("Erro ao decodificar o token da sessão:", error);
-            cookie.remove(TOKEN_COOKIE);
-            removeLocalStorage(USER_STORAGE);
-            return { token: null, user: null };
+            setLoading(false)
+        
+            await validateAndRefreshUser(token)
         }
-    }
 
-    const handleTokenUpdate = useCallback((newToken: string | null) => {
-        if (newToken) {
-            cookie.set(TOKEN_COOKIE, newToken, { expires: 1 });
-            setSession(prev => ({
-                ...prev,
-                token: newToken
-            }));
-        } else {
-            endSession()
-        }
-    }, []);
-
+        initialize()
+    }, [endSession, validateAndRefreshUser])
+    
     return (
         <SessionContext.Provider
             value={{

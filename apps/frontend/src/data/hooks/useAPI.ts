@@ -7,40 +7,41 @@ const URL_BASE = process.env.NEXT_PUBLIC_API_URL
 export function useAPI() {
     const { token } = useSession()
 
+    
     const httpGet = useCallback(
-        async function (path: string) {
+        async function <T = any>(path: string): Promise<T> {
             const uri = path.startsWith('/') ? path : `/${path}`
             const fullUrl = `${URL_BASE}${uri}`
 
             try {
-                const response: AxiosResponse = await axios.get(fullUrl, {
+                const response: AxiosResponse<T> = await axios.get(fullUrl, {
                     headers: {
-                        Authorization: `Bearer ${token}`,
+                        Authorization: token ? `Bearer ${token}` : '', // Evita enviar "Bearer undefined"
                     },                     
                 })
                 return response.data
-            } catch (error: any) {
-                return handleAxiosError(error)
+            } catch (error: any) { 
+                throw handleAxiosError(error)
             }
         },
         [token]
     )
 
     const httpPost = useCallback(
-        async function (path: string, body: any) {
+        async function <T = any>(path: string, body: any): Promise<T> {
             const uri = path.startsWith('/') ? path : `/${path}`
             const fullUrl = `${URL_BASE}${uri}`
 
             try {
-                const response: AxiosResponse = await axios.post(fullUrl, body, {
+                const response: AxiosResponse<T> = await axios.post(fullUrl, body, {
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: `Bearer ${token}`,
+                        Authorization: token ? `Bearer ${token}` : '',
                     },                    
                 })
                 return response.data
             } catch (error: any) {
-                return handleAxiosError(error)
+                throw handleAxiosError(error)
             }
         },
         [token]
@@ -50,9 +51,9 @@ export function useAPI() {
         if (error.response) {            
             return error.response.data
         } else if (error.request) {            
-            return { error: 'No response from server', details: error.message }
+            return { message: 'Sem resposta do servidor. Verifique sua conexão.' }
         } else {            
-            return { error: 'Request error', details: error.message }
+            return { message: 'Erro ao processar requisição.' }
         }
     }
 

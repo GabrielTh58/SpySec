@@ -2,8 +2,8 @@ POST http://localhost:4000/auth/register
 Content-Type: application/json
 
 {
-  "name": "test user",
-  "email": "test6@test.com",
+  "name": "test dto2",
+  "email": "test10@test.com",
   "password": "#Senha123",
   "profileType": "CORPORATE"
 }
@@ -17,3 +17,7 @@ Content-Type: application/json
   "email": "joao@test.com",
   "password": "#Senha123"
 }
+
+###
+GET http://localhost:4000/auth/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhNjM0NGQ0MS1kOGJlLTRlZTgtODkzOC00YTgzMDIyMmE3Y2UiLCJlbWFpbCI6ImpvYW9AdGVzdC5jb20iLCJzY29wZSI6IlBFUlNPTkFMIiwiaWF0IjoxNzY2MDM0NjMxLCJleHAiOjE3NjczMzA2MzF9.ibjHB_e6G_jGgnEJnpHIis24MD86ux7H7QT_RwXp0Nc

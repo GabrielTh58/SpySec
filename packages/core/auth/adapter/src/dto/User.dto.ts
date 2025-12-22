@@ -1,4 +1,4 @@
-import { ProfileType, ProviderType, UserProps } from "@spysec/auth";
+import { ProfileType, ProviderType } from "@spysec/auth";
 
 export interface UserDTO {
     id: string;   

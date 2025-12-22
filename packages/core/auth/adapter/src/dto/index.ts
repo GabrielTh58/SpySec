@@ -1,3 +1,3 @@
 import { UserDTO } from "./User.dto";
 
-export { UserDTO }
+export type { UserDTO }

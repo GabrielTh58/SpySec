@@ -1,11 +1,11 @@
-import React, { InputHTMLAttributes } from 'react';
+import { InputHTMLAttributes } from 'react';
 import { LucideIcon } from 'lucide-react';
 
-interface CyberInputProps extends InputHTMLAttributes<HTMLInputElement> {
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   icon: LucideIcon;
 }
 
-export const CyberInput = ({ icon: Icon, className, ...props }: CyberInputProps) => {
+export function Input({ icon: Icon, className, ...props }: InputProps){
   return (
     <div className="relative group">
       <Icon 

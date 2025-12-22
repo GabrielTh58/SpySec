@@ -1,13 +1,15 @@
 import React, { ButtonHTMLAttributes } from 'react';
 
-interface MissionButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface SubmitFormButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   loading?: boolean;
   children: React.ReactNode;
+  type: React.ButtonHTMLAttributes<HTMLButtonElement>['type'];
 }
 
-export const MissionButton = ({ loading, children, className, disabled, ...props }: MissionButtonProps) => {
+export const SubmitFormButton = ({ loading,type, children, className, disabled, ...props }: SubmitFormButtonProps) => {
   return (
     <button 
+      type={type}
       {...props}
       disabled={loading || disabled}
       className={`

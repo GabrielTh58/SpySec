@@ -1,31 +1,66 @@
 'use client'
-import useFormAuth from '@/data/hooks/useFormAuth'
-import { CyberInput } from './Input'
+import useFormAuth, { AuthFormData } from '@/data/hooks/useFormAuth'
+import { Input } from './Input'
 import { GoogleLoginBtn } from './GoogleLoginBtn'
-import { MissionButton } from '../ui/MissionButton'
+import { SubmitFormButton } from '../ui/SubmitFormButton'
 import { ArrowRight, AtSign, Bot, Key, User } from 'lucide-react'
 import { ProfileType } from '@spysec/auth'
 import { AccountTypeSelector } from './AccountTypeSelector'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useEffect } from 'react'
+import { InputPassword } from './InputPassword'
+
+const loginSchema = z.object({
+    email: z.email("Email inválido"),
+    password: z.string().min(6, { message: "Senha deve ter pelo menos 6 caracteres" }),
+});
+
+const registerSchema = loginSchema.extend({
+    name: z.string().min(2, { message: "Nome deve ter pelo menos 2 caracteres" }),
+    profileType: z.enum(ProfileType, { message: "Tipo de perfil inválido" }), 
+});
 
 export default function FormAuth() {
     const {
-        mode,
-        name,
-        email,
-        password,
-        profileType,
-        alterName,
-        alterEmail,
-        alterPassword,
-        alterProfileType,
-        alterMode,
+        mode,        
+        alterMode,        
+        loginWithGoogle,
+        loading,        
         submit,
+        isPasswordVisible,
+        ChangePasswordVisibility
     } = useFormAuth()
 
+    const currentSchema = mode === 'login' ? loginSchema : registerSchema;        
 
-    const handleAccountTypeChange = (type: ProfileType) => {
-        alterProfileType(type);
-    }
+    const { 
+        register, 
+        handleSubmit, 
+        setValue, 
+        watch,    
+        reset,   
+        formState: { errors } 
+    } = useForm<AuthFormData>({    
+        resolver: zodResolver(currentSchema) as any, 
+        defaultValues: {
+            profileType: ProfileType.PERSONAL
+        }
+    })
+
+    const currentValues = watch()           
+    useEffect(() => {
+        reset({ 
+            ...currentValues,
+            profileType: ProfileType.PERSONAL,
+            password: '',
+            name: ''
+        });
+    }, [mode])
+
+    const currentProfileType = watch('profileType') || ProfileType.PERSONAL; 
+
     return (
         <section className="relative z-10 p-6 sm:p-8 md:p-10 max-w-lg w-full rounded-2xl glass-effect text-center shadow-2xl neon-glow-cyan animate-slideIn">
 
@@ -56,11 +91,14 @@ export default function FormAuth() {
                         <p className="text-gray-400 text-sm mt-1">Crie sua identidade digital segura</p>
                     </>
                 )}
-            </div>
+            </div>       
 
-            <form className="space-y-4 text-left">
+            <form className="space-y-4 text-left" onSubmit={handleSubmit(submit)}  >
                 <div className="space-y-3">
-                    <GoogleLoginBtn />
+                    <GoogleLoginBtn
+                        loading={loading}
+                        onClick={() => loginWithGoogle(currentProfileType)}   
+                    />
                 </div>
 
 
@@ -77,34 +115,33 @@ export default function FormAuth() {
                 <div className="space-y-4">
                     {mode === 'register' && (
                         <>
-                            <AccountTypeSelector value={profileType} onChange={handleAccountTypeChange} />
+                            <AccountTypeSelector value={currentProfileType} onChange={(val) => setValue('profileType', val)} />
+                            {errors.profileType && <span className="text-red-400 text-xs">{errors.profileType.message}</span>}
 
-                            <CyberInput
+                            <Input
+                                {...register('name')}
                                 icon={User}
-                                type='text'
-                                value={name}
-                                onChange={(e) => alterName(e.target.value)}
-                                placeholder="Nome"
-                                required
+                                type='text'                              
+                                placeholder="Nome"                                
                             />
+                            {errors.name && <span className="text-red-400 text-xs">{errors.name.message as string}</span>}
                         </>
                     )}
-                    <CyberInput
+                    <Input
+                        {...register('email')}
                         icon={AtSign}
-                        type="email"
-                        value={email}
-                        onChange={(e) => alterEmail(e.target.value)}
-                        placeholder="Email"
-                        required
+                        type="email"                        
+                        placeholder="Email"                        
                     />
-                    <CyberInput
-                        icon={Key}
-                        type="password"
-                        value={password}
-                        onChange={(e) => alterPassword(e.target.value)}
-                        placeholder="Senha"
-                        required
+                    {errors.email && <span className="text-red-400 text-xs">{errors.email.message as string}</span>}
+
+                    <InputPassword
+                       {...register('password')}                                             
+                        placeholder="Senha"  
+                        fnChangePassword={ChangePasswordVisibility}
+                        isPasswordVisible={isPasswordVisible}
                     />
+                      {errors.password && <span className="text-red-400 text-xs">{errors.password.message as string}</span>}
                 </div>
 
 
@@ -115,11 +152,11 @@ export default function FormAuth() {
                 </div>
 
                 <div className="flex mt-6">
-                    <button onClick={alterMode} className="flex-1 button-outline">
+                    <button type="button" onClick={alterMode} className="flex-1 button-outline">
                         {mode === 'login' ? (
                             <p>
                                 Primeira vez aqui?
-                                <a href="#" className="font-semibold text-cyan-300 hover:text-purple-400 transition-colors duration-200">
+                                <a href="#" className="font-semibold text-cyan-300 hover:text-purple-400 transition-colors duration-200 ml-1">
                                     Criar Identidade
                                 </a>
                             </p>
@@ -133,10 +170,13 @@ export default function FormAuth() {
                     </button>
                 </div>
 
-                <MissionButton>
-                    <span>Iniciar Missão</span>
+                <SubmitFormButton
+                    loading={loading}
+                    type="submit"
+                >
+                      <span>{mode === 'login' ? 'Iniciar Sessão' : 'Registrar'}</span>
                     <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                </MissionButton>
+                </SubmitFormButton>
             </form>
         </section>
     )
