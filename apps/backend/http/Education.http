@@ -1,0 +1,57 @@
+POST http://localhost:4000/education/tracks
+Content-Type: application/json
+
+{
+  "title": "Hacker Ético Iniciante",
+  "description": "Aprenda os fundamentos de segurança ofensiva.",
+  "iconUrl": "https://cdn.spysec.com/icons/hacker.png",
+  "difficulty": "BASIC",
+  "targetProfile": "ALL",
+  "minLevel": 1
+}
+
+###
+POST http://localhost:4000/education/missions
+Content-Type: application/json
+
+{
+  "trackId": "0a01b2b8-3b50-4d34-a5d5-8f1bbde7ed4a",
+  "title": "O que é Phishing?",
+  "description": "Entenda como funcionam os ataques de engenharia social.",
+  "category": "Engenharia Social",
+  "xpReward": 100,
+  "order": 1,
+  "content": [
+    {
+      "id": "0a01b2b8",
+      "type": "INFO",
+      "data": {
+        "text": "Phishing é uma técnica de enganação...",
+        "imageURL": "https://img.com/phishing.png"
+      }
+    },
+    {
+      "id": "0a01b2b8",
+      "type": "QUIZ",
+      "data": {
+        "question": "Qual o principal vetor do Phishing?",
+        "options": [
+          { "id": "a", "text": "Email" },
+          { "id": "b", "text": "Bluetooth" }
+        ],
+        "correctOptionId": "a",
+        "feedbackSuccess": "Boa!",
+        "feedbackError": "Tente novamente."
+      }
+    }
+  ]
+}
+
+###
+GET http://localhost:4000/education/tracks
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhNjM0NGQ0MS1kOGJlLTRlZTgtODkzOC00YTgzMDIyMmE3Y2UiLCJlbWFpbCI6ImpvYW9AdGVzdC5jb20iLCJzY29wZSI6IlBFUlNPTkFMIiwiaWF0IjoxNzY4NDU3MjQ3LCJleHAiOjE3Njk3NTMyNDd9.LsqVvvVvRbiwEgKFeS9jZqH2tbpfK8EcfrYQC7eFaK8
+
+### trackId
+GET http://localhost:4000/education/tracks/0a01b2b8-3b50-4d34-a5d5-8f1bbde7ed4a
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhNjM0NGQ0MS1kOGJlLTRlZTgtODkzOC00YTgzMDIyMmE3Y2UiLCJlbWFpbCI6ImpvYW9AdGVzdC5jb20iLCJzY29wZSI6IlBFUlNPTkFMIiwiaWF0IjoxNzY4NDU3MjQ3LCJleHAiOjE3Njk3NTMyNDd9.LsqVvvVvRbiwEgKFeS9jZqH2tbpfK8EcfrYQC7eFaK8
+

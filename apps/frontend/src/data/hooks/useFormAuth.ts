@@ -73,6 +73,7 @@ export default function useFormAuth() {
                 token: response.accessToken,
                 user: response.user
             })           
+
         } catch (error: any) {
             console.error(error)      
             toast.error("Falha na Operação", {

@@ -5,6 +5,8 @@ import { DbModule } from './db/db.module';
 import { AuthModule } from './auth/auth.module';
 import { FirebaseModule } from './firebase/firebase.module';
 import { ConfigModule } from '@nestjs/config';
+import { EducationModule } from './education/education.module';
+import { GamificationModule } from './gamification/gamification.module';
 
 @Module({
   imports: [
@@ -13,7 +15,9 @@ import { ConfigModule } from '@nestjs/config';
     }),
     AuthModule,
     DbModule,
-    FirebaseModule.forRoot(),    
+    FirebaseModule.forRoot(),
+    EducationModule,
+    GamificationModule,    
   ],
   controllers: [AppController],
   providers: [AppService],

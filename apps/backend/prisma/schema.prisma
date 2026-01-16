@@ -1,11 +1,11 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
   moduleFormat = "cjs"
 }
 
 datasource db {
-  provider = "postgresql" 
+  provider = "postgresql"
 }
 
 enum ProviderType {
@@ -18,9 +18,26 @@ enum ProfileType {
   CORPORATE
 }
 
+enum TrackDifficulty {
+  BASIC
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum TrackVisibility {
+  PERSONAL
+  CORPORATE
+  ALL
+}
+
+enum ProgressStatus {
+  STARTED
+  COMPLETED
+}
+
 model User {
   id              String       @id @default(uuid())
-  firebaseUid     String?       @unique @map("firebase_uid")
+  firebaseUid     String?      @unique @map("firebase_uid")
   name            String
   email           String       @unique
   password        String
@@ -31,6 +48,97 @@ model User {
   lastLoginAt     DateTime?    @map("last_login_at")
   createdAt       DateTime     @default(now()) @map("created_at")
   updatedAt       DateTime     @updatedAt @map("updated_at")
+  trackProgresses TrackProgress[]
 
   @@map("users")
+}
+
+model Track {
+  id                  String          @id @default(uuid())
+  title               String
+  slug                String          @unique
+  description         String
+  iconUrl             String
+  difficulty          TrackDifficulty
+  targetProfile       TrackVisibility
+  prerequisiteTrackId String?
+  isActive            Boolean         @default(true)
+  minLevel            Int
+  missions            Mission[]         
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  trackProgresses     TrackProgress[]
+
+  @@map("tracks")
+}
+
+model Mission {
+  id           String   @id @default(uuid())
+  title        String
+  slug         String   @unique
+  description  String  
+  xpReward     Int
+  order        Int      @unique
+  category     String 
+  content      Json       
+  trackId      String
+  track        Track    @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("missions")
+}
+
+model TrackProgress{
+  id                     String   @id @default(uuid())
+  userId                 String    
+  user                   User     @relation(fields: [userId], references: [id])
+  trackId                String
+  track                  Track    @relation(fields: [trackId], references: [id])
+  status                 ProgressStatus
+  lastCompletedOrder     Int      @default(0)
+  startedAt              DateTime     @default(now())
+  completedAt            DateTime?
+  earnedXp               Int          @default(0)
+
+  @@unique([userId, trackId]) 
+  @@map("track_progress")
+}
+
+model Player {
+  id               String   @id @default(uuid())
+  userId           String   @unique 
+  nickname         String
+  type             ProfileType  @map("profile_type") 
+  currentLevel     Int      @default(1)
+  currentXp        Int      @default(0)
+  streak           Int      @default(0)
+  maxStreak        Int      @default(0)
+  badges           String[] 
+  playedCategories String[] 
+  lastActivityDate DateTime?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("players")
+}
+
+model Level {
+  id          String @id @default(uuid())
+  levelNumber Int    @unique
+  xpRequired  Int
+  title       String
+
+  @@map("gamification_levels")
+}
+
+model Badge {
+  id          String @id @default(uuid())
+  slug        String @unique
+  name        String
+  description String
+  iconUrl     String
+  condition   String?
+
+  @@map("badges")
 }

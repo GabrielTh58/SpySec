@@ -6,9 +6,16 @@ import { LoginWithGoogleDTO } from './dto/login-google.dto';
 import * as jwt from 'jsonwebtoken';
 import { AuthResponse, UserDTO } from '@spysec/auth-adapter';
 import { AuthGuard } from './guards/auth-guard.guard';
+import { ProfileType } from '@spysec/auth';
 
 interface AuthEndpointResponse extends AuthResponse {
     accessToken: string;
+}
+
+export interface UserPayloadJwt {
+    sub: string;     
+    email: string;
+    scope: ProfileType;
 }
 
 @Controller('auth')
@@ -63,10 +70,10 @@ export class AuthController {
             throw new Error('JWT_SECRET is not defined');
         }
     
-        const payload = {
-            sub: authResult.user.id,     
+        const payload: UserPayloadJwt = {
+            sub: authResult.user.id.toString(),     
             email: authResult.user.email,
-            scope: authResult.user.profileType 
+            scope: authResult.user.profileType  
         };
 
         return jwt.sign(payload, secret, { expiresIn: '15d' });
