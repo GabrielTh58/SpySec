@@ -1,0 +1,20 @@
+{
+    "name": "@spysec/education-adapter",
+    "version": "1.0.0",
+    "description": "Education module adapter",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsup src/index.ts --dts --minify",
+        "dev": "tsup src/index.ts --dts --watch"
+    },
+    "dependencies": {
+        "@spysec/education": "*"
+    },
+    "devDependencies": {
+        "tsup": "^8.5.0"
+    },
+    "keywords": [],
+    "author": "gabriel",
+    "license": "ISC"
+}

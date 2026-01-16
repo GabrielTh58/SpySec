@@ -9,8 +9,11 @@ import { RegisterUser } from './usecase/Register-user';
 import { LoginWithGoogle } from './usecase/Login-google'
 import { LoginWithGoogleInput, AuthResult, RegisterUserInput, LoginInput } from './usecase/dto/usecases.dto'
 
+import { UserCreatedEvent } from './events/UserCreatedEvent';
+
 export { 
     User, 
+    UserCreatedEvent,
     ProfileType, 
     ProviderType,
     LoginUser, 

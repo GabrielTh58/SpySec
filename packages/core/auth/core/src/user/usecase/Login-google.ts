@@ -1,8 +1,9 @@
-import { Result, UseCase } from "@spysec/shared";
+import { DomainEvents, Result, UseCase } from "@spysec/shared";
 import { ProfileType, User } from "../model/User.entity";
-import { AuthProvider } from "../provider/Auth.provider";
+import { AuthProvider } from "../provider/Auth.provider";       
 import { UserRepository } from "../provider/User.repository";
 import { AuthResult, LoginWithGoogleInput } from "./dto/usecases.dto";
+import { UserCreatedEvent } from "../events/UserCreatedEvent";
 
 export class LoginWithGoogle implements UseCase<LoginWithGoogleInput, AuthResult> {
     constructor(
@@ -48,6 +49,8 @@ export class LoginWithGoogle implements UseCase<LoginWithGoogleInput, AuthResult
             if (result.failed) {            
                 return Result.fail(result.errors);
             }
+
+            DomainEvents.dispatch(new UserCreatedEvent(user!));
 
             isNewUser = true;
 

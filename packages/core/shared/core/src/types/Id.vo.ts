@@ -2,6 +2,7 @@ import { VO } from "../base/VO";
 import { Result } from "../base/Result";
 import { Validator } from "@spysec/utils";
 import { IdUnique } from "@spysec/utils";
+
 export class Id extends VO<string>{
     static readonly ERRO_INVALID = 'INVALID_ID'
     static readonly ERRO_REQUIRED = 'ID_REQUIRED'
@@ -36,6 +37,10 @@ export class Id extends VO<string>{
         return new Id(value)
     }
 
+    toString(): string {
+        return this.value; 
+    }
+    
     equals(id: Id) {
         return this.value === id.value
     }

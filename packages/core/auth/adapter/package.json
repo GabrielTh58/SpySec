@@ -1,7 +1,7 @@
 {
     "name": "@spysec/auth-adapter",
     "version": "1.0.0",
-    "description": "Módulo core de autenticação",
+    "description": "Auth module adapter",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "scripts": {

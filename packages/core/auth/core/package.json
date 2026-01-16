@@ -1,7 +1,7 @@
 {
     "name": "@spysec/auth",
     "version": "1.0.0",
-    "description": "Módulo core de autenticação",
+    "description": "Authentication core module",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "scripts": {

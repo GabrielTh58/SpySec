@@ -1,0 +1,27 @@
+{
+    "name": "@spysec/education",
+    "version": "1.0.0",
+    "description": "Education core module",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsup src/index.ts --dts --minify",
+        "dev": "tsup src/index.ts --dts --watch",
+        "test": "jest",
+        "test:watch": "jest --watchAll --collectCoverage"
+    },
+    "dependencies": {
+        "@spysec/shared": "*",
+        "@spysec/auth": "*" ,  
+        "@spysec/utils": "*"               
+    },
+    "devDependencies": {
+        "tsup": "^8.5.0",
+        "@types/jest": "^30.0.0",
+        "jest": "^30.2.0",
+        "ts-jest": "^29.4.5"  
+    },
+    "keywords": [],
+    "author": "gabriel",
+    "license": "ISC"
+}

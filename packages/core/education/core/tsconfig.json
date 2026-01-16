@@ -1,0 +1,4 @@
+{
+    "extends": "../../../typescript-config/base.json",
+    "include": [".", "../../shared/core/src/types/Slug.vo.ts"]
+}

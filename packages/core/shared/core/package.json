@@ -1,7 +1,7 @@
 {
     "name": "@spysec/shared",
     "version": "1.0.0",
-    "description": "Utilidades e lógica core compartilhada para a aplicação",
+    "description": "Utilities and shared core logic for the application",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "scripts": {
