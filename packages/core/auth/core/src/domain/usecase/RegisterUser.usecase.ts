@@ -1,17 +1,24 @@
 import { CryptoProvider } from "../provider/Crypto.provider";
 import { UserRepository } from "../provider/User.repository";
 import { DomainEvents, Result, UseCase } from "@spysec/shared";
-import { AuthResult, RegisterUserInput } from "./dto/usecases.dto";
-import { User } from "../model/User.entity";
+import { AuthResultDTO } from "./shared/usecases.dto";
+import { ProfileType, User } from "../model/User.entity";
 import { UserCreatedEvent } from "../events/UserCreatedEvent";
 
-export class RegisterUser implements UseCase<RegisterUserInput, AuthResult>{
+export interface RegisterUserInputDTO {
+    email: string;
+    password: string;
+    name: string;
+    profileType: ProfileType;
+}
+
+export class RegisterUser implements UseCase<RegisterUserInputDTO, AuthResultDTO>{
     constructor(
         private readonly repo: UserRepository,
         private readonly crypto: CryptoProvider
     ){}
 
-    async execute(input: RegisterUserInput): Promise<Result<AuthResult>> {
+    async execute(input: RegisterUserInputDTO): Promise<Result<AuthResultDTO>> {
         const {email, password, name, profileType } = input
         
         const user = await this.repo.findByEmail(input.email);

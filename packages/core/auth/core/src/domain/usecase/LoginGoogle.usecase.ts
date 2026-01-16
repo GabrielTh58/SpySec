@@ -2,16 +2,21 @@ import { DomainEvents, Result, UseCase } from "@spysec/shared";
 import { ProfileType, User } from "../model/User.entity";
 import { AuthProvider } from "../provider/Auth.provider";       
 import { UserRepository } from "../provider/User.repository";
-import { AuthResult, LoginWithGoogleInput } from "./dto/usecases.dto";
 import { UserCreatedEvent } from "../events/UserCreatedEvent";
+import { AuthResultDTO } from "./shared/usecases.dto";
 
-export class LoginWithGoogle implements UseCase<LoginWithGoogleInput, AuthResult> {
+export interface LoginWithGoogleInputDTO {
+    idToken: string;
+    profileType?: ProfileType;
+}
+
+export class LoginWithGoogle implements UseCase<LoginWithGoogleInputDTO, AuthResultDTO> {
     constructor(
         private readonly repo: UserRepository,
         private readonly authProvider: AuthProvider
     ) {}
 
-    async execute(input: LoginWithGoogleInput): Promise<Result<AuthResult>> {
+    async execute(input: LoginWithGoogleInputDTO): Promise<Result<AuthResultDTO>> {
         const { idToken } = input;
         
       

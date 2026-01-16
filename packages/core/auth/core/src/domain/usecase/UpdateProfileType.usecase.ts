@@ -1,12 +1,16 @@
 import { Result, UseCase } from "@spysec/shared";
-import { User } from "../model/User.entity";
+import { ProfileType, User } from "../model/User.entity";
 import { UserRepository } from "../provider/User.repository";
-import { UpdateProfileTypeInput } from "./dto/usecases.dto";
 
-export class UpdateProfileType implements UseCase<UpdateProfileTypeInput, User> {
+export interface UpdateProfileTypeInputDTO {
+    userId: string;
+    profileType: ProfileType
+}
+
+export class UpdateProfileType implements UseCase<UpdateProfileTypeInputDTO, User> {
     constructor(private readonly repo: UserRepository) {}
 
-    async execute(input: UpdateProfileTypeInput): Promise<Result<User>> {
+    async execute(input: UpdateProfileTypeInputDTO): Promise<Result<User>> {
         const user = await this.repo.findById(input.userId);
         if (!user) {
             return Result.fail<User>("USER_NOT_FOUND");

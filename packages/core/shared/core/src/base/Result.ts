@@ -1,4 +1,5 @@
 import { Error } from  '@spysec/utils'
+
 export class Result<T>{
     constructor(
         readonly value: T | undefined,

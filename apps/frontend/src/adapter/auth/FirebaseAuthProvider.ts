@@ -1,9 +1,8 @@
 import {
   Auth,
-  AuthProvider,
   getAuth,
   GoogleAuthProvider,
-  onIdTokenChanged,
+  //onIdTokenChanged,
   signInWithPopup,
   signOut,
 } from "firebase/auth";

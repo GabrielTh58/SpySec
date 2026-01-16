@@ -1,16 +1,20 @@
 import { Result, UseCase } from "@spysec/shared";
 import { UserRepository } from "../provider/User.repository";
 import { CryptoProvider } from "../provider/Crypto.provider";
-import { AuthResult, LoginInput } from "./dto/usecases.dto";
+import { AuthResultDTO } from "./shared/usecases.dto";  
 
+export interface LoginInputDTO {
+    email: string;
+    password: string;
+}
 
-export class LoginUser implements UseCase<LoginInput, AuthResult> {
+export class LoginUser implements UseCase<LoginInputDTO, AuthResultDTO> {
     constructor(
         private readonly repo: UserRepository,
         private readonly crypto: CryptoProvider
     ){}
 
-    async execute(input: LoginInput): Promise<Result<AuthResult>> {
+    async execute(input: LoginInputDTO): Promise<Result<AuthResultDTO>> {
         const { email, password } = input        
 
         const user = await this.repo.findByEmail(email);                        

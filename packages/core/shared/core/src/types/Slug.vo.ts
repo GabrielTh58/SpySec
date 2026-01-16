@@ -1,4 +1,5 @@
-import { Result, VO } from "@spysec/shared";
+import { Result } from "../base";
+import { VO } from "../base/VO";
 
 export class Slug extends VO<string>{
   static readonly ERROR_TOO_SHORT = 'SLUG_TOO_SHORT'

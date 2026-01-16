@@ -1,8 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString, IsEmail, MinLength } from "class-validator";
-import { LoginInput } from "@spysec/auth";
+import { LoginInputDTO } from "@spysec/auth";
 
-export class LoginUserDTO implements LoginInput {
+export class LoginUserDTO implements LoginInputDTO {
     @ApiProperty({
         description: "Email do usuário",
         example: "usuario@example.com"

@@ -4,9 +4,9 @@ import {
     UserRepository,
     LoginUser,
     RegisterUser,    
-    LoginInput,
-    LoginWithGoogleInput,
-    RegisterUserInput,
+    LoginInputDTO,
+    LoginWithGoogleInputDTO,
+    RegisterUserInputDTO,
     LoginWithGoogle,    
 } from '@spysec/auth';
 
@@ -25,7 +25,7 @@ export class AuthFacade {
         private readonly authProvider: AuthProvider
     ) {}
 
-    async login(input: LoginInput): Promise<AuthResponse> {
+    async login(input: LoginInputDTO): Promise<AuthResponse> {
         const useCase = new LoginUser(this.repo, this.cryptoProvider);
         
         const result = await useCase.execute({
@@ -44,7 +44,7 @@ export class AuthFacade {
         };
     }
 
-    async register(input: RegisterUserInput): Promise<AuthResponse> {
+    async register(input: RegisterUserInputDTO): Promise<AuthResponse> {
         const useCase = new RegisterUser(this.repo, this.cryptoProvider);
 
         const result = await useCase.execute({
@@ -65,7 +65,7 @@ export class AuthFacade {
         }
     }
 
-    async loginWithGoogle(input: LoginWithGoogleInput): Promise<AuthResponse> {
+    async loginWithGoogle(input: LoginWithGoogleInputDTO): Promise<AuthResponse> {
         const useCase = new LoginWithGoogle(this.repo, this.authProvider);
 
         const result = await useCase.execute({

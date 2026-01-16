@@ -9,10 +9,10 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.2.2",
     "@spysec/auth": "*",
     "@spysec/auth-adapter": "*",
     "@spysec/shared": "*",
+    "@hookform/resolvers": "^5.2.2",
     "axios": "^1.13.2",
     "firebase": "^12.6.0",
     "js-cookie": "^3.0.5",
