@@ -9,12 +9,15 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
+    "@mantine/core": "^8.3.12",
+    "@mantine/hooks": "^8.3.12",
     "@spysec/auth": "*",
     "@spysec/auth-adapter": "*",
     "@spysec/shared": "*",
-    "@hookform/resolvers": "^5.2.2",
     "axios": "^1.13.2",
     "firebase": "^12.6.0",
+    "framer-motion": "^12.26.2",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.556.0",

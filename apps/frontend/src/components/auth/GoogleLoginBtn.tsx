@@ -20,7 +20,7 @@ export const GoogleLoginBtn = ({ loading, onClick, ...props }: GoogleLoginBtnPro
     >
       {loading ? (
           <>
-              <div className="w-4 h-4 rounded-full border-2 border-white/20 border-l-cyan-400 animate-spin-cyber"></div>
+              <div className="w-4 h-4 rounded-full border-2 border-white/20 border-l-cyan-400 animate-spin-slow"></div>
               <span className="font-orbitron text-sm font-medium tracking-wide text-white">Estabelecendo Conexão...</span>
           </>
       ) : (

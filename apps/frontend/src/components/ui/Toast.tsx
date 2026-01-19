@@ -26,7 +26,7 @@ export const ToastContainer = ({ toasts }: ToastContainerProps) => {
               ? 'border-cyan-500 shadow-[0_0_15px_rgba(0,255,255,0.3)]' 
               : 'border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.3)]'}
             text-white px-4 py-3 rounded shadow-2xl flex items-start gap-3 min-w-[300px] pointer-events-auto
-            ${toast.exiting ? 'animate-slideOut' : 'animate-slideIn'}
+            ${toast.exiting ? 'animate-slide-out' : 'animate-slide-in'}
           `}
         >
           <div className="mt-0.5">

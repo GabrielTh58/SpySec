@@ -62,7 +62,7 @@ export default function FormAuth() {
     const currentProfileType = watch('profileType') || ProfileType.PERSONAL; 
 
     return (
-        <section className="relative z-10 p-6 sm:p-8 md:p-10 max-w-lg w-full rounded-2xl glass-effect text-center shadow-2xl neon-glow-cyan animate-slideIn">
+        <section className="relative z-10 p-6 sm:p-8 md:p-10 max-w-lg w-full rounded-2xl glass-effect text-center shadow-2xl neon-glow-cyan animate-slide-in">
 
             <header className="absolute -top-16 left-1/2 -translate-x-1/2 w-full flex flex-col items-center">
                 <div className="w-24 h-24 flex items-center justify-center rounded-full bg-[#050810] border-2 border-cyan-400 neon-glow-cyan shadow-lg z-20">

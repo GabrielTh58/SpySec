@@ -1,110 +1,196 @@
 @import "tailwindcss";
 
+/* ============================= */
+/* 1. Base   */
+/* ============================= */
 :root {
-  --background: #ffffff;
+  --background: #0a0a1a;
   --foreground: #171717;
+
+  --secondary-color: #9F7AEA;
 }
 
-@theme inline {
+@theme {
+  --color-brand-cyan: #007a8c;
+  --color-magenta: var(--secondary-color);
+
+  --gradient-border-cyan: linear-gradient(
+    90deg,
+    theme(colors.cyan.500),
+    var(--color-brand-cyan)
+  );
+
+  --max-w-8xl: max-width: 1440px;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  --animate-typing: typing 3.5s steps(40, end);
+  --animate-slide-in: slideIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  --animate-slide-out: slideOut 0.5s ease forwards;
+  --animate-spin-slow: spin 1s linear infinite;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #0a0a1a;
     --foreground: #ededed;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ============================= */
+/* 2. Reset               */
+/* ============================= */
+@layer base {
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-inter), Poppins, Helvetica, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 }
 
-.font-orbitron {
-  font-family: var(--font-orbitron), sans-serif;
+/* ============================= */
+/* 3. Utilities (Tailwind-like)  */
+/* ============================= */
+@layer utilities {
+  .bg-gradient-border-cyan {
+    background: var(--gradient-border-cyan);
+  }
+
+  .font-orbitron {
+    font-family: var(--font-orbitron), sans-serif;
+  }
+
+  .font-inter {
+    font-family: var(--font-inter), sans-serif;
+  }
+
+  .typewriter-text {
+    overflow: hidden;
+    border-right: 0.15em solid #00ffff;
+    white-space: nowrap;
+    letter-spacing: 0.1em;
+    animation:
+      typing 3.5s steps(40, end),
+      blink-caret 0.75s step-end infinite;
+  }
 }
 
-.font-inter {
-  font-family: var(--font-inter), sans-serif;
-}
+/* ============================= 
+/* 4. COMPONENTS        */
+/* ============================= */
+@layer components { 
+  .glass-effect {
+    background: rgba(8, 8, 26, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(0, 255, 255, 0.3);
+  }
 
-/* Glassmorphism */
-.glass-effect {
-  background: rgba(10, 14, 26, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(0, 255, 255, 0.15);
-}
+  /*.glass-effect-antigo{
+    background: rgba(22, 29, 49, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(0, 255, 255, 0.1);
+  }
 
-/* Neon Effects */
-.neon-glow-cyan {
-  box-shadow: 0 0 15px rgba(0, 255, 255, 0.2), 0 0 30px rgba(0, 255, 255, 0.1);
-}
+    .glass-effect-secondary {
+    background: rgba(10, 14, 26, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(0, 255, 255, 0.15);
+  }
+  */
 
-.neon-glow-magenta {
-  box-shadow: 0 0 15px rgba(138, 43, 226, 0.2), 0 0 30px rgba(138, 43, 226, 0.1);
-}
+  .neon-glow-cyan {
+    box-shadow:
+      0 0 15px rgba(0, 255, 255, 0.2),
+      0 0 30px rgba(0, 255, 255, 0.1);
+  }
 
-/* Custom Input Styles */
-.input-cyber {
-  background-color: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(0, 255, 255, 0.3);
-  transition: all 0.3s ease;
-  color: #fff;
-}
+  .neon-glow-magenta {
+    box-shadow:
+      0 0 15px rgba(138, 43, 226, 0.2),
+      0 0 30px rgba(138, 43, 226, 0.1);
+  }
 
-.input-cyber:focus {
-  outline: none;
-  border-color: #00ffff;
-  box-shadow: 0 0 0 2px rgba(0, 255, 255, 0.1), 0 0 15px rgba(0, 255, 255, 0.2) inset;
-}
+  .input-cyber {
+    background-color: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    transition: all 0.3s ease;
+    color: #fff;
+  }
 
-/* Animations */
+  .neon-glow-cyan {
+    box-shadow: 0 0 5px rgba(0, 255, 255, 0.3), 0 0 10px rgba(0, 255, 255, 0.2);
+  }
+
+  .neon-text-cyan {
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.6);
+  }
+
+  .neon-text-magenta {
+    text-shadow: 0 0 5px rgba(255, 0, 255, 0.6);
+  }
+  
+  .input-cyber:focus {
+    outline: none;
+    border-color: #00ffff;
+    box-shadow:
+      0 0 0 2px rgba(0, 255, 255, 0.1),
+      0 0 15px rgba(0, 255, 255, 0.2) inset;
+  }
+}
+/* ========================================= */
+/* 5. Animations                              */
+/* ========================================= */
 @keyframes typing {
-  from { width: 0 }
-  to { width: 100% }
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
 }
 
 @keyframes blink-caret {
-  from, to { border-color: transparent }
-  50% { border-color: #00ffff; }
-}
-
-.typewriter-text {
-  overflow: hidden;
-  border-right: .15em solid #00ffff;
-  white-space: nowrap;
-  letter-spacing: .1em;
-  animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+  from,
+  to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: #00ffff;
+  }
 }
 
 @keyframes slideIn {
-  from { transform: translateX(100%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 @keyframes slideOut {
-  from { transform: translateX(0); opacity: 1; }
-  to { transform: translateX(100%); opacity: 0; }
-}
-
-.animate-slideIn {
-  animation: slideIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-}
-
-.animate-slideOut {
-  animation: slideOut 0.5s ease forwards;
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-.animate-spin-cyber {
-  animation: spin 1s linear infinite;
+  to {
+    transform: rotate(360deg);
+  }
 }

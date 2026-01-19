@@ -3,6 +3,8 @@ import { Inter, Orbitron } from 'next/font/google'
 import "./globals.css";
 import { Toaster } from "sonner";
 import { SessionProvider } from "@/data/context/SessionContext";
+import { MantineProvider } from '@mantine/core'
+
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const orbitron = Orbitron({ subsets: ['latin'], variable: '--font-orbitron' })
@@ -22,10 +24,12 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${orbitron.variable} antialiased`}
       >
-        <SessionProvider>
-          {children}
-          <Toaster richColors theme="dark" position="top-right" />
-        </SessionProvider>
+        <MantineProvider>
+          <SessionProvider>
+            {children}
+            <Toaster richColors theme="dark" position="top-right" />
+          </SessionProvider>
+        </MantineProvider>
       </body>
     </html>
   );

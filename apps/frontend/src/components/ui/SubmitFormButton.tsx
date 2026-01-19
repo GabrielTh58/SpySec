@@ -26,7 +26,7 @@ export const SubmitFormButton = ({ loading,type, children, className, disabled, 
       `}
     >
       {loading ? (
-          <div className="w-5 h-5 rounded-full border-2 border-black border-l-transparent animate-spin-cyber"></div>
+          <div className="w-5 h-5 rounded-full border-2 border-black border-l-transparent animate-spin-slow"></div>
       ) : (
           children
       )}
