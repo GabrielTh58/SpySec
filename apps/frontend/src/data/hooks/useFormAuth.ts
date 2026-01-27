@@ -11,6 +11,7 @@ interface AuthAPIResponse {
     accessToken: string;
     user: UserDTO;
     isNewUser: boolean;
+    initials: string;
 }
 
 export interface AuthFormData {
@@ -29,6 +30,7 @@ export default function useFormAuth() {
     const { user, startSession } = useSession()
     const router = useRouter()
     const param = useSearchParams()
+    const initials = user?.initials
 
     useEffect(() => {
         if (user?.email) {
@@ -113,6 +115,7 @@ export default function useFormAuth() {
 
     return {
         mode,
+        initials,
         loading,
         isPasswordVisible,
         ChangePasswordVisibility: handlePasswordVisible,

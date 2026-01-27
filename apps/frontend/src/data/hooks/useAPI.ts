@@ -6,18 +6,18 @@ const URL_BASE = process.env.NEXT_PUBLIC_API_URL
 
 export function useAPI() {
     const { token } = useSession()
-
-    
+       
     const httpGet = useCallback(
-        async function <T = any>(path: string): Promise<T> {
+        async function <T = any>(path: string, params?: any): Promise<T> {
             const uri = path.startsWith('/') ? path : `/${path}`
             const fullUrl = `${URL_BASE}${uri}`
 
             try {
                 const response: AxiosResponse<T> = await axios.get(fullUrl, {
                     headers: {
-                        Authorization: token ? `Bearer ${token}` : '', // Evita enviar "Bearer undefined"
+                        Authorization: token ? `Bearer ${token}` : '', 
                     },                     
+                    params
                 })
                 return response.data
             } catch (error: any) { 
@@ -47,6 +47,26 @@ export function useAPI() {
         [token]
     )
 
+    const httpPatch = useCallback(
+        async function <T = any>(path: string, body: any): Promise<T> {
+            const uri = path.startsWith('/') ? path : `/${path}`
+            const fullUrl = `${URL_BASE}${uri}`
+
+            try {
+                const response: AxiosResponse<T> = await axios.patch(fullUrl, body, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: token ? `Bearer ${token}` : '',
+                    },                    
+                })
+                return response.data
+            } catch (error: any) {
+                throw handleAxiosError(error)
+            }
+        },
+        [token]
+    )
+
     function handleAxiosError(error: any) {
         if (error.response) {            
             return error.response.data
@@ -57,5 +77,5 @@ export function useAPI() {
         }
     }
 
-    return { httpGet, httpPost }
+    return { httpGet, httpPost, httpPatch }
 }

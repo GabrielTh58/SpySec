@@ -1,5 +1,5 @@
 'use client'
-import { ChevronLeft, ChevronRight, Home, Map, Settings, Trophy, X } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Home, LogOut, Map, Settings, Trophy, X } from 'lucide-react'
 import { SidebarItem } from './SidebarItem'
 import { Logo } from '../shared/Logo'
 import { useSideBar } from '../../data/hooks/useSideBar'
@@ -8,7 +8,7 @@ interface MenuProps {
     className?: string
 }
 
-export const SIDEBAR_ITEMS = [
+const SIDEBAR_ITEMS = [
     {
         href: '/dashboard',
         text: 'Dashboard',
@@ -20,7 +20,7 @@ export const SIDEBAR_ITEMS = [
         icon: Map,
     },
     {
-        href: '/achievements',
+        href: '/badges',
         text: 'Conquistas',
         icon: Trophy,
     },
@@ -29,6 +29,11 @@ export const SIDEBAR_ITEMS = [
         text: 'Configurações',
         icon: Settings,
     },
+    {
+        href:'/login',
+        text: 'Sair',
+        icon: LogOut
+    }
 ]
 
 
@@ -48,12 +53,12 @@ export function Sidebar(props: MenuProps) {
         ))
     }
 
-    return (
+    return (    
         <>
             {!drawer && (
                 <aside
                     style={{ width: mini ? 76 : 300 }}
-                    className={`relative flex flex-col overflow-y-auto bg-black/30 border-0 
+                    className={`relative flex flex-col bg-black/30 border-0 overflow-y-auto min-h-screen
                         ${mini && 'items-center'} ${props.className ?? ''}
                     `}
                 >

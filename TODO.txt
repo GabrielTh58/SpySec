@@ -1,0 +1,3 @@
+- testar o trail-card-container connected
+- tirar os comentarios e commitar
+- excluir .vscode e rodar build

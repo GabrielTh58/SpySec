@@ -3,7 +3,7 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 interface RankingItemProps {
   rank: number;
   name: string;
-  xp: string;
+  xp: number;
   change: 'up' | 'down' | 'none';
 };
 

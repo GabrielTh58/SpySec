@@ -34,7 +34,6 @@ export function SessionProvider(props: any) {
     const [loading, setLoading] = useState(true)
     const [session, setSession] = useState<Session>({ token: null, user: null })
 
-
     const startSession = useCallback((input: StartSessionInput) => {   
         cookie.set(TOKEN_COOKIE, input.token, { expires: 15 }) 
         setLocalStorage(USER_STORAGE, input.user)  

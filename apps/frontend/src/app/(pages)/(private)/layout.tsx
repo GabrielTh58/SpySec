@@ -1,6 +1,9 @@
 import { ForceAuth } from "@/components/auth/ForceAuth";
 import { Header } from "@/components/shared/Header";
 import { Sidebar } from "@/components/sidebar/Sidebar";
+import { AiTutorWidget } from "@/components/template/AiTutorWidget";
+import { EducationProvider } from "@/data/context/EducationContext";
+import { GamificationProvider } from "@/data/context/GamificationContext";
 import { SideBarProvider } from "@/data/context/SideBarContext";
 import { ReactNode } from "react";
 
@@ -11,17 +14,23 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
     return (
         <ForceAuth>
-            <SideBarProvider>
-                <div className="flex w-screen h-screen">
-                    <Sidebar />
+            <EducationProvider>
+                <GamificationProvider>
+                    <SideBarProvider>
+                        <div className="relative flex w-screen min-h-screen">
+                            <Sidebar />
 
-                    <div className="w-full">
-                        <Header />
-                        {children}
-                    </div>
+                            <div className="w-full">
+                                <Header />
+                                {children}
 
-                </div>
-            </SideBarProvider>
+                                <AiTutorWidget />
+                            </div>
+
+                        </div>
+                    </SideBarProvider>
+                </GamificationProvider>
+            </EducationProvider>
         </ForceAuth>
     );
 }

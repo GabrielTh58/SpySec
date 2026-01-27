@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from "react";
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ArrowRight, Star, Zap } from "lucide-react";
 
 interface MissionPortalProps {
@@ -22,8 +22,8 @@ export function MissionPortal(props: MissionPortalProps) {
     return (
         <div
             className={`
-                "relative w-full max-w-3xl overflow-hidden rounded-xl bg-[#08081a] neon-glow-cyan bg-linear-to-br from-cyan-900/10 to-transparent border border-cyan-500/30 transition-all duration-500 ease-out",
-                "shadow-[0_0_20px_-5px_rgba(8,145,178,0.3)]",
+                "relative w-full max-w-3xl overflow-hidden rounded-xl bg-[#08081a] neon-glow-cyan bg-linear-to-br from-cyan-900/10 to-transparent 
+                border border-cyan-500/30 transition-all duration-500 ease-out shadow-[0_0_20px_-5px_rgba(8,145,178,0.3)],
                 ${isHovered ? "shadow-[0_0_50px_-10px_rgba(6,182,212,0.5)] border-cyan-400/60 scale-[1.01]" : ""},
                 ${className}
             `}
@@ -31,20 +31,15 @@ export function MissionPortal(props: MissionPortalProps) {
             onMouseLeave={() => setIsHovered(false)}
         >
 
-            {/* Conteúdo Principal */}
             <div className="relative z-10 flex flex-col md:flex-row items-center p-6 md:p-8 gap-8">
 
-                {/* LADO ESQUERDO: O Portal Animado */}
                 <div className="relative flex items-center justify-center shrink-0 w-32 h-32 md:w-40 md:h-40">
-
-                    {/* Círculo Externo (HUD) */}
                     <motion.div
                         animate={{ rotate: 360 }}
                         transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                         className="absolute inset-0 rounded-full border border-dashed border-cyan-500/30"
                     />
 
-                    {/* Anéis de Energia Giratórios */}
                     <motion.div
                         animate={{ rotate: -360, scale: isHovered ? 1.1 : 1 }}
                         transition={{ rotate: { duration: 8, repeat: Infinity, ease: "linear" }, scale: { duration: 0.3 } }}
@@ -56,7 +51,6 @@ export function MissionPortal(props: MissionPortalProps) {
                         className="absolute inset-4 rounded-full border-2 border-transparent border-b-purple-500 border-r-purple-500/50 opacity-80"
                     />
 
-                    {/* Núcleo do Portal */}
                     <div className="absolute inset-0 m-auto w-20 h-20 rounded-full overflow-hidden">
                         <motion.div
                             animate={{ scale: [1, 1.2, 1], opacity: [0.6, 0.9, 0.6] }}
@@ -65,7 +59,6 @@ export function MissionPortal(props: MissionPortalProps) {
                         />
                     </div>
 
-                    {/* Ícone Central */}
                     <div className="relative z-20 flex items-center justify-center w-16 h-16 rounded-full bg-[#0a0a1a] border border-cyan-500/50 shadow-[0_0_20px_rgba(6,182,212,0.3)] backdrop-blur-sm">
                         <Zap 
                             className={`w-8 h-8 text-cyan-400 fill-cyan-400/20 transition-all duration-300", 
@@ -73,7 +66,6 @@ export function MissionPortal(props: MissionPortalProps) {
                         />
                     </div>
 
-                    {/* Elementos decorativos flutuantes */}
                     <motion.div
                         className="absolute -top-2 -right-2 w-3 h-3 bg-cyan-400 rounded-full shadow-[0_0_10px_cyan]"
                         animate={{ y: [0, -5, 0], opacity: [0.5, 1, 0.5] }}
@@ -81,13 +73,10 @@ export function MissionPortal(props: MissionPortalProps) {
                     />
                 </div>
 
-                {/* LADO DIREITO: Informações da Missão */}
                 <div className="flex-1 w-full text-center md:text-left space-y-3">
-
-                    {/* Header da Missão (Tags) */}
                     <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 text-xs font-mono uppercase tracking-wider">
                         <span className="px-2 py-0.5 rounded bg-cyan-950/60 border border-cyan-800 text-cyan-300 flex items-center gap-1">
-                            <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse font-orbitron" /> Nível {level}
+                            <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse font-orbitron" /> Nível {level} 
                         </span>
                         <span className="px-2 py-0.5 rounded bg-purple-950/60 border border-purple-800 text-purple-300 flex items-center gap-1">
                             <Star className="w-3 h-3 fill-current font-orbitron" /> {xpReward} XP
@@ -103,7 +92,6 @@ export function MissionPortal(props: MissionPortalProps) {
                         </p>
                     </div>
 
-                    {/* Área de Ação */}
                     <div className="pt-4 flex flex-col sm:flex-row items-center gap-4">
                         <motion.button
                             onClick={onEnter}
@@ -115,7 +103,6 @@ export function MissionPortal(props: MissionPortalProps) {
                                 {ctaText} <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
                             </span>
 
-                            {/* Efeito de Scanline no botão */}
                             <motion.div
                                 className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent skew-x-12"
                                 initial={{ x: '-100%' }}
@@ -124,7 +111,7 @@ export function MissionPortal(props: MissionPortalProps) {
                             />
                         </motion.button>
 
-                        <span className="hidden sm:block text-slate-600 text-xs font-mono">
+                        <span className="hidden sm:block text-slate-600 text-xs font-inter">
                         </span>
                     </div>
                 </div>
