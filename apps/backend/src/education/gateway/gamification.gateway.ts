@@ -11,7 +11,7 @@ export class PrismaGamificationGateway implements GamificationGateway {
             const profile = await this.gamificationFacade.getPlayerProfile(userId)
 
             return{
-                level: profile.level,
+                level: profile.currentLevel,
                 totalXp: profile.currentXp
             }
         }        

@@ -1,6 +1,7 @@
 import { Track as PrismaTrack, Mission as PrismaMission } from "../../../generated/prisma/client"; 
 import { 
     Track,      
+    TrackCategory,      
     TrackDifficulty, 
     TrackVisibility 
 } from "@spysec/education"; 
@@ -26,6 +27,8 @@ export class TrackMapper {
             prerequisiteTrackId: raw.prerequisiteTrackId ?? undefined,
             isActive: raw.isActive,
             missions: missions, 
+            category: raw.category as TrackCategory,
+            tags: raw.tags,
             createdAt: raw.createdAt,
             updatedAt: raw.updatedAt,
         });
@@ -49,6 +52,8 @@ export class TrackMapper {
             minLevel: track.minLevel,
             prerequisiteTrackId: track.prerequisiteTrackId || null,
             isActive: track.isActive,
+            category: track.category,
+            tags: track.tags,
             createdAt: track.createdAt,
             updatedAt: track.updatedAt,
         };

@@ -1,7 +1,7 @@
 import { Result, UseCase } from "@spysec/shared";
 import { PlayerRepository } from "../provider";
 import { Player } from "../model";
-import { CreatePlayerInput } from "../model/Player";
+import { CreatePlayerInput } from "../model/Player.entity";
 
 export class CreatePlayer implements UseCase<CreatePlayerInput, Player>{
     constructor(

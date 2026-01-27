@@ -1,66 +1,82 @@
 import { Result, VO } from "@spysec/shared";
 
-interface EmailContent {
+interface BaseBlockData {
+  mascotMessage?: string;
+}
+
+interface MatchingData extends BaseBlockData {
+  question: string;
+  pairs: { leftId: string; leftText: string; rightId: string; rightText: string }[];
+  feedbackSuccess: string;
+  feedbackError: string;
+}
+
+interface SortingData extends BaseBlockData {
+  question: string;
+  items: { id: string; text: string }[];
+  correctOrder: string[];
+  feedbackSuccess: string;
+  feedbackError: string;
+}
+
+interface EmailContent extends BaseBlockData {
   type: 'EMAIL';
   sender: string;
   subject: string;
   body: string;
 }
 
-interface CodeContent {
-  type: 'CODE';
-  language: 'typescript' | 'python' | 'bash' | 'sql';
-  codeSnippet: string;
-  filename?: string;
-}
-
-interface ImageContent {
+interface ImageContent extends BaseBlockData {
   type: 'IMAGE';
-  imageUrl: string;
-  altText?: string;
+  image: string;
+  altText: string;
 }
 
-interface TerminalContent {
+interface TerminalContent extends BaseBlockData {
   type: 'TERMINAL';
   logs: string[];
   hostname: string;
 }
 
-interface InfoData {
+interface InfoData extends BaseBlockData {
   title?: string;
   text: string;
+  deepDive?: string
   imageURL?: string;
+  highlightBox?: string;
 }
 
-interface QuizData {
+interface QuizData extends BaseBlockData {
   context?: HotspotContext
   question: string;
   options: { id: string; text: string }[];
   correctOptionId: string;
   feedbackSuccess: string;
   feedbackError: string;
+  explanation?: string
 }
 
-interface InputData {
+interface InputData extends BaseBlockData {
   question: string;
   description?: string;
   placeholder?: string;
-  context?: HotspotContext; 
+  context?: HotspotContext;
   validation: {
     type: 'EXACT_MATCH' | 'CONTAINS' | 'REGEX';
     expectedValue: string;
+    isCaseSensitive?: boolean
   };
   feedbackSuccess: string;
   feedbackError: string;
 }
 
-type HotspotContext = EmailContent | CodeContent | ImageContent | TerminalContent;
+type HotspotContext = EmailContent | TerminalContent | ImageContent;
 
 interface HotspotData {
   context: HotspotContext;
   regions: {
     id: string;
-    rect: { x: number, y: number, w: number, h: number }; 
+    rect: { x: number, y: number, w: number, h: number };
     feedback: string;
     isCorrect: boolean;
   }[];
@@ -70,7 +86,9 @@ export type MissionBlock =
   | { id: string; type: 'INFO'; data: InfoData }
   | { id: string; type: 'QUIZ'; data: QuizData }
   | { id: string; type: 'HOTSPOT'; data: HotspotData }
-  | { id: string; type: 'INPUT'; data: InputData };
+  | { id: string; type: 'INPUT'; data: InputData }
+  | { id: string; type: 'MATCHING'; data: MatchingData }
+  | { id: string; type: 'SORTING'; data: SortingData };
 
 export class MissionContent extends VO<MissionBlock[]> {
   static readonly ERROR_MISSION_CONTENT_MUST_BE_NON_EMPTY_LIST = "MISSION_CONTENT_MUST_BE_NON_EMPTY_LIST";
@@ -91,8 +109,19 @@ export class MissionContent extends VO<MissionBlock[]> {
     }
 
     for (const block of rawBlocks) {
+
       if (!block.id || !block.type || !block.data) {
         return Result.fail(MissionContent.ERROR_BLOCK_MISSING_ID_OR_TYPE);
+      }
+
+      if (block.type === 'MATCHING') {
+        const data = block.data as Partial<MatchingData>;
+        if (!Array.isArray(data.pairs) || data.pairs.length < 2) return Result.fail("MATCHING_NEEDS_AT_LEAST_TWO_PAIRS");
+      }
+  
+      if (block.type === 'SORTING') {
+        const data = block.data as Partial<SortingData>;
+        if (!Array.isArray(data.items) || !Array.isArray(data.correctOrder)) return Result.fail("SORTING_INVALID_STRUCTURE");
       }
 
       if (block.type === 'QUIZ') {
@@ -106,7 +135,7 @@ export class MissionContent extends VO<MissionBlock[]> {
       if (block.type === 'INPUT') {
         const inputData = block.data as Partial<InputData>;
         if (!inputData.validation || !inputData.validation.expectedValue) {
-            return Result.fail(MissionContent.ERROR_INPUT_MISSING_VALIDATION);
+          return Result.fail(MissionContent.ERROR_INPUT_MISSING_VALIDATION);
         }
       }
 
@@ -137,8 +166,130 @@ export class MissionContent extends VO<MissionBlock[]> {
     return quizCount > 3 ? 'HARD' : 'EASY';
   }
 
+  hasInteraction(): boolean {
+    return this.value.some(b => ['INPUT', 'HOTSPOT', 'QUIZ'].includes(b.type));
+  }
+
+  validateUserAnswers(answers: Record<string, any>): { isValid: boolean, failedBlockIds: string[] } {
+    const failedBlockIds: string[] = [];
+
+    for (const block of this.value) {
+      if (block.type === 'INFO') continue;
+
+      const userAnswer = answers[block.id];
+
+      if (userAnswer === undefined || userAnswer === null || userAnswer === '') {
+        failedBlockIds.push(block.id);
+        continue;
+      }
+
+      // 3. Validação de QUIZ
+      if (block.type === 'QUIZ') {
+        // No Quiz, a resposta deve ser o ID da opção
+        if (userAnswer !== block.data.correctOptionId) {
+          failedBlockIds.push(block.id);
+        }
+      }
+
+      // 4. Validação de INPUT
+      if (block.type === 'INPUT') {
+        const validation = block.data.validation;
+        const userText = String(userAnswer).trim();
+        const expectedText = validation.expectedValue.trim();
+
+        if (validation.type === 'EXACT_MATCH') {
+          const isCaseSensitive = (validation as any).isCaseSensitive ?? false;
+
+          if (isCaseSensitive) {
+            if (userText !== expectedText) failedBlockIds.push(block.id);
+          } else {
+            if (userText.toLowerCase() !== expectedText.toLowerCase()) failedBlockIds.push(block.id);
+          }
+        }
+
+        else if (validation.type === 'CONTAINS') {
+          if (!userText.includes(expectedText)) failedBlockIds.push(block.id);
+        }
+
+        else if (validation.type === 'REGEX') {
+          try {
+            const regex = new RegExp(expectedText);
+            if (!regex.test(userText)) failedBlockIds.push(block.id);
+          } catch (e) {
+            console.error(`Invalid Regex in block ${block.id}`);
+            failedBlockIds.push(block.id);
+          }
+        }
+      }
+
+      // 5. Validação de HOTSPOT
+      if (block.type === 'HOTSPOT') {
+        // Assumimos que a resposta é um array de IDs das regiões clicadas: ['r1', 'r2']
+        if (!Array.isArray(userAnswer)) {
+          failedBlockIds.push(block.id);
+          continue;
+        }
+
+        const requiredRegionIds = block.data.regions
+          .filter(r => r.isCorrect)
+          .map(r => r.id);
+
+        const foundAllCorrect = requiredRegionIds.every(id => userAnswer.includes(id));
+        const clickedWrong = userAnswer.some(id => {
+          const region = block.data.regions.find(r => r.id === id);
+          return region ? !region.isCorrect : false;
+        });
+
+        if (!foundAllCorrect || clickedWrong) {
+          failedBlockIds.push(block.id);
+        }
+      }
+
+      if (block.type === 'MATCHING') {
+        const isCorrect = block.data.pairs.every(pair => userAnswer[pair.leftId] === pair.rightId);
+        if (!isCorrect) failedBlockIds.push(block.id);
+      }
+
+      if (block.type === 'SORTING') {
+        const isCorrect = Array.isArray(userAnswer) &&
+          userAnswer.length === block.data.correctOrder.length &&
+          userAnswer.every((id, idx) => id === block.data.correctOrder[idx]);
+        if (!isCorrect) failedBlockIds.push(block.id);
+      }
+    }
+
+    return {
+      isValid: failedBlockIds.length === 0,
+      failedBlockIds
+    };
+  }
+
+  findBlockById(id: string) {
+    const block = this.value.find((b) => b.id === id)
+    return block || null
+  }
+
+  getBlockErrorFeedback(id: string): string {
+    const block = this.findBlockById(id);
+    if (!block) return "UNKNOWN_ERROR";
+
+    // QUIZ and INPUT have direct feedbackError property
+    if (block.type === 'QUIZ' || block.type === 'INPUT') {
+      return block.data.feedbackError || "INCORRECT_ANSWER";
+    }
+
+    // HOTSPOT is more complex, feedback is per region
+    if (block.type === 'HOTSPOT') {
+      // Here you may return a generic message or try to locate specific region feedback
+      return "DID_NOT_FIND_ALL_CORRECT_AREAS_OR_CLICKED_WRONG_LOCATION";
+    }
+
+    return "INCORRECT_ANSWER";
+  }
+
+
   get blocks(): MissionBlock[] {
     return this.value;
-  }     
+  }
 }
 

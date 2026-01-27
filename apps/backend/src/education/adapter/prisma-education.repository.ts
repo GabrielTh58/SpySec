@@ -50,6 +50,12 @@ export class PrismaEducationRepository implements EducationRepository {
         return raw ? raw.slug : null;
     }
 
+    async countTotalTracks(): Promise<number> {
+        return await this.prisma.track.count({
+            where: { isActive: true }
+        });
+    }
+
     // --- MISSIONS ---
 
     async saveMission(mission: Mission): Promise<void> {
@@ -82,5 +88,13 @@ export class PrismaEducationRepository implements EducationRepository {
         });
         if (!raw) return null;
         return MissionMapper.toDomain(raw);
+    }
+
+    async countTotalMissions(): Promise<number> {
+        return await this.prisma.mission.count({
+            where: {
+                track: { isActive: true }
+            }
+        });
     }
 }

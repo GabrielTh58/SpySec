@@ -10,22 +10,27 @@ export interface MissionProps extends EntityProps {
   trackId: string;
   title: string;
   description: string;
+  iconUrl: string;
   slug: Slug;
   xpReward: number;
   order: number;
   category: string;
+  estimatedTime: number; 
   content: MissionContent;
   createdAt: Date;
   updatedAt: Date;
 }
 
-export interface CreateMissionInputDTO {
+export interface CreateMissionInputDTO {  
+  id?: string;
   trackId: string;
   title: string;
   description: string;
+  iconUrl: string;
   xpReward: number;
   order: number;
   category: string;
+  estimatedTime: number;
   content: MissionBlock[];
 }
 
@@ -34,10 +39,12 @@ export interface RestoreMissionProps {
   trackId: string;
   title: string;
   slug: string
+  iconUrl: string
   description: string;
   xpReward: number;
   order: number;
   category: string;
+  estimatedTime: number;
   content: MissionBlock[];
   createdAt: Date;
   updatedAt: Date;
@@ -53,6 +60,7 @@ export class Mission extends Entity<Mission, MissionProps> {
   static create(props: CreateMissionInputDTO): Result<Mission> {
     const errors = [
       Validator.notNullOrEmpty("TRACK_ID_IS_REQUIRED", props.trackId),
+      Validator.notNullOrEmpty("ICON_IS_REQUIRED", props.iconUrl),
       Validator.notNullOrEmpty("TITLE_IS_REQUIRED", props.title),
       Validator.notNullOrEmpty("DESCRIPTION_IS_REQUIRED", props.description),
       Validator.notNullOrEmpty("CATEGORY_IS_REQUIRED", props.category),
@@ -74,6 +82,8 @@ export class Mission extends Entity<Mission, MissionProps> {
     if (props.xpReward <= 0) return Result.fail("XP Reward must be positive.");
     if (props.order < 0) return Result.fail("Order cannot be negative.");
 
+    const uniqueId = props.id ? Id.restore(props.id) : Id.generate();
+
     return Result.ok(
       new Mission(
         {
@@ -81,14 +91,16 @@ export class Mission extends Entity<Mission, MissionProps> {
           slug: slugResult.value!,
           title: props.title,
           description: props.description,
+          iconUrl: props.iconUrl,
           xpReward: props.xpReward,
           order: props.order,
           category: props.category,
+          estimatedTime: props.estimatedTime,
           content: contentResult.value!,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
-        Id.generate()
+        uniqueId
       )
     );
   }
@@ -150,6 +162,7 @@ export class Mission extends Entity<Mission, MissionProps> {
   
   get title() { return this.props.title; }
   get description() { return this.props.description; }
+  get iconUrl() { return this.props.iconUrl; }
   get content() { return this.props.content; }
   get blocks() { return this.props.content.value; }
   get xpReward() { return this.props.xpReward; }
@@ -157,6 +170,7 @@ export class Mission extends Entity<Mission, MissionProps> {
   get order() { return this.props.order; }
   get slug() { return this.props.slug.value; }
   get category() { return this.props.category; }
+  get estimatedTime() { return this.props.estimatedTime; }
   get createdAt() { return this.props.createdAt; }
   get updatedAt() { return this.props.updatedAt; }
 }

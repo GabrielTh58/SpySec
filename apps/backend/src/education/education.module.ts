@@ -3,7 +3,7 @@ import { EducationController } from './education.controller';
 import { EducationFacade } from '@spysec/education-adapter';
 import { EducationRepository, GamificationGateway, TrackProgressRepository } from '@spysec/education';
 import { PrismaEducationRepository } from './adapter/prisma-education.repository';
-import { PrismaTrackProgressRepository } from './adapter/track-progress.repository';
+import { PrismaTrackProgressRepository } from './adapter/prisma-track-progress.repository';
 import { PrismaGamificationGateway } from './gateway/gamification.gateway';
 import { GamificationModule } from 'src/gamification/gamification.module';
 

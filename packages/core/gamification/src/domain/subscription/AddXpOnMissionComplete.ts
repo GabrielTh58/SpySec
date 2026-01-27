@@ -13,12 +13,13 @@
     }
 
     async handle(event: MissionCompletedEvent): Promise<void> {
-      const { userId, trackId, xpEarned, missionCategory, isLastMission } = event.payload;
+      const { userId, trackId, xpEarned, missionCategory, isLastMission, timeSpent } = event.payload;
 
       await this.useCase.execute({
           userId: userId,
           xpEarned: xpEarned,
           action: ActionStatus.MISSION_COMPLETED,
+          timeSpent,
           payload: {
             trackId: trackId, 
             missionCategory: missionCategory ? [missionCategory] : [], 

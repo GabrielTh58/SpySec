@@ -1,4 +1,4 @@
 {
     "extends": "../../typescript-config/base.json",
-    "include": [".", "../education/core/src/domain/model/TrackProgress.entity.ts", "../education/core/src/domain/provider/TrackProgress.repository.ts"]
+    "include": [".", "../education/core/src/domain/model/TrackProgress.entity.ts", "../education/core/src/domain/provider/TrackProgress.repository.ts", "../education/core/src/domain/usecase/GetStudentProgressSummary.usecase.ts"]
 }

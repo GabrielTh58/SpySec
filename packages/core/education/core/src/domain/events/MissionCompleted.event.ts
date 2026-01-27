@@ -6,6 +6,7 @@ interface MissionCompletedEventPayload {
     xpEarned: number;
     trackId: string;
     missionCategory: string; 
+    timeSpent: number
     isLastMission: boolean
 }
 
@@ -20,6 +21,6 @@ export class MissionCompletedEvent implements IDomainEvent {
   }
 
   getAggregateId(): string {
-    return this.payload.userId;
+    return this.payload.userId; 
   }
 }

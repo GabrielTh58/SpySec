@@ -2,10 +2,10 @@ POST http://localhost:4000/auth/register
 Content-Type: application/json
 
 {
-  "name": "test dto2",
-  "email": "test10@test.com",
+  "name": "Teste Gamification",
+  "email": "testGame@test.com",
   "password": "#Senha123",
-  "profileType": "CORPORATE"
+  "profileType": "PERSONAL"
 }
 
 ###

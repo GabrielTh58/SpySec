@@ -1,5 +1,27 @@
 
-import { BrowseTracks, BrowseTracksInputDTO, CompleteMission, CompleteMissionInputDTO, CompleteMissionOutputDTO, CreateMission, CreateMissionInputDTO, CreateTrack, CreateTrackInputDTO, EducationRepository, GamificationGateway, GetMissionData, GetMissionDataInputDTO, GetMissionDataOutputDTO, GetTrackDetails, TrackCardDTO, GetTrackDetailsInputDTO, GetTrackDetailsOutputDTO, TrackProgressRepository } from "@spysec/education";
+import {
+    BrowseTracks,
+    BrowseTracksInputDTO,
+    BrowseTracksOutputDTO,
+    CompleteMission,
+    CompleteMissionInputDTO,
+    CompleteMissionOutputDTO,
+    CreateMission,
+    CreateMissionInputDTO,
+    CreateTrack,
+    CreateTrackInputDTO,
+    EducationRepository,
+    GamificationGateway,
+    GetMissionData,
+    GetMissionDataInputDTO,
+    GetMissionDataOutputDTO,
+    GetStudentProgressSummary,
+    GetTrackDetails,
+    GetTrackDetailsInputDTO,
+    GetTrackDetailsOutputDTO,
+    StudentProgressSummaryOutputDTO,
+    TrackProgressRepository
+} from "@spysec/education";
 import { CreateTrackOutputDTO, CreateMissionOutputDTO } from "../dto";
 
 export class EducationFacade {
@@ -79,7 +101,7 @@ export class EducationFacade {
         return result.value
     }
 
-    async browseTracks(input: BrowseTracksInputDTO): Promise<TrackCardDTO[]>{
+    async browseTracks(input: BrowseTracksInputDTO): Promise<BrowseTracksOutputDTO>{
         const useCase = new BrowseTracks(
             this.repoEducation,
             this.repoProgress,
@@ -91,5 +113,18 @@ export class EducationFacade {
         if(result.failed) result.throwIfFailed()
 
         return result.value
-    }         
+    } 
+
+    async getStudentProgressSummary(userId: string): Promise<StudentProgressSummaryOutputDTO>{
+        const useCase = new GetStudentProgressSummary(
+            this.repoEducation, 
+            this.repoProgress
+        )
+
+        const result = await useCase.execute(userId)
+
+        if(result.failed) result.throwIfFailed()
+
+        return result.value
+    }        
 }

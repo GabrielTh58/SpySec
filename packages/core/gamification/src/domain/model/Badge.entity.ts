@@ -2,11 +2,19 @@ import { Entity, EntityProps, Id, Result } from "@spysec/shared";
 import { Validator } from "@spysec/utils";
 import { Slug } from "@spysec/shared";
 
+export enum Rarity {
+  COMMON = "COMMON",
+  RARE = "RARE",
+  EPIC = "EPIC",
+  LEGENDARY = "LEGENDARY"
+}
+
 export interface BadgeProps extends EntityProps {
   slug: Slug;
   name: string;
   description: string;  
   iconUrl: string;
+  rarity: Rarity;
   condition?: string;   
 }
 
@@ -15,6 +23,7 @@ export interface CreateBadgeInput{
     name: string;
     description: string;
     iconUrl: string
+    rarity: Rarity;
 }
 
 export interface RestoreBadgeProps {
@@ -22,6 +31,7 @@ export interface RestoreBadgeProps {
     slug: string;
     name: string;
     description: string;
+    rarity: Rarity;
     iconUrl: string;
     condition?: string;
 }
@@ -68,6 +78,7 @@ export class Badge extends Entity<Badge, BadgeProps> {
   get slug() { return this.props.slug; }
   get name() { return this.props.name; }
   get description() { return this.props.description; }
-  get iconUrl() { return this.props.iconUrl; }
-  get condition() { return this.props.condition; }
+  get iconUrl(): string { return this.props.iconUrl; }
+  get condition(): string | undefined { return this.props.condition; }
+  get rarity(): Rarity { return this.props.rarity; }
 }

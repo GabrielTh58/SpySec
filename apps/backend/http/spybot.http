@@ -1,0 +1,7 @@
+POST http://localhost:5678/webhook-test/spybot
+Content-Type: application/json
+
+{
+  "chatId": "Teste123",
+  "message": "bom dia"
+}

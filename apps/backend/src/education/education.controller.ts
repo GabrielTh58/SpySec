@@ -6,6 +6,7 @@ import { CreateMissionDto } from './dto/create-mission.dto';
 import { UserLogged } from 'src/common/decorators/user.decorator';
 import { AuthGuard } from 'src/auth/guards/auth-guard.guard';
 import type { UserPayloadJwt } from 'src/auth/auth.controller';
+import { CompleteMissionDto } from './dto/complete-mission.dto';
 
 @UseGuards(AuthGuard)
 @Controller('education')
@@ -54,13 +55,20 @@ export class EducationController {
   } 
 
   @Post('missions/:missionId/complete')
-  async completeMission(
+  async completeMission(  
       @Param('missionId') missionId: string,
-      @UserLogged() user: UserPayloadJwt 
+      @UserLogged() user: UserPayloadJwt,
+      @Body() body: CompleteMissionDto
   ) {
     return this.educationFacade.completeMission({
         missionId,
-        userId: user.sub.toString()
+        userId: user.sub.toString(),
+        answers: body.answers
     });
+  }
+
+  @Get('summary') 
+  async getStudentProgressSummary(@UserLogged() user: UserPayloadJwt) {
+    return this.educationFacade.getStudentProgressSummary(user.sub.toString());
   }
 }

@@ -15,6 +15,14 @@ export enum TrackDifficulty {
   ADVANCED = "ADVANCED"
 }
 
+export enum TrackCategory {
+  MINDSET = "MINDSET",       
+  DEVICES = "DEVICES",       
+  CORPORATE = "CORPORATE",   
+  TRENDS = "TRENDS",
+  FINAL = "FINAL"       
+}
+
 export interface TrackProps extends EntityProps {
   title: string;
   slug: Slug;
@@ -25,12 +33,15 @@ export interface TrackProps extends EntityProps {
   prerequisiteTrackId?: string | null;
   isActive: boolean;
   minLevel: number;
-  missions: Mission[] 
+  missions: Mission[];
+  category: TrackCategory;
+  tags: string[]; 
   createdAt: Date;
   updatedAt: Date;  
 }
 
 export interface CreateTrackInputDTO {
+  id?: string
   title: string;
   description: string;
   iconUrl: string;
@@ -38,6 +49,8 @@ export interface CreateTrackInputDTO {
   prerequisiteTrackId?: string | null;
   difficulty: TrackDifficulty;
   targetProfile: TrackVisibility;
+  category: TrackCategory;
+  tags: string[];
 }
 
 export interface RestoreTrackProps {
@@ -52,6 +65,8 @@ export interface RestoreTrackProps {
   minLevel: number;
   prerequisiteTrackId?: string | null;
   missions?: Mission[]
+  category: TrackCategory;
+  tags: string[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -77,6 +92,7 @@ export class Track extends Entity<Track, TrackProps> {
     ];
 
     const validErrors = errors.filter((e): e is string => e !== null);
+    const uniqueId = props.id ? Id.restore(props.id) : Id.generate();
 
     if (validErrors.length > 0) {
       return Result.fail<Track>(validErrors[0]!);
@@ -101,10 +117,12 @@ export class Track extends Entity<Track, TrackProps> {
           targetProfile: props.targetProfile,
           isActive: true,
           missions: [],
+          category: props.category, 
+          tags: props.tags || [],
           createdAt: new Date(),
           updatedAt: new Date(),
         },
-        Id.generate()
+        uniqueId
       )
     );
   }
@@ -202,4 +220,6 @@ export class Track extends Entity<Track, TrackProps> {
   get createdAt() { return this.props.createdAt; }
   get updatedAt() { return this.props.updatedAt; }
   get missions() {return this.props.missions }
+  get category() { return this.props.category; }
+  get tags() { return this.props.tags; }
 }

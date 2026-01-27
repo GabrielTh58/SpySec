@@ -1,8 +1,9 @@
-import { PrismaClient } from '../../generated/prisma/client';
+import { PrismaClient, Rarity } from '../../../generated/prisma/client';
 
 export async function seedBadges(prisma: PrismaClient) {
   console.log('Generating Badges...');
 
+  // Tipagem explicita para ajudar o TS
   const badges = [
     {
       slug: 'recruta-digital', 
@@ -10,6 +11,7 @@ export async function seedBadges(prisma: PrismaClient) {
       description: 'Deu o primeiro passo completando sua primeira missão valendo XP.',
       iconUrl: 'https://cdn-icons-png.flaticon.com/512/3408/3408455.png',
       condition: 'XP_EARNED > 0',
+      rarity: Rarity.COMMON
     },
     {
       slug: 'explorador-curioso', 
@@ -17,6 +19,7 @@ export async function seedBadges(prisma: PrismaClient) {
       description: 'Utilizou a Inteligência Artificial para tirar dúvidas ou buscar conhecimento.',
       iconUrl: 'https://cdn-icons-png.flaticon.com/512/2921/2921226.png', 
       condition: 'ACTION:AI_INTERACTION',
+      rarity: Rarity.COMMON
     },
     {
       slug: 'escudo-corporativo', 
@@ -24,6 +27,7 @@ export async function seedBadges(prisma: PrismaClient) {
       description: 'Concluiu trilhas essenciais para proteção empresarial.',
       iconUrl: 'https://cdn-icons-png.flaticon.com/512/9564/9564115.png',
       condition: 'TRACK:seguranca-home-office OR lgpd-corporativo',
+      rarity: Rarity.EPIC
     },
     {
       slug: 'especialista-fundamentos', 
@@ -31,6 +35,7 @@ export async function seedBadges(prisma: PrismaClient) {
       description: 'Dominou os conceitos fundamentais completando a trilha de Fundamentos.',
       iconUrl: 'https://cdn-icons-png.flaticon.com/512/9630/9630249.png',
       condition: 'TRACK:fundamentos-da-seguranca',
+      rarity: Rarity.RARE
     },
     {
       slug: 'guardiao-de-chaves', 
@@ -38,6 +43,7 @@ export async function seedBadges(prisma: PrismaClient) {
       description: 'Completou missões focadas em segurança de senhas.',
       iconUrl: 'https://cdn-icons-png.flaticon.com/512/2889/2889676.png',
       condition: 'CATEGORY:PASSWORDS',
+      rarity: Rarity.RARE
     },
     {
       slug: 'fenix', 
@@ -45,6 +51,7 @@ export async function seedBadges(prisma: PrismaClient) {
       description: 'Mostrou resiliência ao voltar a estudar após perder uma grande sequência.',
       iconUrl: 'https://cdn-icons-png.flaticon.com/512/785/785116.png',
       condition: 'RECOVER_STREAK (Max >= 5)',
+      rarity: Rarity.LEGENDARY
     },
     {
       slug: 'em-ascensao', 
@@ -52,6 +59,7 @@ export async function seedBadges(prisma: PrismaClient) {
       description: 'Alcançou o nível 5 na plataforma.',
       iconUrl: 'https://cdn-icons-png.flaticon.com/512/3112/3112946.png',
       condition: 'LEVEL:5',
+      rarity: Rarity.RARE
     },
     {
       slug: 'sentinela-atento', 
@@ -59,6 +67,7 @@ export async function seedBadges(prisma: PrismaClient) {
       description: 'Manteve a constância nos estudos por 3 dias seguidos.',
       iconUrl: 'https://cdn-icons-png.flaticon.com/512/1042/1042306.png', 
       condition: 'STREAK:3',
+      rarity: Rarity.COMMON
     },
     {
       slug: 'detector-de-iscas',
@@ -66,6 +75,7 @@ export async function seedBadges(prisma: PrismaClient) {
       description: 'Concluiu treinamentos sobre identificação de Phishing.',
       iconUrl: 'https://cdn-icons-png.flaticon.com/512/2058/2058142.png',
       condition: 'TRACK:phishing',
+      rarity: Rarity.RARE
     },
     {
       slug: 'aluno-do-futuro', 
@@ -73,6 +83,7 @@ export async function seedBadges(prisma: PrismaClient) {
       description: 'Interessado em IA e novas tecnologias.',
       iconUrl: 'https://cdn-icons-png.flaticon.com/512/2282/2282195.png',
       condition: 'TRACK:ai-security',
+      rarity: Rarity.EPIC
     },
   ];
 
@@ -83,9 +94,12 @@ export async function seedBadges(prisma: PrismaClient) {
         name: badge.name,
         description: badge.description,
         iconUrl: badge.iconUrl,
-        condition: badge.condition
+        condition: badge.condition,
+        rarity: badge.rarity 
       },
-      create: badge,
+      create: {
+        ...badge
+      },
     });
   }
   console.log(`✅ ${badges.length} Badges seeded.`);

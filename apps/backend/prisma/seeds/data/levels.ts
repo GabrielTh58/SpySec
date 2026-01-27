@@ -1,4 +1,4 @@
-import { PrismaClient } from '../../generated/prisma/client';
+import { PrismaClient } from '../../../generated/prisma/client';
 
 export async function seedLevels(prisma: PrismaClient) {
   console.log('Generating Levels...');

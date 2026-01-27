@@ -19,11 +19,12 @@ import { AchievementRulesProvider, ACHIEVEMENT_RULES_TOKEN } from './provider/ac
       provide: GamificationFacade,
       useFactory: (
         repoPlayer: PlayerRepository,
-        repoBadge: BadgeRepository
+        repoBadge: BadgeRepository,
+        repoLevel: LevelRepository
       ) => {
-        return new GamificationFacade(repoPlayer, repoBadge)
+        return new GamificationFacade(repoPlayer, repoBadge, repoLevel)
       },
-      inject: [PlayerRepository, BadgeRepository]
+      inject: [PlayerRepository, BadgeRepository, LevelRepository]
     },
 
     // Domain Services & Use Cases 

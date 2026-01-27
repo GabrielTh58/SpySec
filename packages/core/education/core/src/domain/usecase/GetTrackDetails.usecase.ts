@@ -17,6 +17,7 @@ export interface GetTrackDetailsOutputDTO {
     missions: {
         id: string;
         title: string;
+        iconUrl: string;
         xpReward: number;
         order: number;
         status: MissionStatus; 
@@ -57,6 +58,7 @@ export class GetTrackDetails implements UseCase<GetTrackDetailsInputDTO, GetTrac
             return {
                 id: mission.id.toString(), 
                 title: mission.title,
+                iconUrl: mission.iconUrl,
                 xpReward: mission.xpReward,
                 order: mission.order,
                 status,

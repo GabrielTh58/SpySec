@@ -1,4 +1,4 @@
-import { Badge } from "@spysec/gamification";
+import { Badge, Rarity } from "@spysec/gamification";
 import { Badge as PrismaBadge } from '../../../generated/prisma/client';
 
 export class BadgeMapper {
@@ -9,6 +9,7 @@ export class BadgeMapper {
       name: raw.name,
       slug: raw.slug,
       description: raw.description,
+      rarity: raw.rarity as Rarity,
       iconUrl: raw.iconUrl ?? '',
       condition: raw.condition ?? undefined,
     });
@@ -26,6 +27,7 @@ export class BadgeMapper {
     name: badge.name,
     slug: badge.slug.toString(),
     description: badge.description,
+    rarity: badge.rarity,
     iconUrl: badge.iconUrl,
     condition: badge.condition,
     };

@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Query, UseGuards } from '@nestjs/common';
 import { GamificationFacade } from '@spysec/gamification-adapter';
 import type { UserPayloadJwt } from 'src/auth/auth.controller';
 import { AuthGuard } from 'src/auth/guards/auth-guard.guard';
@@ -23,5 +23,18 @@ export class GamificationController {
   getRanking(@Query('limit') limit: number) {
     const safeLimit = +limit || 10;
     return this.gamificationFacade.getRanking(+safeLimit);
+  }
+
+  @Patch('nickname')
+  updateNickName(
+    @UserLogged() user: UserPayloadJwt, 
+    @Body() body: { nickName: string }
+  ) {
+    return this.gamificationFacade.updateProfile({
+      userId: user.sub,
+      newData: {
+        nickname: body.nickName 
+      }
+    });
   }
 }

@@ -1,7 +1,7 @@
 import { Result, UseCase } from "@spysec/shared";
 import { EducationRepository } from "../provider/Education.repository";
 import { ProfileType } from "@spysec/auth";
-import { TrackDifficulty } from "../model/Track.entity";
+import { TrackCategory, TrackDifficulty } from "../model/Track.entity";
 import { GamificationGateway } from "../gateway/Gamification.gateway";
 import { TrackProgressRepository } from "../provider/TrackProgress.repository";
 import { TrackProgress } from "../model/TrackProgress.entity";
@@ -11,38 +11,49 @@ export interface BrowseTracksInputDTO {
   userProfile: ProfileType;
 }
 
-export interface TrackCardDTO {
+export interface TrackDTO {
   id: string;
   title: string;
   slug: string;
   description: string;
   iconUrl: string;
+  category: TrackCategory
   difficulty: TrackDifficulty;
   isLocked: boolean;
   lockReason?: "LEVEL" | "PREREQUISITE";
-  progressPercentage: number;
+  progressPercentage: number; 
   status: "LOCKED" | "NOT_STARTED" | "IN_PROGRESS" | "COMPLETED";
 }
 
-export class BrowseTracks implements UseCase<BrowseTracksInputDTO, TrackCardDTO[]>{
+export interface BrowseTracksOutputDTO {
+  summary: {
+      totalTracks: number;
+      completedTracks: number;
+  };
+  tracks: TrackDTO[];
+}
+
+export class BrowseTracks implements UseCase<BrowseTracksInputDTO, BrowseTracksOutputDTO>{
   constructor(
     private readonly repoEducation: EducationRepository,
     private readonly repoProgress: TrackProgressRepository,
     private readonly gatewayGamification: GamificationGateway
   ) {}
 
-  async execute(input: BrowseTracksInputDTO): Promise<Result<TrackCardDTO[]>> {
+  async execute(input: BrowseTracksInputDTO): Promise<Result<BrowseTracksOutputDTO>> {
     const dataOrError = await Result.tryAsync(() =>
       Promise.all([
         this.repoEducation.findAllTracks(true), 
         this.gatewayGamification.getPlayerStats(input.userId),
         this.repoProgress.findAllProgressByUser(input.userId),
+        this.repoEducation.countTotalTracks(),
+        this.repoProgress.countCompletedTracksByUserId(input.userId)
       ])
     );
 
     if (dataOrError.failed) return Result.fail(dataOrError.errors);
 
-    const [allTracks, statsData, allProgresses] = dataOrError.value!;
+    const [allTracks, statsData, allProgresses, totalTracks, completedTracks] = dataOrError.value!;
     const userStats = statsData || { level: 1, totalXp: 0 };
 
     const progressMap = new Map(allProgresses.map((p: TrackProgress) => [p.trackId, p]));
@@ -50,14 +61,12 @@ export class BrowseTracks implements UseCase<BrowseTracksInputDTO, TrackCardDTO[
     const visibleTracks = allTracks.filter((track) =>
       track.isVisibleTo(input.userProfile)
     );
-
-    // Calcula uma vez os IDs das trilhas completadas (performance)
+    
     const completedTrackIds = allProgresses
       .filter((p) => p.isCompleted)
       .map((p) => p.trackId);
 
-    // Mapeia os dados (Tudo em memória, super rápido)
-    const trackCards: TrackCardDTO[] = visibleTracks.map((track) => {
+    const trackCards: TrackDTO[] = visibleTracks.map((track) => {
       const lockStatus = track.isLocked(completedTrackIds, userStats.level);
       const totalMissions = track.missions.length;
       const progressEntity = progressMap.get(track.id.toString());
@@ -69,7 +78,7 @@ export class BrowseTracks implements UseCase<BrowseTracksInputDTO, TrackCardDTO[
         percentage = Math.round((safeCount / totalMissions) * 100);
       }
 
-      let status: TrackCardDTO["status"] = "NOT_STARTED";
+      let status: TrackDTO["status"] = "NOT_STARTED";
       if (lockStatus.locked) status = "LOCKED";
       else if (percentage === 100) status = "COMPLETED";
       else if (percentage > 0) status = "IN_PROGRESS";
@@ -80,6 +89,7 @@ export class BrowseTracks implements UseCase<BrowseTracksInputDTO, TrackCardDTO[
         slug: track.slug,
         description: track.description,
         iconUrl: track.iconUrl,
+        category: track.category,
         difficulty: track.difficulty,
         isLocked: lockStatus.locked,
         lockReason: lockStatus.reason,
@@ -88,6 +98,12 @@ export class BrowseTracks implements UseCase<BrowseTracksInputDTO, TrackCardDTO[
       };
     });
 
-    return Result.ok(trackCards);
+    return Result.ok({
+      summary: {
+          totalTracks,
+          completedTracks
+      },
+      tracks: trackCards
+  });
   }
 }

@@ -1,4 +1,5 @@
 import { CreateTrackInputDTO, Track, TrackDifficulty, TrackVisibility } from "@spysec/education";
+import { TrackCategory } from "../../src";
 
 export class TrackBuilder {
   private props: CreateTrackInputDTO = {
@@ -7,6 +8,8 @@ export class TrackBuilder {
     iconUrl: "https://example.com/icon.png",
     difficulty: TrackDifficulty.BASIC,
     targetProfile: TrackVisibility.ALL,
+    category: TrackCategory.MINDSET,
+    tags: [],
     minLevel: 0,
     prerequisiteTrackId: null 
   };
@@ -14,7 +17,7 @@ export class TrackBuilder {
   static aTrack(): TrackBuilder {
     return new TrackBuilder();
   }
-
+  
   withTitle(title: string): this {
     this.props.title = title;
     return this;
@@ -43,6 +46,16 @@ export class TrackBuilder {
   withMinLevel(level: number): this {
     this.props.minLevel = level;
     return this;
+  }
+
+  withCategory(category: TrackCategory): this{
+    this.props.category = category
+    return this
+  }
+
+  withTags(newTags: string[]): this{
+    this.props.tags = newTags
+    return this
   }
 
   withPrerequisite(trackId: string | undefined): this {

@@ -2,7 +2,7 @@ import { Entity, EntityProps, Id, Result } from "@spysec/shared";
 import { Validator } from "@spysec/utils";
 import { ProfileType } from "@spysec/auth";
 
-export interface PlayerProps extends EntityProps {
+interface PlayerProps extends EntityProps {
   userId: string;
   nickname: string;
   type: ProfileType;
@@ -13,6 +13,8 @@ export interface PlayerProps extends EntityProps {
   maxStreak: number; 
   playedCategories: string[]; 
   lastActivityDate: Date | null;
+  completedMissionsCount: number
+  totalStudySeconds: number
   createdAt: Date;
   updatedAt: Date;
 }
@@ -35,6 +37,8 @@ export interface RestorePlayerProps {
   maxStreak: number; 
   playedCategories: string[]; 
   lastActivityDate: Date | null;
+  completedMissionsCount: number;
+  totalStudySeconds: number
   createdAt: Date | string;
   updatedAt: Date | string;
 }
@@ -65,7 +69,9 @@ export class Player extends Entity<Player, PlayerProps> {
           badges: [],
           maxStreak: 0,
           playedCategories: [],   
+          completedMissionsCount: 0,
           lastActivityDate: null,
+          totalStudySeconds: 0,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -161,11 +167,25 @@ export class Player extends Entity<Player, PlayerProps> {
     return this.clone({ badges: [...this.props.badges, badgeSlug] });    
   }
 
+  incrementCompletedMissions(): void {
+    if (!this.props.completedMissionsCount) {
+        this.props.completedMissionsCount = 0;
+    }
+    this.props.completedMissionsCount++;
+  }
+
+  addStudyTime(seconds: number): void {
+    if (!this.props.totalStudySeconds) {
+        this.props.totalStudySeconds = 0;
+    }
+    this.props.totalStudySeconds += seconds;
+}
+
   addCategoryHistory(category: string): Player {
     if (this.props.playedCategories.includes(category)) return this;
     return this.clone({ 
         playedCategories: [...this.props.playedCategories, category] 
-    });
+  }); 
 }
 
   get userId() { return this.props.userId; } 
@@ -179,4 +199,6 @@ export class Player extends Entity<Player, PlayerProps> {
   get badges() { return this.props.badges }
   get lastActivityDate() { return this.props.lastActivityDate }
   get createdAt() { return this.props.createdAt }
+  get completedMissionsCount(): number { return this.props.completedMissionsCount }
+  get totalStudySeconds(): number { return this.props.totalStudySeconds || 0 }
 }

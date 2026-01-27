@@ -7,6 +7,7 @@ interface InputDTO {
     userId: string;
     action: ActionStatus;
     xpEarned: number; 
+    timeSpent?: number; 
     payload: { 
         trackId?: string;
         trackSlug?: string
@@ -44,6 +45,14 @@ export class RegisterGameplay implements UseCase<InputDTO, OutputDTO> {
         }
         
         player = player.registerActivity();
+
+        if (input.timeSpent && input.timeSpent > 0) {
+            player.addStudyTime(input.timeSpent);   
+        }
+
+        if (input.action === ActionStatus.MISSION_COMPLETED) {
+            player.incrementCompletedMissions(); 
+       }
 
         // 3. Processa Níveis (Loop do Service)
         // Service retorna { leveledUp: boolean, updatedPlayer: Player }

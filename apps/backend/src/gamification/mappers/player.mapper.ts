@@ -17,6 +17,8 @@ export class PlayerMapper {
       badges: raw.badges,
       playedCategories: raw.playedCategories,
       lastActivityDate: raw.lastActivityDate, 
+      completedMissionsCount: raw.completedMissionsCount ?? 0,
+      totalStudySeconds: raw.totalStudySeconds ?? 0,
       createdAt: raw.createdAt,
       updatedAt: raw.updatedAt,
     });
@@ -41,6 +43,8 @@ export class PlayerMapper {
       badges: player.badges, 
       playedCategories: player.playedCategories,
       lastActivityDate: player.lastActivityDate ? player.lastActivityDate : null,
+      completedMissionsCount: player.completedMissionsCount,
+      totalStudySeconds: player.totalStudySeconds,
       updatedAt: new Date(), 
       createdAt: player.createdAt instanceof Date ? player.createdAt : new Date(player.createdAt)
     };

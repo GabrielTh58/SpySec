@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Player, PlayerRepository } from '@spysec/gamification';
+import { IPlayerUpdateParams, Player, PlayerRepository } from '@spysec/gamification';
 import { PrismaService } from 'src/db/prisma.service';
 import { PlayerMapper } from '../mappers/player.mapper';
+import { Prisma } from 'generated/prisma/browser';
 
 @Injectable()
 export class PrismaPlayerRepository implements PlayerRepository {
@@ -52,4 +53,27 @@ export class PrismaPlayerRepository implements PlayerRepository {
       },
     });
   }
+
+  async getRankingPosition(userId: string, currentXp: number): Promise<number> {
+    const countBetterPlayers = await this.prisma.player.count({
+        where: {
+            currentXp: { gt: currentXp }
+        }
+    });
+    return countBetterPlayers + 1; 
+  }
+
+  async update(userId: string, data: IPlayerUpdateParams): Promise<Player> {
+    const prismaData: Prisma.PlayerUpdateInput = {};
+
+    if (data.nickname) {
+        prismaData.nickname = data.nickname;
+    }
+    const updatedRaw = await this.prisma.player.update({
+        where: { userId: userId },
+        data: prismaData
+    });
+
+    return PlayerMapper.toDomain(updatedRaw);
+}
 }
