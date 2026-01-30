@@ -8,14 +8,14 @@ interface MissionPortalProps {
     title?: string;
     subtitle?: string;
     ctaText?: string;
-    level?: number;
+    estimatedTime?: number;
     xpReward?: number;
     onEnter?: () => void;   
     className?: string;
 }
 
 export function MissionPortal(props: MissionPortalProps) {
-    const { title, subtitle, ctaText, level, xpReward, onEnter, className } = props
+    const { title, subtitle, ctaText, estimatedTime = 3, xpReward, onEnter, className } = props
 
     const [isHovered, setIsHovered] = useState(false);
 
@@ -76,10 +76,12 @@ export function MissionPortal(props: MissionPortalProps) {
                 <div className="flex-1 w-full text-center md:text-left space-y-3">
                     <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 text-xs font-mono uppercase tracking-wider">
                         <span className="px-2 py-0.5 rounded bg-cyan-950/60 border border-cyan-800 text-cyan-300 flex items-center gap-1">
-                            <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse font-orbitron" /> Nível {level} 
+                            <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse font-orbitron" /> 
+                            {estimatedTime} min 
                         </span>
                         <span className="px-2 py-0.5 rounded bg-purple-950/60 border border-purple-800 text-purple-300 flex items-center gap-1">
-                            <Star className="w-3 h-3 fill-current font-orbitron" /> {xpReward} XP
+                            <Star className="w-3 h-3 fill-current font-orbitron" /> 
+                            {xpReward} XP
                         </span>
                     </div>
 

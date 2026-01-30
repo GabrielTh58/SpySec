@@ -13,6 +13,7 @@ export interface GetMissionDataOutputDTO {
   title: string;       
   description?: string; 
   blocks: MissionBlock[];    
+  order: number
   nextMissionId?: string | null; 
 }
 
@@ -61,6 +62,7 @@ export class GetMissionData implements UseCase<GetMissionDataInputDTO, GetMissio
       title: mission.title,
       description: mission.description,
       blocks: mission.blocks,
+      order: mission.order,
       nextMissionId: nextMission ? nextMission.id.toString() : null
     });
   }

@@ -86,7 +86,7 @@ export class RegisterGameplay implements UseCase<InputDTO, OutputDTO> {
         return Result.ok({
             leveledUp: levelResult.leveledUp,
             newLevel: player.currentLevel,
-            badgesEarned: badgesEarnedInThisSession, // O front vê: "Opa, array > 0? Mostra popup!"
+            badgesEarned: badgesEarnedInThisSession, 
             totalXp: player.currentXp
         });
     }

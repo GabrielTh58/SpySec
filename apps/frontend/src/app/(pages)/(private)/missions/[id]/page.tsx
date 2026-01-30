@@ -1,47 +1,118 @@
 'use client'
+
+import { use, useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 import { useEducation } from "@/data/hooks/useEducation";
 import { useGamification } from "@/data/hooks/useGamification";
-import { useState } from "react";
+import { MissionContent } from "@spysec/education";
+import { Loading } from "@/components/template/Loading";
+import { MissionSuccessModal } from "@/components/missions/MissionSuccessModal";
+import { MissionWorkspace } from "@/components/missions/engine/MissionWorkspace";
+import { BadgeRevealModal } from "@/components/badges/BadgeRevealModal";
 
-export default function MissionPage(props: any) {
-    const [currentStep, setCurrentStep] = useState(1);
-    const [completedSteps, setCompletedSteps] = useState<number[]>([]); 
-    const missionId = props.params.id
+interface MissionPageProps {
+    params: Promise<{ id: string }>
+}
 
-    const { completeMission } = useEducation();
+export default function MissionPage({ params }: MissionPageProps) {
+    const { id } = use(params);
+    const missionId = id;
+    const router = useRouter();
+
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [showBadgeModal, setShowBadgeModal] = useState<boolean>(false);
+    const [earnedBadge, setEarnedBadge] = useState<any | null>(null);
+    const [xpEarnedResult, setXpEarnedResult] = useState(0);
+
+    const {
+        activeMission,
+        fetchMissionData,
+        completeMission,
+        isLoading
+    } = useEducation();
+
     const { refreshProfile } = useGamification();
-    
 
-    const handleMissionFinish = async () => {
-        const result = await completeMission(missionId);
-        
-        if (result) {
-            // Se deu certo, atualiza o XP no Header (Gamification)
-            // O EducationContext já atualizou o progresso interno dele automaticamente
-            await refreshProfile(); 
-            
-            alert(`Missão cumprida! Ganhou ${result.xpEarned} XP`);
+    useEffect(() => {
+        if (!activeMission || activeMission.id !== missionId) {
+            fetchMissionData(missionId);
         }
+    }, [missionId, activeMission, fetchMissionData]);
+
+    const missionContentVO = useMemo(() => {
+        if (!activeMission || !activeMission.blocks) return null;
+
+        const blocksData = Array.isArray(activeMission.blocks)
+            ? activeMission.blocks
+            : (activeMission.blocks as any).value || [];
+
+        return MissionContent.restore(blocksData);
+    }, [activeMission]);
+
+    const handleMissionFinish = async (answers: Record<string, any>) => {
+        const result = await completeMission(missionId, answers);
+
+        if (result && result.success) {
+            await refreshProfile();
+            setXpEarnedResult(result.xpEarned);
+            setShowSuccessModal(true)
+
+            /*if (result.newBadge) {
+                setEarnedBadge(result.newBadge);
+                setShowBadgeModal(true);
+            } else {
+                setShowSuccessModal(true);
+            }*/
+        } else {
+            toast.error("Erro ao validar missão. Verifique suas respostas.");
+        }
+    };
+
+    const handleCloseBadge = () => {
+        setShowBadgeModal(false);
+        setTimeout(() => {
+            setShowSuccessModal(true);
+        }, 300);
+    };
+
+    const handleNextMission = () => {
+        if (activeMission?.nextMissionId) {
+            setShowSuccessModal(false);
+            router.push(`/missions/${activeMission.nextMissionId}`);
+        }
+    };
+
+    const handleBackToTrack = () => {
+        router.push(`/tracks`)
     }
 
-    return(
-        <div className="relative flex-1 w-full min-h-screen mx-auto max-w-[1440px]  p-6 md:p-12 animate-fade-in">
-            {/* Background Decorativo */}
-            <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-                <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] bg-purple-600/30  rounded-full filter blur-3xl opacity-20"></div>
-                <div className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] bg-cyan-600/30 rounded-full filter blur-3xl opacity-20"></div>
-            </div>
+    if (isLoading || !missionContentVO) return <Loading />
 
-            <h2 className="font-orbitron text-2xl neon-text-glow text-center">Missão 01 - Introdução a Segurança</h2>
+    return (
+        <>
+            <MissionWorkspace
+                missionContent={missionContentVO}
+                title={activeMission?.title || "Missão"}
+                order={activeMission?.order || 0}
+                onFinish={handleMissionFinish}
+            />
 
-            <div className="flex items-center w-full">
-                 {/*<Steps />*/}
+            {showBadgeModal && earnedBadge && (
+                <BadgeRevealModal
+                    badge={earnedBadge}
+                    onClose={handleCloseBadge} 
+                />
+            )}
 
-                <div className="neon-border-cyan flex-1 w-64">
-                    sda
-                </div>
-            </div>
-
-        </div>
-    )
+            {showSuccessModal && (
+                <MissionSuccessModal
+                    xpEarned={xpEarnedResult}
+                    onNextMission={handleNextMission}
+                    onBackToTrack={handleBackToTrack}
+                    hasNextMission={!!activeMission?.nextMissionId}
+                />
+            )}
+        </>
+    );
 }

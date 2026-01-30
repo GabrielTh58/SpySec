@@ -1,5 +1,7 @@
 import { PrismaClient, Rarity } from '../../../generated/prisma/client';
 
+const ICON_BASE_URL = "https://github.com/GabrielTh58/SpySec/blob/main/public/badge-icons";
+
 export async function seedBadges(prisma: PrismaClient) {
   console.log('Generating Badges...');
 
@@ -9,7 +11,7 @@ export async function seedBadges(prisma: PrismaClient) {
       slug: 'recruta-digital', 
       name: 'Recruta Digital',
       description: 'Deu o primeiro passo completando sua primeira missão valendo XP.',
-      iconUrl: 'https://cdn-icons-png.flaticon.com/512/3408/3408455.png',
+      iconUrl: `${ICON_BASE_URL}/footprints.svg`,
       condition: 'XP_EARNED > 0',
       rarity: Rarity.COMMON
     },
@@ -17,7 +19,7 @@ export async function seedBadges(prisma: PrismaClient) {
       slug: 'explorador-curioso', 
       name: 'Explorador Curioso',
       description: 'Utilizou a Inteligência Artificial para tirar dúvidas ou buscar conhecimento.',
-      iconUrl: 'https://cdn-icons-png.flaticon.com/512/2921/2921226.png', 
+      iconUrl: `${ICON_BASE_URL}/shield-question-mark.svg`,
       condition: 'ACTION:AI_INTERACTION',
       rarity: Rarity.COMMON
     },
@@ -25,7 +27,7 @@ export async function seedBadges(prisma: PrismaClient) {
       slug: 'escudo-corporativo', 
       name: 'Escudo Corporativo',
       description: 'Concluiu trilhas essenciais para proteção empresarial.',
-      iconUrl: 'https://cdn-icons-png.flaticon.com/512/9564/9564115.png',
+      iconUrl: `${ICON_BASE_URL}/shield-check.svg`,
       condition: 'TRACK:seguranca-home-office OR lgpd-corporativo',
       rarity: Rarity.EPIC
     },
@@ -33,7 +35,7 @@ export async function seedBadges(prisma: PrismaClient) {
       slug: 'especialista-fundamentos', 
       name: 'Base Sólida',
       description: 'Dominou os conceitos fundamentais completando a trilha de Fundamentos.',
-      iconUrl: 'https://cdn-icons-png.flaticon.com/512/9630/9630249.png',
+      iconUrl: `${ICON_BASE_URL}/brick-wall-shield.svg`,
       condition: 'TRACK:fundamentos-da-seguranca',
       rarity: Rarity.RARE
     },
@@ -41,7 +43,7 @@ export async function seedBadges(prisma: PrismaClient) {
       slug: 'guardiao-de-chaves', 
       name: 'Guardião das Chaves',
       description: 'Completou missões focadas em segurança de senhas.',
-      iconUrl: 'https://cdn-icons-png.flaticon.com/512/2889/2889676.png',
+      iconUrl: `${ICON_BASE_URL}/key-round.svg`,
       condition: 'CATEGORY:PASSWORDS',
       rarity: Rarity.RARE
     },
@@ -49,7 +51,7 @@ export async function seedBadges(prisma: PrismaClient) {
       slug: 'fenix', 
       name: 'A Fênix',
       description: 'Mostrou resiliência ao voltar a estudar após perder uma grande sequência.',
-      iconUrl: 'https://cdn-icons-png.flaticon.com/512/785/785116.png',
+      iconUrl: `${ICON_BASE_URL}/flame.svg`,
       condition: 'RECOVER_STREAK (Max >= 5)',
       rarity: Rarity.LEGENDARY
     },
@@ -57,7 +59,7 @@ export async function seedBadges(prisma: PrismaClient) {
       slug: 'em-ascensao', 
       name: 'Em Ascensão',
       description: 'Alcançou o nível 5 na plataforma.',
-      iconUrl: 'https://cdn-icons-png.flaticon.com/512/3112/3112946.png',
+      iconUrl: `${ICON_BASE_URL}/rocket.svg`,
       condition: 'LEVEL:5',
       rarity: Rarity.RARE
     },
@@ -65,7 +67,7 @@ export async function seedBadges(prisma: PrismaClient) {
       slug: 'sentinela-atento', 
       name: 'Sentinela Atento',
       description: 'Manteve a constância nos estudos por 3 dias seguidos.',
-      iconUrl: 'https://cdn-icons-png.flaticon.com/512/1042/1042306.png', 
+      iconUrl: `${ICON_BASE_URL}/eye.svg`, 
       condition: 'STREAK:3',
       rarity: Rarity.COMMON
     },
@@ -73,7 +75,7 @@ export async function seedBadges(prisma: PrismaClient) {
       slug: 'detector-de-iscas',
       name: 'Detector de Iscas',
       description: 'Concluiu treinamentos sobre identificação de Phishing.',
-      iconUrl: 'https://cdn-icons-png.flaticon.com/512/2058/2058142.png',
+      iconUrl: `${ICON_BASE_URL}/fishing-hook.svg`,
       condition: 'TRACK:phishing',
       rarity: Rarity.RARE
     },
@@ -81,7 +83,7 @@ export async function seedBadges(prisma: PrismaClient) {
       slug: 'aluno-do-futuro', 
       name: 'Aluno do Futuro',
       description: 'Interessado em IA e novas tecnologias.',
-      iconUrl: 'https://cdn-icons-png.flaticon.com/512/2282/2282195.png',
+      iconUrl: `${ICON_BASE_URL}/brain-circuit.svg`,
       condition: 'TRACK:ai-security',
       rarity: Rarity.EPIC
     },

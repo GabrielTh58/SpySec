@@ -74,6 +74,7 @@ type HotspotContext = EmailContent | TerminalContent | ImageContent;
 
 interface HotspotData {
   context: HotspotContext;
+  feedbackError?: string;
   regions: {
     id: string;
     rect: { x: number, y: number, w: number, h: number };
@@ -273,20 +274,12 @@ export class MissionContent extends VO<MissionBlock[]> {
     const block = this.findBlockById(id);
     if (!block) return "UNKNOWN_ERROR";
 
-    // QUIZ and INPUT have direct feedbackError property
-    if (block.type === 'QUIZ' || block.type === 'INPUT') {
-      return block.data.feedbackError || "INCORRECT_ANSWER";
-    }
-
-    // HOTSPOT is more complex, feedback is per region
-    if (block.type === 'HOTSPOT') {
-      // Here you may return a generic message or try to locate specific region feedback
-      return "DID_NOT_FIND_ALL_CORRECT_AREAS_OR_CLICKED_WRONG_LOCATION";
+    if (['QUIZ', 'INPUT', 'MATCHING', 'SORTING', 'HOTSPOT'].includes(block.type)) {
+      return (block.data as any).feedbackError || "INCORRECT_ANSWER";
     }
 
     return "INCORRECT_ANSWER";
   }
-
 
   get blocks(): MissionBlock[] {
     return this.value;

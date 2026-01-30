@@ -1,6 +1,5 @@
 import { TrackCategory, TrackDifficulty, TrackVisibility } from "@spysec/education"; 
-// Base URL para ícones (Substitua pelo seu repo real se quiser)
-const ICON_BASE_URL = "https://github.com/GabrielTh58/SpySec/tree/main/public/track-icons";
+const ICON_BASE_URL = "https://github.com/GabrielTh58/SpySec/blob/main/public/track-icons";
 
 export const TRACK_IDS = {
   MINDSET: "550e8400-e29b-41d4-a716-446655440001",
@@ -48,7 +47,7 @@ export const tracksData = [
     difficulty: TrackDifficulty.INTERMEDIATE,
     targetProfile: TrackVisibility.ALL,
     tags: ["Antivirus", "Hardware", "Updates"],
-    minLevel: 2
+    minLevel: 3
   },
   {
     id: TRACK_IDS.DEVICES_NETWORKS,
@@ -72,7 +71,7 @@ export const tracksData = [
     difficulty: TrackDifficulty.ADVANCED,
     targetProfile: TrackVisibility.CORPORATE,
     tags: ["Phishing", "Engenharia Social", "BEC"],
-    minLevel: 0
+    minLevel: 5
   },
   {
     id: TRACK_IDS.JURIDICO,
@@ -83,7 +82,7 @@ export const tracksData = [
     difficulty: TrackDifficulty.ADVANCED,
     targetProfile: TrackVisibility.CORPORATE,
     tags: ["LGPD", "Ransomware", "Compliance"],
-    minLevel: 0
+    minLevel: 5
   },
 
   // --- EIXO 4: TENDÊNCIAS ---
@@ -108,6 +107,6 @@ export const tracksData = [
     difficulty: TrackDifficulty.ADVANCED,
     targetProfile: TrackVisibility.ALL,
     tags: ["Exame", "Certificação", "Hardcore"],
-    minLevel: 10, 
+    minLevel: 8, 
   }
 ];

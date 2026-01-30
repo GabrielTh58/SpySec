@@ -18,7 +18,7 @@ export class AwardBadgesOnTrackComplete implements Subscriber<TrackCompletedEven
         await this.useCase.execute({
             userId: userId,
             xpEarned: 0,
-            action: ActionStatus.TRACK_COMPLETED, 
+            action: ActionStatus.TRACK_COMPLETED,   
             payload: {
                 trackId: trackId,
                 trackSlug: trackSlug

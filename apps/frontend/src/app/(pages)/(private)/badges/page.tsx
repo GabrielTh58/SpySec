@@ -19,14 +19,15 @@ export interface UI_Badge {
 export default function BadgesPage() {
     const [filter, setFilter] = useState<'all' | 'unlocked' | 'locked'>('all');
     const { profile, allBadges, isLoading } = useGamification();
-
+    
     const processedBadges: UI_Badge[] = useMemo(() => {
         if (!allBadges) return [];
 
-        const earnedIds = new Set(profile?.badges?.map((b: any) => b.id));
+        const earnedIds = new Set(profile?.badges?.map((b: any) => b));
+        
         return allBadges.map((badge: any) => {
-            const isUnlocked = earnedIds.has(badge.id);
-
+            const isUnlocked = earnedIds.has(badge.slug);
+            
             return {
                 id: badge.id,
                 title: badge.name,
@@ -44,6 +45,7 @@ export default function BadgesPage() {
         if (filter === 'locked') return !badge.isUnlocked;
         return true;
     });
+
 
     const totalUnlocked = processedBadges.filter(b => b.isUnlocked).length;
     const totalBadges = processedBadges.length;
@@ -90,7 +92,6 @@ export default function BadgesPage() {
                     <FilterButton active={filter === 'locked'} onClick={() => setFilter('locked')} label="A Conquistar" />
                 </div>
 
-                {/* Legenda de Raridade */}
                 <div className="flex flex-wrap items-center gap-3 text-[10px] uppercase tracking-wider text-gray-500 font-bold">
                     <LegendItem color="bg-slate-400" label="Comum" />
                     <LegendItem color="bg-cyan-400" label="Rara" />

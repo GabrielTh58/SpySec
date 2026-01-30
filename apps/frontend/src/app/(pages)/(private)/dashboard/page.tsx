@@ -13,37 +13,35 @@ import { formatStudyTime } from "@/data/utils/formatDate";
 import { Award, ChartNoAxesColumnIncreasing, ChevronUp, Clock, Lock, Shield, Trophy, Zap } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 
 export default function Dashboard() {
     const { profile, isLoading, ranking, allBadges } = useGamification()
-    const { progress } = useEducation()
+    
+    const { progress  } = useEducation()
     const studyTime = formatStudyTime(profile?.totalStudySeconds || 0);
     const router = useRouter()
-
-    const [portalStatus, setPortalStatus] = useState<'idle' | 'active'>('idle');
 
     if (isLoading) return <Loading />
 
     const recentBadges = profile?.badges.slice(-5).reverse() || [];
     const hasActiveMission = !!progress?.nextMission;
+    
     const portalData = hasActiveMission ? {
         title: progress?.nextMission?.title,
         subtitle: `Continuar Trilha: ${progress?.nextMission?.description}`,
         cta: "Continuar Missão",
-        targetUrl: `/education/mission/${progress?.nextMission?.id}`
+        targetUrl: `/missions/${progress?.nextMission?.id}`
     } : {
         title: "Iniciar Nova Operação",
         subtitle: "Nenhuma missão ativa no momento. Escolha uma nova trilha para começar.",
         cta: "Explorar Trilhas",
-        targetUrl: "/education/tracks"
+        targetUrl: "/tracks"
     };
 
     const handlePortalEnter = () => {
-        setPortalStatus('active');
         setTimeout(() => {
             router.push(portalData.targetUrl);
-        }, 1500);
+        }, 1000);
     };
 
     return (
@@ -54,13 +52,11 @@ export default function Dashboard() {
                     title={portalData.title}
                     subtitle={portalData.subtitle}
                     ctaText={portalData.cta}
-                    level={profile?.currentXp || 1}
                     xpReward={hasActiveMission ? progress.nextMission?.xpReward : 100}
                     onEnter={handlePortalEnter}
                     className="md:col-span-2 lg:col-span-2 lg:row-span-2"
                 />
 
-                {/* Stat Card 1 - Progresso Geral */}
                 <GlassCard className="flex flex-col justify-between" hoverEffect>
                     <div className="flex items-center justify-between">
                         <h3 className="text-gray-400 font-medium font-orbitron text-sm">Progresso</h3>
@@ -69,14 +65,13 @@ export default function Dashboard() {
                         </div>
                     </div>
                     <div>
-                        <p className="text-3xl font-bold font-orbitron text-cyan-400 mt-2 neon-text-cyan">{progress?.globalProgressPercent}</p>
+                        <p className="text-3xl font-bold font-orbitron text-cyan-400 mt-2 neon-text-cyan">{progress?.globalProgressPercent}%</p>
                         <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
-                            <ChevronUp size={12} className="text-green-500" /> {progress?.monthlyGrowth} este mês
+                            <ChevronUp size={12} className="text-green-500" /> {progress?.monthlyGrowth}% este mês
                         </p>
                     </div>
                 </GlassCard>
 
-                {/* Stat Card 2 - Desafios */}
                 <GlassCard className="flex flex-col justify-between" hoverEffect>
                     <div className="flex items-center justify-between">
                         <h3 className="text-gray-400 font-medium font-orbitron text-sm">Missões Concluídas</h3>
@@ -90,7 +85,6 @@ export default function Dashboard() {
                     </div>
                 </GlassCard>
 
-                {/* Stat Card 3 - Tempo */}
                 <GlassCard className="flex flex-col justify-between" hoverEffect>
                     <div className="flex items-center justify-between">
                         <h3 className="text-gray-400 font-medium text-sm font-orbitron">Tempo de Estudo</h3>
@@ -107,7 +101,6 @@ export default function Dashboard() {
                     </div>
                 </GlassCard>
 
-                {/* Stat Card 4 - Streak */}
                 <GlassCard className="flex flex-col justify-between" hoverEffect>
                     <div className="flex items-center justify-between">
                         <h3 className="text-gray-400 font-medium text-sm font-orbitron">Sequência</h3>
@@ -169,7 +162,7 @@ export default function Dashboard() {
                             className="text-[10px] text-cyan-400 hover:text-cyan-300 transition-colors uppercase font-bold tracking-wider border border-cyan-500/30 px-2 py-1 rounded hover:bg-cyan-500/10"
                         >
                             Ver todas
-                        </Link>
+                        </Link> 
                     </div>
 
                     <div className="flex-1 flex flex-col gap-6 overflow-y-auto custom-scrollbar pr-1 max-h-[300px]">
@@ -184,7 +177,7 @@ export default function Dashboard() {
                                     return (
                                         <AchievementBadge
                                             key={badgeSlug}
-                                            icon={badgeDetails.iconUrl || "🏅"}
+                                            icon={badgeDetails.iconUrl} 
                                             title={badgeDetails.name}
                                             subtitle="Conquistado"
                                         />
@@ -221,6 +214,7 @@ export default function Dashboard() {
                     </div>
                 </GlassCard>             
             </div>
+
             <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-6 max-w-[1440px] mx-auto">    
                     <div className="md:col-span-1 min-h-[250px]">
                         <SecurityGoalsWidget />
@@ -228,7 +222,7 @@ export default function Dashboard() {
                     <div className="md:col-span-2 min-h-[250px]">
                         <ThreatRadarWidget />
                     </div>                
-                </div>  
+            </div>  
         </div>
     )
 }

@@ -58,15 +58,17 @@ export class BrowseTracks implements UseCase<BrowseTracksInputDTO, BrowseTracksO
 
     const progressMap = new Map(allProgresses.map((p: TrackProgress) => [p.trackId, p]));
 
+    /* Filtrar por categoria
     const visibleTracks = allTracks.filter((track) =>
       track.isVisibleTo(input.userProfile)
     );
+    */
     
     const completedTrackIds = allProgresses
       .filter((p) => p.isCompleted)
       .map((p) => p.trackId);
 
-    const trackCards: TrackDTO[] = visibleTracks.map((track) => {
+    const trackCards: TrackDTO[] = allTracks.map((track) => {
       const lockStatus = track.isLocked(completedTrackIds, userStats.level);
       const totalMissions = track.missions.length;
       const progressEntity = progressMap.get(track.id.toString());

@@ -94,8 +94,9 @@ model Mission {
   title         String
   slug          String   @unique
   description   String
+  iconUrl       String  
   xpReward      Int
-  order         Int       
+  order         Int
   category      String
   estimatedTime Int      @default(180)
   content       Json

@@ -1,11 +1,11 @@
-import { GetAllBadges, GetPlayerProfile, PlayerRepository, BadgeRepository, GetRanking, RankingDTO,BadgeDTO, LevelRepository, PlayerProfileOutputDTO, UpdateProfileInputDTO, UpdateProfileOutputDTO, UpdateProfile } from "@spysec/gamification";
+import { GetAllBadges, GetPlayerProfile, PlayerRepository, BadgeRepository, GetRanking, RankingDTO,BadgeDTO, LevelRepository, PlayerProfileOutputDTO, UpdateProfileInputDTO, UpdateProfileOutputDTO, UpdateProfile, LevelingService, AchievementRule, RegisterGameplay, ActionStatus } from "@spysec/gamification";
 import { RankingResponseDTO } from "../dto/RankingResponse.dto";
 
 export class GamificationFacade {
     constructor(
         private readonly repoPlayer: PlayerRepository,  
         private readonly repoBadge: BadgeRepository, 
-        private readonly repoLevel: LevelRepository,                      
+        private readonly repoLevel: LevelRepository,     
     ) {}
 
     async getPlayerProfile(userId: string): Promise<PlayerProfileOutputDTO> {
@@ -78,4 +78,6 @@ export class GamificationFacade {
 
         return updatedProfile
     }
+
+ 
 }

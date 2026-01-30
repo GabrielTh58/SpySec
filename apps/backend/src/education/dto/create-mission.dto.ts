@@ -59,6 +59,15 @@ export class CreateMissionDto implements CreateMissionInputDTO {
     })
     @IsArray({ message: 'Content must be an array of blocks' })
     content!: MissionBlockDto[]; 
+
+    @ApiProperty({
+        description: 'Mission icon URL',
+        example: 'https://example.com/icon.png',
+    })
+    @IsString()
+    @IsNotEmpty({ message: 'Mission icon URL is required' })
+    iconUrl!: string;
+
     @ApiProperty({
         description: 'Estimated time to complete the mission (in minutes)',
         example: 10

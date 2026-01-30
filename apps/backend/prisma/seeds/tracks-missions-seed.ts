@@ -91,12 +91,13 @@ export async function seedTracks(prisma: PrismaService) {
       await prisma.mission.upsert({
         where: { slug: mission.slug }, // Supondo que slug seja único, ou use um ID fixo para missões também
         update: {
-            title: mission.title,
-            description: mission.description,
-            content: contentJson, 
-            xpReward: mission.xpReward,
-            estimatedTime: mission.estimatedTime,
-            updatedAt: new Date()
+          title: mission.title,
+          description: mission.description,
+          iconUrl: mission.iconUrl,
+          content: contentJson,
+          xpReward: mission.xpReward,
+          estimatedTime: mission.estimatedTime,
+          updatedAt: new Date()
         },
         create: {
           id: mission.id.toString(),
@@ -104,6 +105,7 @@ export async function seedTracks(prisma: PrismaService) {
           title: mission.title,
           slug: mission.slug,
           description: mission.description,
+          iconUrl: mission.iconUrl,
           xpReward: mission.xpReward,
           category: mission.category,
           estimatedTime: mission.estimatedTime,

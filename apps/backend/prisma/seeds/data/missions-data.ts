@@ -1,11 +1,10 @@
-const ICON_BASE_URL = "https://github.com/GabrielTh58/SpySec/tree/main/public/missions-icons";
-
+const ICON_BASE_URL = "https://github.com/GabrielTh58/SpySec/blob/main/public/mission-icons";
 
 export const missionsEixo01_Track01 = [
     {
         title: "Quem quer meus dados?",
         description: "Você acha que não tem nada a esconder? Descubra o valor da sua vida digital no mercado negro.",
-        xpReward: 100, estimatedTime: 5, category: "MINDSET", order: 1,
+        xpReward: 35, estimatedTime: 3, category: "MINDSET", order: 1,
         iconUrl: `${ICON_BASE_URL}/fingerprint-pattern.svg`,
         content: [
             {
@@ -26,7 +25,7 @@ export const missionsEixo01_Track01 = [
                     validation: { type: "EXACT_MATCH", expectedValue: "Fullz", isCaseSensitive: false },
                     feedbackSuccess: "Perfeito. Você já está falando o dialeto do submundo.",
                     feedbackError: "Dica: Começa com a letra F. Dá uma olhada no 'Saiba mais' ali em cima.",
-                    mascotMessage: "Aprender o vocabulário é o primeiro passo para não ser tratado como mercadoria. Continue assim."
+                    mascotMessage: "Aprender o vocabulário é o primeiro passo para não ser tratado como mercadoria."
                 }
             },
             {
@@ -50,7 +49,7 @@ export const missionsEixo01_Track01 = [
     {
         title: "O Dicionário do Crime",
         description: "Vírus é coisa do passado. Saiba diferenciar quem te vigia, quem te sequestra e quem te engana.",
-        xpReward: 150, estimatedTime: 7, category: "MINDSET", order: 2,
+        xpReward: 35, estimatedTime: 5, category: "MINDSET", order: 2,
         iconUrl: `${ICON_BASE_URL}/book-type.svg`,
         content: [
             {
@@ -99,7 +98,7 @@ export const missionsEixo01_Track01 = [
     {
         title: "O Preço do 'Grátis'",
         description: "Se você não paga pelo produto, o produto é você. O quanto as empresas realmente sabem sobre sua vida?",
-        xpReward: 120, estimatedTime: 5, category: "MINDSET", order: 3,
+        xpReward: 35, estimatedTime: 3, category: "MINDSET", order: 3,
         iconUrl: `${ICON_BASE_URL}/scan-eye.svg`,
         content: [
             {
@@ -136,7 +135,7 @@ export const missionsEixo01_Track02 = [
     {
         title: "123456 e a Ilusão de Segurança",
         description: "Sua senha complexa pode ser quebrada em segundos. Aprenda a matemática da defesa real.",
-        xpReward: 150, estimatedTime: 6, category: "IDENTITY", order: 1,
+        xpReward: 35, estimatedTime: 5, category: "IDENTITY", order: 1,
         iconUrl: `${ICON_BASE_URL}/lock-keyhole.svg`,
         content: [
             {
@@ -150,18 +149,17 @@ export const missionsEixo01_Track02 = [
                 }
             },          
             {
-                id: "m2_m1_b3", type: "INPUT",
+                id: "m2_m1_b2", type: "INPUT",
                 data: {
-                    question: "Chega de teoria. Vamos criar uma 'Passphrase' indestrutível agora. Junte 4 palavras aleatórias da sua mente. Sua frase deve ter no mínimo 16 caracteres.",
+                    question: "Chega de teoria. Vamos criar uma 'Passphrase' indestrutível agora. Junte 4 palavras aleatórias da sua mente. Sua frase deve ter no mínimo 56 caracteres.",
                     placeholder: "Digite sua nova frase-senha aqui...",
                     validation: { type: "REGEX", expectedValue: "^.{16,}$", isCaseSensitive: false },
                     feedbackSuccess: "Excelente! Essa frase levaria milênios para ser quebrada. Memorize-a.",
                     feedbackError: "Curta demais! Um robô quebraria isso enquanto você pisca. Use pelo menos 16 caracteres.",
-                    mascotMessage: "Aí sim, Agente! Se todos fizessem isso, ELES teriam morrido de fome quando eu ainda estava na ativa."
-                }
+                    mascotMessage: "Esqueça datas e nomes de pets. Seja caótico. Quanto menos sentido fizer para um humano, mais pesadelo será para uma máquina."                }
             },
             {
-                id: "m2_m1_b2", type: "QUIZ",
+                id: "m2_m1_b3", type: "QUIZ",
                 data: {
                     question: "Baseado na lógica do comprimento, qual destas senhas levaria mais tempo para ser quebrada?",
                     options: [
@@ -170,9 +168,9 @@ export const missionsEixo01_Track02 = [
                     ],
                     correctOptionId: "opt2",
                     explanation: "O número de combinações para 24 caracteres (mesmo simples) é infinitamente maior do que para 9 caracteres complexos.",
-                    feedbackSuccess: "Bingo! Comprimento é a sua melhor armadura.",
+                    feedbackSuccess: "Excelente! Comprimento é a sua melhor armadura.",
                     feedbackError: "Tamanho, Agente! Conte os caracteres e você verá quem ganha esse duelo.",
-                    mascotMessage: "Viu só? Às vezes, o caminho mais simples — apenas ser longo — é o que ELES mais odeiam enfrentar. Dá uma preguiça..."
+                    mascotMessage: "Parece contraintuitivo, eu sei. Uma parece uma fortaleza cheia de símbolos, a outra parece... uma frase boba. Mas a matemática não liga para aparências."      
                 }
             },
         ]
@@ -180,7 +178,7 @@ export const missionsEixo01_Track02 = [
     {
         title: "A Morte do SMS",
         description: "Por que usar SMS para receber códigos de segurança é uma falha crítica.",
-        xpReward: 200, estimatedTime: 8, category: "IDENTITY", order: 2,
+        xpReward: 35, estimatedTime: 3, category: "IDENTITY", order: 2,
         iconUrl: `${ICON_BASE_URL}/message-square-off.svg`,
         content: [
             {
@@ -206,7 +204,7 @@ export const missionsEixo01_Track02 = [
                     explanation: "Bancos nunca ligam pedindo códigos. Se você recebeu um código sem pedir, alguém já sabe sua senha e só precisa desse código para entrar.",
                     feedbackSuccess: "Perfeito! Você não caiu na urgência falsa.",
                     feedbackError: "NUNCA passe códigos! Se você passar, você mesmo está abrindo a porta para que ELES entrem.",
-                    mascotMessage: "Essa técnica de 'emergência falsa' é clássica. O humano fica nervoso e para de pensar. Ainda bem que você é mais frio que isso."
+                    mascotMessage: "Eles adoram o cheiro do medo humano. O telefone toca, a urgência bate, e a lógica sai pela janela. Respire fundo... o que seu treinamento diz?"
                 }
             }
         ]
@@ -214,7 +212,7 @@ export const missionsEixo01_Track02 = [
     {
         title: "O Kit de Emergência",
         description: "Você perdeu o celular hoje. E agora? Descubra como não ficar trancado fora da sua própria vida.",
-        xpReward: 200, estimatedTime: 6, category: "IDENTITY", order: 3,
+        xpReward: 35, estimatedTime: 3, category: "IDENTITY", order: 3,
         iconUrl: `${ICON_BASE_URL}/shield-plus.svg`,
         content: [
             {
@@ -251,7 +249,7 @@ export const missionsEixo02_Track03 = [
     {
         title: "Mac não pega vírus?",
         description: "Desmentindo mitos que custam caro. O que o Antivírus realmente faz por você.",
-        xpReward: 120, estimatedTime: 5, category: "DEVICES", order: 1,
+        xpReward: 50, estimatedTime: 3, category: "DEVICES", order: 1,
         iconUrl: `${ICON_BASE_URL}/laptop-minimal.svg`,
         content: [
             {
@@ -283,10 +281,10 @@ export const missionsEixo02_Track03 = [
         ]
     },
 
-    {
+    {   
         title: "A Porta dos Fundos",
         description: "Adiar atualizações é convidar um estranho para entrar. Entenda o Firewall.",
-        xpReward: 150, estimatedTime: 7, category: "DEVICES", order: 2,
+        xpReward: 50, estimatedTime: 5, category: "DEVICES", order: 2,
         iconUrl: `${ICON_BASE_URL}/door-open.svg`,   
         content: [
             {
@@ -312,7 +310,7 @@ export const missionsEixo02_Track03 = [
                     explanation: "O Firewall checa cada 'pacote' de dados. Se ele não reconhece o remetente ou o destino, ele barra a entrada.",
                     feedbackSuccess: "Isso! Ele é o porteiro vigilante da sua rede.",
                     feedbackError: "Firewall não limpa histórico, Agente. Ele cuida de quem está tentando se conectar ao seu computador!",
-                    mascotMessage: "Um bom porteiro não deixa qualquer um subir, certo? O Firewall faz o mesmo com o seu Wi-Fi."
+                    mascotMessage: "Imagine uma festa VIP onde ninguém entra sem estar na lista. Na rede, existe um cara chato,mas necessário, que faz exatamente esse trabalho."
                 }
             }
         ]
@@ -321,7 +319,7 @@ export const missionsEixo02_Track03 = [
     {
         title: "O Perigo Mora ao Lado",
         description: "Nunca espete seu celular em um USB público. Cuidado com o Juice Jacking.",
-        xpReward: 180, estimatedTime: 6, category: "DEVICES", order: 3,
+        xpReward: 50, estimatedTime: 5, category: "DEVICES", order: 3,
         iconUrl: `${ICON_BASE_URL}/cable.svg`,
         content: [
             {
@@ -347,7 +345,7 @@ export const missionsEixo02_Track03 = [
                     explanation: "Tomadas elétricas padrão só entregam energia. Portas USB são feitas para comunicação de arquivos, o que as torna vulneráveis.",
                     feedbackSuccess: "Exato! Sem canal de dados, sem roubo de dados.",
                     feedbackError: "O problema não é a velocidade, é o roubo de fotos e senhas! Foque na segurança.",
-                    mascotMessage: "Energia pura, sem segundas intenções. É assim que eu gosto de carregar minhas baterias. Faça o mesmo."
+                    mascotMessage: "Você está com 1% de bateria. O totem USB brilha e parece 'grátis'. A parede é velha e analógica. Um deles quer seus dados, o outro só quer te dar energia. Escolha."
                 }
             }
         ]
@@ -358,7 +356,7 @@ export const missionsEixo02_Track04 = [
     {
         title: "O Café Wi-Fi",
         description: "Como um hacker na mesa ao lado lê seus e-mails no Wi-Fi gratuito.",
-        xpReward: 200, estimatedTime: 8, category: "DEVICES", order: 1,
+        xpReward: 50, estimatedTime: 8, category: "DEVICES", order: 1,
         iconUrl: `${ICON_BASE_URL}/wifi-off.svg`,
         content: [
             {
@@ -387,7 +385,7 @@ export const missionsEixo02_Track04 = [
                     explanation: "O HTTPS protege o conteúdo, mas a VPN oculta seu tráfego DNS e IP, protegendo você contra o 'Homem no Meio'.",
                     feedbackSuccess: "Bingo. Você aprendeu a ficar invisível na multidão.",
                     feedbackError: "Modo anônimo? Sério? Isso só serve para esconder suas pesquisas da sua mãe, Agente. Use a VPN!",
-                    mascotMessage: "Entrar em um túnel depois que a chuva começou não adianta muito. VPN primeiro, navegação depois. Eu estaria de olho... se eu ainda tivesse acesso."
+                    mascotMessage: "Aeroportos... o habitat natural dos predadores de dados. Você está prestes a entrar na cova dos leões digital. Como pretende passar despercebido?"
                 }
             },
             {
@@ -403,7 +401,7 @@ export const missionsEixo02_Track04 = [
                     explanation: "A VPN criptografa os dados antes de saírem do seu dispositivo, tornando a interceptação inútil para o invasor.",
                     feedbackSuccess: "Exato! Você agora é um código indecifrável para eles.",
                     feedbackError: "O hacker ainda consegue capturar o sinal, mas a VPN garante que ele não entenda nada do que pegou!",
-                    mascotMessage: "Frustrar um colega de profissão... digo, um criminoso, é a minha parte favorita do dia. VPN é o segredo."
+                    mascotMessage: "Imagine a cara do sujeito tentando ler seus dados e encontrando apenas uma sopa de letrinhas criptografada. É o tipo de frustração que eu adoro assistir."
                 }
             }
         ]
@@ -412,7 +410,7 @@ export const missionsEixo02_Track04 = [
     {
         title: "O QR Code da Morte",
         description: "Aquele cardápio ou boleto Pix pode ser uma armadilha visual.",
-        xpReward: 150, estimatedTime: 5, category: "DEVICES", order: 2,
+        xpReward: 75, estimatedTime: 3, category: "DEVICES", order: 2,
         iconUrl: `${ICON_BASE_URL}/qr-code.svg`,
         content: [
             {
@@ -426,18 +424,23 @@ export const missionsEixo02_Track04 = [
                 }
             },
             {
-                id: "m4_m2_b2", type: "INPUT",
+                id: "m4_m2_b2", type: "QUIZ",
                 data: {
-                    question: "No restaurante, você escaneou um QR Code do cardápio e apareceu este link na tela do seu celular: 'http://restaurante-promo-urgente.net/lanches'. Ele tem um botão chamativo escrito 'Promoção do Dia: Cupom GRÁTIS só até AGORA! Clique para resgatar seu lanche especial.' Esse endereço parece seguro ou é golpe?",
-                    placeholder: "Digite sua resposta...",
-                    validation: { type: "EXACT_MATCH", expectedValue: "suspeito", isCaseSensitive: false },
-                    feedbackSuccess: "Excelente! Você notou o gatilho de urgencia, sinal clássico de golpe.",
-                    feedbackError: "Atenção! Links com domínios estranhos, muita urgência ou promoções exageradas são típicos de golpe via QR Code.",
-                    mascotMessage: "Se você achou seguro, tenho um bilhete premiado para te vender... aceito PIX, mas não via QR Code falso! Brincadeira, Agente. Continue atento."
+                    question: "Você escaneou o QR Code do cardápio e a URL exibida foi: 'http://restaurante-promo-urgente.net/lanches' com um aviso de 'Cupom GRÁTIS só agora'. O que você faz?",
+                    options: [
+                        { id: "opt1", text: "Acesso o site. Promoções urgentes são comuns em restaurantes." },
+                        { id: "opt2", text: "Tento baixar o cardápio em PDF para ver se o antivírus detecta algo." },
+                        { id: "opt3", text: "Fecho imediatamente. O domínio genérico e a urgência ('só agora') são sinais claros de golpe." }
+                    ],
+                    correctOptionId: "opt3",
+                    explanation: "Sites legítimos de restaurantes geralmente usam o nome exato do estabelecimento ou plataformas conhecidas (ex: menu.com/restaurante). Domínios como 'promo-urgente.net' criam senso de urgência falso para roubar dados.",
+                    feedbackSuccess: "Excelente análise! A urgência e o domínio estranho entregaram o criminoso.",
+                    feedbackError: "Cuidado! 'Promoção urgente' é a isca favorita dos golpistas. Nunca clique em links que apelam para o seu medo de perder uma oportunidade.",
+                    mascotMessage: "Almoço grátis? Nem eu que sou um software recebo updates de graça. Analise a oferta... o que eles ganham te dando comida?"
                 }
             },
             {
-                id: "m4_m2_b2", type: "QUIZ",
+                id: "m4_m2_b3", type: "QUIZ",
                 data: {
                     question: "Você escaneou um QR Code de pagamento e a URL que apareceu foi: 'https://pagamento-itau-confirmar.net/login'. O que você faz?",
                     options: [
@@ -449,7 +452,7 @@ export const missionsEixo02_Track04 = [
                     explanation: "Bancos oficiais usam domínios limpos como 'itau.com.br'. Qualquer variação é uma tentativa de enganar sua percepção visual rápida.",
                     feedbackSuccess: "Olho de lince! Você farejou o golpe antes de morder a isca.",
                     feedbackError: "Você ia mesmo entregar sua senha para um site '.net'? Meus antigos colegas agradecem a doação, novato!",
-                    mascotMessage: "Se você clicasse nisso, a única coisa que você ia 'confirmar' seria o seu arrependimento. Sorte que eu te parei... dessa vez."
+                    mascotMessage: "Bancos adoram padrões chatos. Esse link aí está 'criativo' demais para uma instituição financeira. Olhe bem para o domínio antes de abrir a carteira."
                 }
             }
         ]
@@ -458,8 +461,8 @@ export const missionsEixo02_Track04 = [
     {
         title: "O Porteiro Dorminhoco",
         description: "Se a senha é 'admin', sua rede é território público. Retome o controle agora.",
-        xpReward: 180,
-        estimatedTime: 6,
+        xpReward: 50,
+        estimatedTime: 3,
         category: "DEVICES",
         iconUrl: `${ICON_BASE_URL}/router.svg`,
         order: 3,
@@ -500,7 +503,7 @@ export const missionsEixo03_Track05 = [
     {
         title: "O Chefe Mandou?",
         description: "Um e-mail urgente do Diretor pedindo um pagamento... ou uma armadilha perfeita?",
-        xpReward: 150, estimatedTime: 6, category: "CORPORATE", order: 1,
+        xpReward: 100, estimatedTime: 6, category: "CORPORATE", order: 1,
         iconUrl: `${ICON_BASE_URL}/briefcase-business.svg`,
         content: [
             {
@@ -517,23 +520,25 @@ export const missionsEixo03_Track05 = [
                 }
             },
             {
-                id: "m5_m1_b2", type: "HOTSPOT",
+                id: "m5_m1_b2",
+                type: "HOTSPOT",
                 data: {
-                    context: {
-                        type: "EMAIL",
-                        sender: "diretoria@spisec.com",
-                        subject: "PAGAMENTO PRIORITÁRIO - PROJETO SIGILOSO",
-                        body: "Agente, preciso que o depósito anexo seja feito nos próximos 20 minutos. Não comente com ninguém da equipe, pois a negociação ainda é confidencial. Conto com sua discrição.\n\nAtt, CEO."
-                    },
-                    regions: [
-                        {
-                            id: "r1",
-                            rect: { x: 0, y: 0, w: 100, h: 20 },
-                            feedback: "Olho de lince! O domínio '.pro' é um clássico disfarce. Na dúvida, sempre cheque o histórico de conversas anteriores.",
-                            isCorrect: true
-                        }
-                    ],
-                    mascotMessage: "Analise o 'crachá' desse e-mail. Tem algo aí que não cheira bem... e não é o meu código."
+                  context: {
+                    type: "EMAIL",
+                    sender: "diretoria@spisec.com", 
+                    subject: "PAGAMENTO PRIORITÁRIO - PROJETO SIGILOSO",
+                    body: "Agente, preciso que o depósito anexo seja feito nos próximos 20 minutos.\n\nNão comente com ninguém da equipe, pois a negociação ainda é confidencial. Conto com sua discrição.\n\nAtt, CEO."
+                  },
+                  feedbackError: "Você deixou passar um detalhe crucial no remetente ou no tom da mensagem. Procure por inconsistências.",
+                  regions: [
+                    {
+                      id: "r1",
+                      rect: { x: 12, y: 3, w: 50, h: 9 },   
+                      feedback: "Olho de lince! O domínio e o tom de urgência são clássicos de fraude de CEO.",
+                      isCorrect: true
+                    }
+                  ],
+                  mascotMessage: "Analise o 'crachá' desse e-mail. Tem algo aí que não cheira bem... e não é o meu código."
                 }
             },
             {
@@ -549,16 +554,16 @@ export const missionsEixo03_Track05 = [
                     explanation: "Responder valida que seu e-mail está ativo. Encaminhar pode fazer um colega clicar por engano. O certo é isolar e reportar.",
                     feedbackSuccess: "Correto! Você agiu como um verdadeiro escudo para a empresa.",
                     feedbackError: "Cuidado! Responder ao hacker só confirma que você caiu na rede dele. Reporte para a TI!",
-                    mascotMessage: "Não tente ser o herói solitário. No mundo corporativo, segurança é um esporte de equipe. Avise a TI."
+                    mascotMessage: "Você detectou a ameaça. Agora, o que causa mais dano ao inimigo: gritar com ele sozinho ou garantir que toda a rede esteja imune ao ataque?"
                 }
             }
         ]
     },
 
-    {
+    {   
         title: "O Suporte Amigo",
         description: "Uma ligação simpática do 'técnico' pode ser o início de um desastre.",
-        xpReward: 180, estimatedTime: 7, category: "CORPORATE", order: 2,
+        xpReward: 100, estimatedTime: 7, category: "CORPORATE", order: 2,
         iconUrl: `${ICON_BASE_URL}/headset.svg`,
         content: [
             {
@@ -587,8 +592,7 @@ export const missionsEixo03_Track05 = [
                     explanation: "Ao pedir para desativar o antivírus, o hacker está removendo o último obstáculo que impediria o software malicioso de ser detectado pelo sistema.",
                     feedbackSuccess: "Exato! Ele quer que você tire o colete à prova de balas para ele poder atirar.",
                     feedbackError: "Pense na ação: ele quer desativar sua proteção. Ele está removendo suas barreiras de segurança!",
-                    mascotMessage: "Se alguém pede para você 'tirar a tranca' para ele poder trabalhar melhor, corre que é cilada, Agente."
-                }
+                    mascotMessage: "Pense comigo: qual o sentido de um 'segurança' pedir para você destrancar a porta da frente para ele te proteger? Tem algo errado nessa lógica."                }
             }
         ]
     },
@@ -596,11 +600,11 @@ export const missionsEixo03_Track05 = [
     {
         title: "Vazamento em Tempo Real",
         description: "O perigo de compartilhar sua tela e o 'espião de ombro'.",
-        xpReward: 120, estimatedTime: 5, category: "CORPORATE", order: 3,
+        xpReward: 100, estimatedTime: 3, category: "CORPORATE", order: 3,
         iconUrl: `${ICON_BASE_URL}/cast.svg`,
         content: [
             {
-                id: "m3_m3_b1", type: "INFO",
+                id: "m5_m3_b1", type: "INFO",
                 data: {
                     title: "A Janela da Indiscreção",
                     text: "Você está em um café badalado, trabalhando no seu notebook. Alguém na mesa de trás parece estar apenas mexendo no celular, mas a câmera dele está apontada exatamente para a sua tela enquanto você digita sua senha. Isso é o **Shoulder Surfing**. No mundo digital, o vazamento visual é tão perigoso quanto um vírus; um 'print' da sua tela durante uma reunião pode expor dados de clientes ou salários que nunca deveriam ser vistos.\n\nCompartilhar 'Tela Inteira' em reuniões online é outro erro fatal. Aquela notificação de WhatsApp que sobe no canto da tela com uma fofoca de escritório ou um dado sigiloso pode ser gravada por qualquer participante. O hacker moderno adora OSINT (Inteligência de Fontes Abertas): ele não invade sua rede, ele apenas assiste às suas lives e reuniões mal configuradas para coletar nomes de servidores e processos internos.\n\nPara blindar sua rotina, adote o hábito de compartilhar apenas a **Janela do Aplicativo** (ex: só o Excel) e nunca a área de trabalho inteira. Em locais públicos, use películas de privacidade (filtros de tela) que escurecem a visão para quem olha de lado. Seus dados são como sua vida pessoal: não precisam estar em exibição para quem passa.",
@@ -625,7 +629,7 @@ export const missionsEixo03_Track05 = [
                     explanation: "Deixar o PC desbloqueado é o erro fatal. Em 5 segundos, alguém pode inserir um pendrive malicioso ou tirar foto de documentos sigilosos.",
                     feedbackSuccess: "Bingo! Bloqueie sempre (Win+L ou Cmd+L) antes de levantar.",
                     feedbackError: "A película ajuda, mas deixar o PC 'aberto' sem ninguém perto é um convite ao desastre!",
-                    mascotMessage: "Cinco segundos. É o que eu levava para me instalar se você deixasse a tela aberta. Bloqueia isso aí, Agente."
+                    mascotMessage: "O café leva dois minutos. Inserir um script malicioso leva três segundos. Você confia nas pessoas ao seu redor mais do que confia na matemática?"                
                 }
             }
         ]
@@ -636,7 +640,7 @@ export const missionsEixo03_Track06 = [
     {
         title: "O Sequestro de Dados",
         description: "Seu computador travou e pediram Bitcoin. Descubra por que pagar é o pior negócio da sua vida.",
-        xpReward: 200, estimatedTime: 8, category: "CORPORATE", order: 1,
+        xpReward: 150, estimatedTime: 8, category: "CORPORATE", order: 1,
         iconUrl: `${ICON_BASE_URL}/file-lock.svg`,
         content: [
             {
@@ -660,12 +664,12 @@ export const missionsEixo03_Track06 = [
                   items: [
                     { id: "iso", text: "Isolar o computador (tirar cabo de rede/Wi-Fi)." },
                     { id: "not", text: "Notificar o setor de TI ou Segurança." },
-                    { id: "res", text: "Restaurar arquivos via Backup seguro." }
+                    { id: "res", text: "Restaurar arquivos via Backup seguro." }    
                   ],
                   correctOrder: ["iso", "not", "res"],
                   feedbackSuccess: "Excelente protocolo! Primeiro você para a sangria, depois chama o médico e por fim recupera o paciente.",
                   feedbackError: "A ordem importa! Se você tentar restaurar antes de isolar, o vírus vai trancar seu backup também.",
-                  mascotMessage: "Corta o oxigênio dele primeiro, Agente! Sem rede, o Ransomware é só um código solitário e impotente no seu HD. Rápido!"
+                  mascotMessage: "O vírus precisa de conexão para 'ligar para casa' e criptografar o resto da rede. Qual a primeira coisa que você tira dele para salvar os outros?"
                 }
             },
             {
@@ -681,7 +685,7 @@ export const missionsEixo03_Track06 = [
                     explanation: "O Ransomware se espalha pela rede. Isolar o seu computador pode salvar o resto da empresa de ser infectado também.",
                     feedbackSuccess: "Perfeito! Você agiu como um verdadeiro firewall humano.",
                     feedbackError: "Nunca abra arquivos suspeitos! E reiniciar pode forçar o malware a rodar novamente. O segredo é o isolamento físico da rede.",
-                    mascotMessage: "Corta o oxigênio dele, Agente! Sem rede, o Ransomware é só um programa solitário e triste no seu HD."
+                    mascotMessage: "Curiosidade matou o gato... e criptografou o servidor. Você vai ficar olhando o desastre acontecer ou vai puxar o plugue da tomada?" 
                 }
             }
         ]
@@ -690,7 +694,7 @@ export const missionsEixo03_Track06 = [
     {
         title: "A Ferramenta Proibida",
         description: "Usar aquele 'conversor de PDF grátis' pode vazar o segredo da sua empresa.",
-        xpReward: 150, estimatedTime: 6, category: "CORPORATE", order: 2,
+        xpReward: 100, estimatedTime: 6, category: "CORPORATE", order: 2,
         iconUrl: `${ICON_BASE_URL}/ghost.svg`,
         content: [
             {
@@ -719,7 +723,7 @@ export const missionsEixo03_Track06 = [
                     explanation: "Segurança corporativa exige controle. Um app 'grátis' pode ser a porta de entrada para um espião na rede interna.",
                     feedbackSuccess: "Exato! Controle de software é controle de riscos.",
                     feedbackError: "Não é sobre controle de tempo, Agente. É sobre o fato de que o 'grátis' geralmente cobra em dados da empresa.",
-                    mascotMessage: "Ninguém dá nada de graça na internet, novato. Se o serviço é grátis, o seu documento é o pagamento."
+                    mascotMessage: "Se você não está pagando pelo produto, adivinhe quem é a mercadoria? Dica: olhe no espelho."
                 }
             }
         ]
@@ -728,7 +732,7 @@ export const missionsEixo03_Track06 = [
     {
         title: "LGPD na Prática",
         description: "Dado Pessoal não é só CPF. Saiba como não causar uma multa milionária.",
-        xpReward: 180, estimatedTime: 7, category: "CORPORATE", order: 3,
+        xpReward: 150, estimatedTime: 7, category: "CORPORATE", order: 3,
         iconUrl: `${ICON_BASE_URL}/scale.svg`,
         content: [
             {
@@ -745,23 +749,25 @@ export const missionsEixo03_Track06 = [
                 }
             },
             {
-                id: "m6_m3_b2", type: "HOTSPOT",
+                id: "m6_m3_b2", 
+                type: "HOTSPOT",
                 data: {
                     context: {
                         type: "EMAIL",
-                        sender: "comunicacao@empresa.com",
-                        subject: "Convite: Workshop de Segurança para Clientes",
-                        body: "Prezados clientes, segue o link para o nosso evento exclusivo...\n\n(Abaixo estão os campos de destinatários. Onde você deve colocar a lista de 100 e-mails para que ninguém veja o contato do outro?)"
+                        sender: "marketing@suaempresa.com",
+                        subject: "APROVADO: Texto para disparo do Workshop",
+                        body: "Prezados,\n\nSegue o texto final aprovado para o convite do Workshop de Segurança.\n\n-----------------------------\n\nOlá, parceiro!\n\nGostaríamos de convidar você para nosso evento exclusivo...\n[...restante do texto do convite...]\n\n-----------------------------\n\n⚠️ INSTRUÇÃO PARA O AGENTE:\nPor favor, copie o texto acima e dispare agora para a 'Lista_VIP_500_Clientes.csv' anexa.\n\nLembre-se: são concorrentes, ninguém pode saber quem mais foi convidado."
                     },
+                    feedbackError: "Se você colocar a lista no campo 'Para' ou no corpo do texto, vazará os dados de todos. Procure o campo que oculta os destinatários.",
                     regions: [
                         {
                             id: "r1",
-                            rect: { x: 0, y: 85, w: 100, h: 15 },
-                            feedback: "Bingo! O campo Cco (Cópia Oculta) mantém a privacidade de todos os clientes. Nunca envie e-mails em massa sem ele!",
+                            rect: { x: 90, y: 7, w: 8, h: 6 }, 
+                            feedback: "Excelente! O campo Cco (Cópia Oculta) mantém a privacidade de todos os clientes. Nunca envie e-mails em massa sem ele!",
                             isCorrect: true
                         }
                     ],
-                    mascotMessage: "Clique no campo que salva a empresa de um processo judicial por vazamento de contatos. Dica: ele é 'oculto' por um motivo."
+                    mascotMessage: "O chefe foi claro na nota interna: você tem uma lista de 500 concorrentes para notificar. Onde você cola essa lista para evitar um vazamento de dados em massa?"
                 }
             },
             {
@@ -777,7 +783,7 @@ export const missionsEixo03_Track06 = [
                     explanation: "A LGPD protege a identidade. Se você pode descobrir quem é o dono daquela informação, ela é um dado pessoal e deve ser protegida.",
                     feedbackSuccess: "Correto! Você agora entende a amplitude da privacidade.",
                     feedbackError: "Errado! A lei é muito mais abrangente que apenas o CPF. Se identifica alguém, é um dado protegido!",
-                    mascotMessage: "Identificar humanos é a minha especialidade... e a lei agora diz que isso é perigoso para o seu bolso. Fique atento."
+                    mascotMessage: "Se eu te der a placa do carro e a cor da casa, eu não preciso do nome para saber quem mora lá. Proteja tudo que aponta para um humano."
                 }
             }
         ]
@@ -788,7 +794,7 @@ export const missionsEixo04_Track07 = [
     {
         title: "O ChatGPT é X9?",
         description: "Tudo o que você digita na IA pode ser usado contra sua empresa. Aprenda a não vazar segredos.",
-        xpReward: 150, estimatedTime: 6, category: "TRENDS", order: 1,
+        xpReward: 120, estimatedTime: 6, category: "TRENDS", order: 1,
         iconUrl: `${ICON_BASE_URL}/bot-message-square.svg`,
         content: [
             {
@@ -812,7 +818,7 @@ export const missionsEixo04_Track07 = [
                     validation: { type: "CONTAINS", expectedValue: "empresa", isCaseSensitive: false },
                     feedbackSuccess: "Excelente! Ao usar termos genéricos, você obtém o resumo sem vazar o valor ou o nome do cliente.",
                     feedbackError: "Errado! Você deve remover o nome 'João Silva' e o valor real. Tente algo como: 'Resuma o contrato da Empresa X com Valor Y'.",
-                    mascotMessage: "Viu? A IA te ajuda do mesmo jeito sem você precisar entregar o plano de dominação mundial do seu chefe."
+                    mascotMessage: "A IA é inteligente, mas fofoqueira. Ela aprende com o que você diz. Como você pediria esse resumo sem entregar o ouro ao bandido?"
                 }
             },
             {
@@ -828,7 +834,7 @@ export const missionsEixo04_Track07 = [
                     explanation: "O 'treinamento' é o processo onde a IA aprende com o que recebe. Se você der um dado sigiloso, ele vira parte do aprendizado da máquina.",
                     feedbackSuccess: "Perfeito! Você entendeu que a IA é um buraco negro de informações.",
                     feedbackError: "Não é sobre vírus, Agente! É sobre a privacidade do dado que VOCÊ insere voluntariamente.",
-                    mascotMessage: "Conhecimento é poder, e você está dando o seu poder de graça para a nuvem. Pense nisso."
+                    mascotMessage: "O que você fala na internet fica na internet. O que você fala para uma IA... vira o cérebro dela. Você quer seus segredos treinando o robô do vizinho?"
                 }
             }
         ]
@@ -837,7 +843,7 @@ export const missionsEixo04_Track07 = [
     {
         title: "Essa voz não é minha",
         description: "Áudios de WhatsApp e vídeos de reunião falsos. Saiba como identificar um Deepfake.",
-        xpReward: 200, estimatedTime: 8, category: "TRENDS", order: 2,
+        xpReward: 100, estimatedTime: 3, category: "TRENDS", order: 2,
         iconUrl: `${ICON_BASE_URL}/venetian-mask.svg`,
         content: [
             {
@@ -866,7 +872,7 @@ export const missionsEixo04_Track07 = [
                     explanation: "Movimentos laterais e obstruções rápidas (mão na frente do rosto) confundem o algoritmo de sobreposição do Deepfake, gerando 'glitches' ou falhas visuais imediatas.",
                     feedbackSuccess: "Sensacional! O teste físico é o ponto fraco da IA atual.",
                     feedbackError: "Som alto não ajuda em nada! O truque é forçar o algoritmo a processar ângulos complexos que ele ainda não domina.",
-                    mascotMessage: "Faça ele se mexer! IAs adoram rostos estáticos, mas odeiam um perfil bem traçado. Quase como eu."
+                    mascotMessage: "Rostos falsos são como máscaras digitais: funcionam bem de frente, mas caem se você olhar pelos cantos. Faça ele suar o processador."
                 }
             }
         ]
@@ -875,7 +881,7 @@ export const missionsEixo04_Track07 = [
     {
         title: "O Golpe Perfeito",
         description: "A IA escreve e-mails sem erros de português e altamente personalizados. Como notar?",
-        xpReward: 180, estimatedTime: 5, category: "TRENDS", order: 3,
+        xpReward: 150, estimatedTime: 3, category: "TRENDS", order: 3,
         iconUrl: `${ICON_BASE_URL}/sparkles.svg`,
         content: [
             {
@@ -892,25 +898,43 @@ export const missionsEixo04_Track07 = [
                 }
             },
             {
-                id: "m7_m3_b2", type: "HOTSPOT",
+                id: "m7_m3_b2", 
+                type: "HOTSPOT",
                 data: {
-                    context: {
-                        type: "EMAIL",
-                        sender: "suporte@microsoft.cloud",
-                        subject: "Ação Necessária: Sincronização de Conta Pendente",
-                        body: "Prezado(a) Agente, detectamos uma tentativa de login incomum em sua conta corporativa originada de Curitiba. Para sua segurança, solicitamos que valide seu acesso no link abaixo para evitar a suspensão de seus serviços nas próximas 2 horas. Atenciosamente, Equipe de Segurança Microsoft."
-                    },
-                    regions: [
-                        {
-                            id: "r1",
-                            rect: { x: 0, y: 0, w: 100, h: 20 },
-                            feedback: "Ponto para você! O domínio '.cloud' não é usado pela Microsoft para alertas de segurança de conta. É um e-mail gerado por IA com aparência oficial.",
-                            isCorrect: true
-                        }
-                    ],
-                    mascotMessage: "O texto está perfeito, né? Nem um erro de vírgula. Mas e o endereço do remetente... você confiaria a chave da sua casa a esse estranho?"
+                  context: {
+                    type: "EMAIL",
+                    sender: "suporte@microsoft.cloud",
+                    subject: "Ação Necessária: Sincronização de Conta Pendente",
+                    body: "Prezado(a) Agente, detectamos uma tentativa de login incomum em sua conta corporativa.\n\nPara sua segurança, solicitamos que valide seu acesso no link abaixo para evitar a suspensão de seus serviços nas próximas 2 horas.\n\nAtenciosamente, Equipe de Segurança Microsoft."
+                  },
+                  feedbackError: "O texto te assustou? É essa a intenção. Respire e olhe a origem da mensagem.",
+                  regions: [
+                    {
+                      id: "r1",
+                      rect: { x: 12, y: 2, w: 50, h: 9 },
+                      feedback: "Ponto para você! O domínio '.cloud' não é oficial da Microsoft para alertas de segurança.",
+                      isCorrect: true
+                    }
+                  ],
+                  mascotMessage: "Eles tentam te ganhar pelo medo. Ignore o texto alarmista por um segundo e olhe para a origem. Esse remetente tem autoridade real?"
                 }
-            }
+            },
+            {
+                id: "m7_m3_b3", type: "QUIZ",
+                data: {
+                    question: "Você recebeu um e-mail do 'RH' com seu nome completo, cargo e mencionando o projeto real que você entregou ontem, pedindo um clique urgente para 'Confirmar Bônus'. O texto é gramaticalmente perfeito. O que você faz?",
+                    options: [
+                        { id: "opt1", text: "Clico, pois o nível de detalhes prova que é interno e legítimo." },
+                        { id: "opt2", text: "Ignoro a qualidade do texto e analiso o remetente real (cabeçalho) e o link (mouse-over) antes de qualquer clique." },
+                        { id: "opt3", text: "Respondo perguntando qual é o valor do bônus para testar se é um robô." }
+                    ],
+                    correctOptionId: "opt2",
+                    explanation: "Com IAs, a perfeição gramatical e a personalização não são mais provas de legitimidade. A única verdade está nos metadados técnicos (remetente e link).",
+                    feedbackSuccess: "Brilhante. Você não se deixou seduzir pela 'maquiagem' do texto.",
+                    feedbackError: "Cuidado! A IA consegue esses detalhes nas redes sociais em segundos. Não confie no conteúdo, confie na infraestrutura (remetente/link).",
+                    mascotMessage: "Eles escrevem sonetos melhores que Shakespeare agora. Mas ainda não conseguem falsificar a realidade do servidor. Ignore a poesia, olhe a infraestrutura."
+                }
+            }            
         ]
     }
 ];
@@ -918,7 +942,7 @@ export const missionsEixo04_Track07 = [
 export const finalEpicMission = {
     title: "Missão Épica: O Protocolo Final",
     description: "O Spy está auditando seus circuitos. 10 testes. Erre e você será deletado. Acerte e torne-se um Agente.",
-    xpReward: 500,
+    xpReward: 300,
     category: "FINAL_CHALLENGE",
     order: 1, 
     estimatedTime: 15,
@@ -932,7 +956,6 @@ export const finalEpicMission = {
                 mascotMessage: "Vou analisar cada bit da sua resposta. Não me decepcione... eu odeio ter que formatar alunos promissores."
             }
         },
-        // 01: DADOS - Correta: opt2
         {
             id: "f_q1", type: "QUIZ",
             data: {
@@ -948,7 +971,6 @@ export const finalEpicMission = {
                 feedbackError: "Sério? Instagram? Pense no prejuízo financeiro e jurídico, Agente!"
             }
         },
-        // 02: MALWARE - Correta: opt3
         {
             id: "f_q2", type: "QUIZ",
             data: {
@@ -964,7 +986,6 @@ export const finalEpicMission = {
                 feedbackError: "Se fosse Ransomware, você veria um aviso de resgate. O inimigo aqui é silencioso."
             }
         },
-        // 03: SENHAS - Correta: opt1
         {
             id: "f_q3", type: "QUIZ",
             data: {
@@ -980,7 +1001,6 @@ export const finalEpicMission = {
                 feedbackError: "Símbolos em senhas curtas não param computadores modernos. Use frases longas!"
             }
         },
-        // 04: MFA - Correta: opt1
         {
             id: "f_q4", type: "QUIZ",
             data: {
@@ -996,7 +1016,6 @@ export const finalEpicMission = {
                 feedbackError: "Apps são seguros. O SMS é que viaja 'aberto' pelo ar esperando para ser roubado."
             }
         },
-        // 05: USB - Correta: opt2
         {
             id: "f_q5", type: "QUIZ",
             data: {
@@ -1012,7 +1031,6 @@ export const finalEpicMission = {
                 feedbackError: "Nunca conecte! Formatar não adianta se o vírus infectar o PC no segundo em que você o espeta."
             }
         },
-        // 06: WI-FI - Correta: opt3
         {
             id: "f_q6", type: "QUIZ",
             data: {
@@ -1028,7 +1046,6 @@ export const finalEpicMission = {
                 feedbackError: "HTTPS é bom, mas a VPN esconde até *para onde* você está indo. Blindagem total!"
             }
         },
-        // 07: BEC/EMAIL - Correta: opt1
         {
             id: "f_q7", type: "QUIZ",
             data: {
@@ -1044,7 +1061,6 @@ export const finalEpicMission = {
                 feedbackError: "O valor não importa; o que importa é se o remetente é um impostor usando um e-mail falso."
             }
         },
-        // 08: IA - Correta: opt2
         {
             id: "f_q8", type: "QUIZ",
             data: {
@@ -1060,7 +1076,6 @@ export const finalEpicMission = {
                 feedbackError: "A IA lembra de tudo. Se você colar o segredo da empresa, ele não é mais segredo."
             }
         },
-        // 09: LGPD - Correta: opt1
         {
             id: "f_q9", type: "QUIZ",
             data: {
@@ -1076,7 +1091,6 @@ export const finalEpicMission = {
                 feedbackError: "No campo 'Para', todos veem o e-mail de todos. Isso é vazamento de lista de contatos!"
             }
         },
-        // 10: RANSOMWARE - Correta: opt3
         {
             id: "f_q10", type: "QUIZ",
             data: {

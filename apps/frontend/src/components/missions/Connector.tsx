@@ -1,19 +1,21 @@
 interface ConnectorProps {
-    status: 'completed' | 'active' | 'locked';
+    status: "LOCKED" | "AVAILABLE" | "COMPLETED";
 }
 
 export function Connector({ status }: ConnectorProps) {
     const styles = {
-      completed: "bg-gradient-to-b from-green-500 to-yellow-500",
-      active: "bg-cyan-600 path-connector-active shadow-[0_0_10px_rgba(8,145,178,0.5)]",
-      locked: "bg-gray-700 opacity-50"
+      completed: "bg-gradient-to-b from-green-500 to-cyan-600 shadow-[0_0_10px_rgba(34,197,94,0.4)]",
+      available: "bg-cyan-600 shadow-[0_0_15px_rgba(8,145,178,0.6)] animate-pulse", 
+      locked: "bg-gray-800 border-l border-r border-gray-700 opacity-40"
     };
   
-    // Se o status for "completed", assumimos que ele conecta a uma missão "active" ou "completed",
-    // mas para simplificar visualmente, usamos a lógica do layout HTML original
-    const currentStyle = status === 'completed' ? styles.completed 
-                       : status === 'active' ? styles.active 
-                       : styles.locked;
+    // Mapeamento simples
+    const currentStyle = 
+        status === 'COMPLETED' ? styles.completed :
+        status === 'AVAILABLE' ? styles.available : 
+        styles.locked;
   
-    return <div className={`w-1 h-20 rounded ${currentStyle} my-2 transition-all duration-500`}></div>;
-  }
+    return (
+        <div className={`w-1 h-16 rounded-full ${currentStyle} my-1 transition-all duration-500`} />
+    );
+}

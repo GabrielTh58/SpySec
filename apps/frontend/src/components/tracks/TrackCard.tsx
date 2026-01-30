@@ -1,19 +1,20 @@
+import { TrackDifficulty } from "@spysec/education";
 import { CheckCircle2, Lock } from "lucide-react";
 import Link from "next/link";
 
 interface TrackCardProps {
   id: string;
   title: string;
-  level: number;
+  difficulty: TrackDifficulty;
   progress: number;
-  status: string; 
-  iconUrl: string
+  status: 'COMPLETED' | 'IN_PROGRESS' | 'NOT_STARTED' | 'LOCKED';
+  iconUrl: string;
   themeColor: "green" | "cyan" | "yellow" | "purple" | "gray";
 }
 
 export function TrackCard(props: TrackCardProps) {
-  const { id, title, level, progress, status, iconUrl, themeColor } = props
-
+  const { id, title, difficulty, progress, status, iconUrl, themeColor } = props;
+  
   const normalizedStatus = status.toUpperCase();
   const isLocked = normalizedStatus === 'LOCKED';
   const isCompleted = normalizedStatus === 'COMPLETED';
@@ -51,6 +52,8 @@ export function TrackCard(props: TrackCardProps) {
     gray: "bg-gray-700 text-gray-500 cursor-not-allowed border-none shadow-none"
   };
 
+  const targetLink = isLocked ? '#' : `/tracks/${id}`;
+
   return (
     <div className={`
         relative group flex flex-col items-center text-center p-8 rounded-2xl
@@ -58,45 +61,42 @@ export function TrackCard(props: TrackCardProps) {
         min-h-[420px] justify-between 
         ${borderThemes[currentTheme]}`}
     >
+        {isCompleted && (
+            <div className="absolute top-4 right-4 text-green-400 drop-shadow-[0_0_8px_rgba(34,197,94,0.5)]">
+            <CheckCircle2 size={32} />
+            </div>
+        )}
+        {isLocked && (
+            <div className="absolute inset-0 bg-gray-900/30 rounded-2xl z-10 flex flex-col items-center justify-center backdrop-blur-[2px]">
+            <Lock size={48} className="text-gray-400 mb-4" />
+            <span className="font-orbitron text-gray-300 tracking-widest uppercase">Bloqueado</span>
+            </div>
+        )}
 
-      {/* Ícone de Status (Check ou Cadeado) */}
-      {isCompleted && (
-        <div className="absolute top-4 right-4 text-green-400  drop-shadow-[0_0_8px_rgba(34,197,94,0.5)]">
-          <CheckCircle2 size={32} />
-        </div>
-      )}
-      {isLocked && (
-        <div className="absolute inset-0 bg-gray-900/30 rounded-2xl z-10 flex flex-col items-center justify-center backdrop-blur-[2px]">
-          <Lock size={48} className="text-gray-400 mb-4" />
-          <span className="font-orbitron text-gray-300 tracking-widest uppercase">Bloqueado</span>
-        </div>
-      )}
-
-      {/* Conteúdo Superior */}
       <div className="w-full flex flex-col items-center">
         <div className={`p-6 rounded-full mb-6 ring-1 transition-colors ${iconThemes[currentTheme]}`}>
-          <img 
-            src={iconUrl} 
-            alt={title}
-            className="w-12 h-12 object-contain"
-          />
+          {iconUrl && (
+              <img 
+                src={iconUrl} 
+                alt={title}
+                className="w-12 h-12 object-contain"
+              />
+          )}
         </div>
 
         <h3 className="font-orbitron text-xl text-white mb-2 leading-tight min-h-[56px] flex items-center justify-center">
           {title}
         </h3>
 
-        <DifficultyBadge levelNumber={level} />
+        <DifficultyBadge difficulty={difficulty} />
       </div>
 
-      {/* Conteúdo Inferior (Progresso e Ação) */}
       <div className="w-full">
         <div className="flex justify-between text-xs text-gray-400 mb-2 font-inter">
           <span>Progresso</span>
-          <span>{progress}%</span>
+          <span>{Math.round(progress)}%</span>
         </div>
 
-        {/* Barra de Progresso */}
         <div className="w-full bg-gray-800 rounded-full h-2 mb-6 overflow-hidden">
           <div
             className={`h-full rounded-full transition-all duration-1000 bg-linear-to-r ${progressThemes[currentTheme]}`}
@@ -104,12 +104,11 @@ export function TrackCard(props: TrackCardProps) {
           />
         </div>
 
-        {/* Botão de Ação */}
-        <Link href={isLocked ? '#' : `/education/track/${id}`} className="w-full block">
+        <Link href={targetLink} className={`w-full block ${isLocked ? 'pointer-events-none' : ''}`}>
           <button
             disabled={isLocked}
             className={`
-                  w-full py-3 rounded-xl font-bold font-orbitron text-sm tracking-wide transition-all
+                  w-full py-3 rounded-xl font-bold font-orbitron text-sm tracking-wide transition-all cursor-pointer
                   ${isCompleted
                 ? "bg-green-500/10 text-green-400 border border-green-500/50 hover:bg-green-500 hover:text-gray-900"
                 : buttonThemes[currentTheme]
@@ -124,19 +123,26 @@ export function TrackCard(props: TrackCardProps) {
   );
 };
 
-function DifficultyBadge({ levelNumber }: { levelNumber: number }) {
+  function DifficultyBadge({ difficulty }: { difficulty: TrackDifficulty }) {
   let label = "Iniciante";
   let style = "bg-green-500/20 text-green-400 border-green-500/30";
 
-  if (levelNumber >= 3) {
-    label = "Intermediário";
-    style = "bg-orange-500/20 text-orange-400 border-orange-500/30";
-  } else if (levelNumber >= 6) {
-    label = "Avançado";
-    style = "bg-red-500/20 text-red-400 border-red-500/30";
-  } else {
-    label = "Iniciante";
-    style = "bg-green-500/20 text-green-400 border-green-500/30";
+  const level = String(difficulty)?.toUpperCase() || 'BASIC';
+
+  switch (level) {
+    case 'INTERMEDIATE':
+        label = "Intermediário";
+        style = "bg-orange-500/20 text-orange-400 border-orange-500/30";
+        break;
+    case 'ADVANCED':
+        label = "Avançado";
+        style = "bg-red-500/20 text-red-400 border-red-500/30";
+        break;
+    case 'BASIC':
+    default:
+        label = "Iniciante";
+        style = "bg-green-500/20 text-green-400 border-green-500/30";
+        break;
   }
 
   return (

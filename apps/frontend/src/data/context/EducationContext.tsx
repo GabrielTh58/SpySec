@@ -13,15 +13,17 @@ import { useAPI } from "../hooks/useAPI";
 interface EducationContextProps {
     tracks: TrackDTO[];
     currentTrack: GetTrackDetailsOutputDTO | null;
+    activeMission: GetMissionDataOutputDTO | null;
     isLoading: boolean;
     tracksSummary: { total: number; completed: number }; 
     progress: StudentProgressSummaryOutputDTO | null
 
     loadTracks: () => Promise<void>;
+    clearActiveMission: () => void;
     getProgressSummary: () => Promise<void>;
     selectTrack: (trackId: string) => Promise<void>;
-    fetchMissionData: (missionId: string) => Promise<GetMissionDataOutputDTO | null>;
-    completeMission: (missionId: string) => Promise<CompleteMissionOutputDTO | null>;
+    fetchMissionData: (missionId: string) => Promise<void>
+    completeMission: (missionId: string, answers: Record<string, any>) => Promise<CompleteMissionOutputDTO | null>;
 }
 
 export const EducationContext = createContext<EducationContextProps>({} as any);
@@ -33,6 +35,7 @@ export function EducationProvider({ children }: { children: ReactNode }) {
     const [tracksSummary, setTracksSummary] = useState({ total: 0, completed: 0 });
     const [progress, setProgress] = useState<StudentProgressSummaryOutputDTO | null>(null)
     const [currentTrack, setCurrentTrack] = useState<GetTrackDetailsOutputDTO | null>(null);
+    const [activeMission, setActiveMission] = useState<GetMissionDataOutputDTO | null>(null);  
     const [isLoading, setIsLoading] = useState(false);
 
     async function loadTracks() {
@@ -56,7 +59,7 @@ export function EducationProvider({ children }: { children: ReactNode }) {
         try {
             const data = await httpGet<GetTrackDetailsOutputDTO>(`/education/tracks/${trackId}`);
             setCurrentTrack(data);
-        } catch (error) {
+        } catch (error) {   
             console.error("Erro ao carregar trilha", error);
         } finally {
             setIsLoading(false);
@@ -64,26 +67,29 @@ export function EducationProvider({ children }: { children: ReactNode }) {
     }
 
     async function fetchMissionData(missionId: string) {
+        if (activeMission?.id === missionId) return;
+
         setIsLoading(true); 
         try {
             const data = await httpGet<GetMissionDataOutputDTO>(`/education/missions/${missionId}`);
-            return data;
+           setActiveMission(data)
         } catch (error) {
             console.error("Erro ao carregar missão", error);
-            return null;
+            setActiveMission(null);
         } finally {
             setIsLoading(false);
         }
     }
 
-    async function completeMission(missionId: string) {
+    async function completeMission(missionId: string, answers: Record<string, any>) {
         setIsLoading(true); 
         try {
             const data = await httpPost<CompleteMissionOutputDTO>(
                 `/education/missions/${missionId}/complete`, 
-                {} 
+                { answers } 
             );
-            if (data) {
+            
+            if (data && data.success) { 
                 await getProgressSummary(); 
                 await loadTracks(); 
             }
@@ -108,33 +114,37 @@ export function EducationProvider({ children }: { children: ReactNode }) {
         }
     }
 
+    function clearActiveMission() {
+        setActiveMission(null);
+    }
+
     async function init() {
         setIsLoading(true);
         await Promise.all([
             loadTracks(), 
-            getProgressSummary()
+            getProgressSummary()            
         ]);
         setIsLoading(false);
     }
 
     useEffect(() => {     
         init();
-        console.log('tracks',tracks);
-        
     }, []);
 
     return (
         <EducationContext.Provider value={{ 
             tracks, 
             currentTrack, 
+            activeMission,
             tracksSummary,  
             isLoading, 
             loadTracks, 
             selectTrack, 
-            fetchMissionData,
-            completeMission,
+            fetchMissionData,   
             getProgressSummary,
-            progress
+            completeMission,
+            progress,
+            clearActiveMission
         }}>
             {children}
         </EducationContext.Provider>

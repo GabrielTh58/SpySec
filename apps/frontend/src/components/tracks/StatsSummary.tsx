@@ -12,6 +12,11 @@ export function StatsSummary() {
     ? Math.round((completedTracks / totalTracks) * 100) 
     : 0;
 
+    console.log('completed', completedTracks);
+    console.log('totalTracks', totalTracks);
+    console.log('completion', completionPercentage);
+    
+
   const nextTarget = tracks.find(t => t.status === 'LOCKED' || t.status === 'NOT_STARTED');
   
   const motivationText = nextTarget 

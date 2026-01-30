@@ -94,7 +94,6 @@ export function BadgeCard({ badge }: { badge: UI_Badge }) {
                 {badge.description}
             </p>
 
-            {/* Efeito Glow Background (Apenas se desbloqueado, para não poluir o hover do bloqueado) */}
             {badge.isUnlocked && (
                 <div className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-5 pointer-events-none ${variant.bg.replace('/10', '/30')} blur-xl transition-opacity duration-500`} />
             )}
