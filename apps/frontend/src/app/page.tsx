@@ -31,7 +31,6 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 md:h-20 flex items-center justify-between">
           <div className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
              <Logo /> 
-             <span className="font-orbitron font-bold text-lg md:text-xl tracking-wider text-white hidden sm:block">SPYSEC</span>
           </div>
           <div className="flex items-center gap-6">
             <Link 
@@ -210,7 +209,7 @@ export default function LandingPage() {
             
             <p className="text-base md:text-lg text-gray-400 leading-relaxed">
                 O Spy não nasceu em um laboratório de antivírus. Ele foi gerado nas camadas mais profundas da dark web como uma ferramenta de invasão. <br/><br/>
-                Após ser capturado e reconfigurado, sua lealdade mudou, mas seu código não. Ele traz o conhecimento proibido do "outro lado" para treinar você. Ele é sarcástico com a ingenuidade humana, direto nos alertas, e a melhor defesa que você poderia ter.
+                Após ser capturado e reconfigurado, sua lealdade mudou, mas seu código não. Ele traz o conhecimento proibido do "outro lado" para treinar você. Ele é sarcástico com a ingenuidade humana, direto nos alertas, é a melhor defesa que você poderia ter.
             </p>
 
             <div className="p-5 md:p-6 bg-gray-900/50 border border-gray-800 rounded-xl">

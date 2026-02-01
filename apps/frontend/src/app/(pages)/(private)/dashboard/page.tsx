@@ -80,7 +80,7 @@ export default function Dashboard() {
                         </div>
                     </div>
                     <div>
-                        <p className="text-3xl font-bold font-orbitron text-purple-400 mt-2 neon-text-magenta">{progress?.completedTracksCount}</p>
+                        <p className="text-3xl font-bold font-orbitron text-purple-400 mt-2 neon-text-magenta">{profile?.completedMissionsCount}</p>
                         <p className="text-xs text-gray-500 mt-1">Missões Práticas</p>
                     </div>
                 </GlassCard>
