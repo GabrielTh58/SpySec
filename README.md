@@ -158,5 +158,5 @@ Contribuições são bem-vindas! Se você tiver uma ideia de melhoria ou nova mi
 
 ## 📝 Licença
 
-Este projeto está sob a licença **MIT**. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+Este projeto está sob a licença **MIT**. Veja o arquivo [LICENSE](https://github.com/GabrielTh58/SpySec/blob/main/LICENCE.md) para mais detalhes.
 
