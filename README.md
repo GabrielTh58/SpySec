@@ -1,135 +1,162 @@
-# Turborepo starter
+<div align="center">
+  <img src="apps/frontend/src/app/favicon.ico" alt="SpySec Logo" width="120">
+  <h1>SpySec</h1>
+  <p>
+    <b>Descomplicando a cibersegurança através da gamificação e inteligência artificial.</b>
+  </p>
+  
+  <p>
+    <a href="#-sobre">Sobre</a> •
+    <a href="#-features">Funcionalidades</a> •
+    <a href="#-tecnologias">Tecnologias</a> •
+    <a href="#-arquitetura">Arquitetura</a> •
+    <a href="#-como-rodar">Como Rodar</a>
+  </p>
 
-This Turborepo starter is maintained by the Turborepo core team.
+  ![Badge em Desenvolvimento](https://img.shields.io/badge/Status-Em_Desenvolvimento-yellow)
+  ![Badge License](https://img.shields.io/badge/License-MIT-blue)
+</div>
 
-## Using this example
+---
 
-Run the following command:
+## 🛡️ Sobre
 
-```sh
-npx create-turbo@latest
-```
+O **SpySec** é uma plataforma de educação em cibersegurança (SaaS) projetada para treinar o "Human Firewall" (o usuário final). Diferente de cursos tradicionais e massantes, utilizamos **Gamificação** e **IA** para ensinar funcionários e indivíduos a se protegerem de ameaças reais como Phishing, Engenharia Social e Vazamento de Dados.
 
-## What's inside?
+O projeto conta com um guia virtual, **"Spy"**, um ex-vírus reconfigurado que atua não apenas como mascote, mas como um tutor inteligente em tempo real.
 
-This Turborepo includes the following packages/apps:
+> **Contexto:** Projeto desenvolvido como Trabalho de Conclusão de Curso (TCC) em Engenharia de Software na UNINTER.
 
-### Apps and Packages
+---
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+## 📸 Preview
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+<div align="center">
+  <img src="public/dashboard-preview.png" alt="Dashboard SpySec" width="800">
+</div>
 
-### Utilities
+---
 
-This Turborepo has some additional tools already setup for you:
+## 🚀 Features
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+- **Tutor IA (Spy):** Chat inteligente em tempo real para tirar dúvidas de segurança e auxiliar nas missões, servindo como um mentor pessoal 24/7.
+- **Gamificação Completa:** Sistema de XP, Níveis, Ranking Global e Badges (Conquistas).
+- **Missões Interativas:** Cenários práticos onde o usuário deve identificar vulnerabilidades (MissionFlow).
+- **Onboarding Narrativo:** Fluxo de boas-vindas guiado pelo mascote Spy para criação de codinome.
+- **Feedback System:** Widget integrado via Webhook (N8N) para report de bugs e sugestões.
+- **Autenticação Híbrida:** Login via Email/Senha e Social Login (Google).
+- **Dashboard Analítico:** Visualização de progresso e estatísticas de defesa.
 
-### Build
+---
 
-To build all apps and packages, run the following command:
+## 🛠 Tecnologias
 
-```
-cd my-turborepo
+O projeto adota uma abordagem moderna utilizando **Monorepo** para gerenciar a complexidade e compartilhar regras de negócio.
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
+### Front-end (Client)
+- **Framework:** [Next.js 14](https://nextjs.org/) (App Router)
+- **Estilização:** [Tailwind CSS](https://tailwindcss.com/)
+- **Animações:** [Framer Motion](https://www.framer.com/motion/)
+- **Ícones:** [Lucide React](https://lucide.dev/)
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
+### Back-end (Server)
+- **Framework:** [NestJS](https://nestjs.com/)
+- **ORM:** [Prisma](https://www.prisma.io/)
+- **Documentação:** [Swagger](https://swagger.io/)
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+### Infraestrutura & Ferramentas
+- **Gerenciamento de Repositório:** [Turborepo](https://turbo.build/) (Monorepo)
+- **Banco de Dados:** [Supabase](https://supabase.com/) (PostgreSQL)
+- **Autenticação:** [Firebase Auth](https://firebase.google.com/)
+- **Automação/Webhooks:** [N8N](https://n8n.io/)
+- **Linguagem:** TypeScript
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+---
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+## 🏛️ Arquitetura
 
-### Develop
+O projeto segue princípios de **Clean Architecture** e **DDD (Domain-Driven Design)**, estruturado para garantir que as regras de negócio sejam o coração da aplicação, independentes de frameworks externos.
 
-To develop all apps and packages, run the following command:
+A estrutura é dividida em três camadas principais:
 
-```
-cd my-turborepo
+1.  **Domain (Core):**
+    * É o núcleo do sistema. Contém as **Entidades**, **Casos de Uso** (Regras de Negócio), **Providers** (interfaces) e **Portas** (interfaces de repositórios).
+    * Esta camada é pura e não depende de frameworks (nem NestJS, nem Next.js).
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
+2.  **Adapter (Orchestration):**
+    * Atua como uma camada de **Facade**.
+    * Responsável por instanciar os Casos de Uso do Domain e orquestrar a lógica necessária, expondo métodos simples e diretos para serem consumidos pelas camadas externas.
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
+3.  **Consumers (Backend & Frontend):**
+    * **Backend (NestJS):** Importa o Adapter e expõe os dados via API REST, conectando com o Prisma e Supabase.
+    * **Frontend (Next.js):** Consome a lógica de apresentação e interage com o usuário.
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+---
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
+## ⚡ Como Rodar
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
+### Pré-requisitos
+- Node.js (v18 ou superior)
+- NPM ou Yarn
+- Conta no Firebase e Supabase configuradas.
 
-### Remote Caching
+### Instalação
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+1. Clone o repositório:
+   ```bash
+     git clone [https://github.com/](https://github.com/)[SEU-USUARIO]/spysec.git
+     cd spysec
+     npm install
+   ```
+   
+2. Instale as dependências (na raiz do Monorepo):
+   ```bash
+    npm install
+    # ou
+    yarn install
+   ```
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+3. Configure as Variáveis de Ambiente: Crie um arquivo .env na raiz (ou nas pastas específicas apps/backend e apps/web) seguindo o modelo .env.example:
+   - Frontend
+     ```bash
+      DATABASE_URL=[URL
+      FIREBASE_API_KEY=[KEY]
+      NEXT_PUBLIC_FIREBASE_API_KEY=seu_api_key
+      NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=seu_projeto.firebaseapp.com
+      NEXT_PUBLIC_FIREBASE_PROJECT_ID=seu_project_id
+      N8N_FEEDBACK_URL=[URL]
+      CHAT_WEBHOOK=[URL]
+      ```
+   - Backend
+     ```bash
+      DATABASE_URL="postgresql://user:pass@host:5432/db?pgbouncer=true"
+      DIRECT_URL="postgresql://user:pass@host:5432/db"
+      FIREBASE_CREDENTIALS={"type": "service_account", ...}
+      ```
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+4. Execute o projeto (via Turbo):
+    ```bash
+      npm run dev
+    ```
+    
+5. Acesse:
+  - Web: http://localhost:3000
+  - API/Swagger: http://localhost:4000/api
+    
+---
+## 🤝 Contribuição
 
-```
-cd my-turborepo
+Contribuições são bem-vindas! Se você tiver uma ideia de melhoria ou nova missão:
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
+1. Faça um **Fork** do projeto.
+2. Crie uma **Branch** para sua Feature (`git checkout -b feature/NovaMissao`).
+3. Faça o **Commit** (`git commit -m 'feat: ''`).
+4. Faça o **Push** (`git push origin feature/NovaMissao`).
+5. Abra um **Pull Request**.
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
+---
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+## 📝 Licença
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+Este projeto está sob a licença **MIT**. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
