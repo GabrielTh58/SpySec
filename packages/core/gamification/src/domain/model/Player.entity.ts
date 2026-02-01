@@ -174,12 +174,16 @@ export class Player extends Entity<Player, PlayerProps> {
     this.props.completedMissionsCount++;
   }
 
-  addStudyTime(seconds: number): void {
+  addStudyTime(seconds: number): Player {
     if (!this.props.totalStudySeconds) {
         this.props.totalStudySeconds = 0;
     }
-    this.props.totalStudySeconds += seconds;
-}
+    const currentTotal = this.props.totalStudySeconds || 0;
+    
+    return this.clone({ 
+      totalStudySeconds: currentTotal + seconds 
+    });
+  } 
 
   addCategoryHistory(category: string): Player {
     if (this.props.playedCategories.includes(category)) return this;

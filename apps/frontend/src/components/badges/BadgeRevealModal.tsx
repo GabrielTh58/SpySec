@@ -85,7 +85,7 @@ export function BadgeRevealModal({ badge, onClose }: BadgeRevealModalProps) {
                         transition={{ delay: 1 }}
                         onClick={onClose}
                         className="mt-8 px-8 py-3 bg-yellow-600 hover:bg-yellow-500 text-black font-bold rounded-full shadow-lg shadow-yellow-500/20
-                            transition-all hover:scale-105"
+                            transition-all hover:scale-105 cursor-pointer"
                     >
                         RESGATAR RECOMPENSA
                     </motion.button>

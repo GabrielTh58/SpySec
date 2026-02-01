@@ -1,7 +1,8 @@
 import { ReactNode } from "react";
+import { DynamicIcon } from "../ui/DynamicIcon";
 
 interface AchievementBadgeProps {
-  icon: string | ReactNode;
+  icon: ReactNode;
   title: string;
   subtitle: string;
   locked?: boolean;
@@ -18,8 +19,8 @@ export function AchievementBadge(props: AchievementBadgeProps) {
     >
       <div className={`text-3xl mb-2 ${locked ? "filter grayscale" : ""}`}>
         {typeof icon === "string" ? (
-          <img src={icon} alt={title} />
-        ) : (
+          <DynamicIcon name={icon} />          
+      ) : (
           icon
         )}
       </div>

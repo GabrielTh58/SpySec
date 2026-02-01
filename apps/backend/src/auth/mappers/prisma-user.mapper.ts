@@ -26,7 +26,7 @@ export class PrismaUserMapper {
       firebaseUid: user.firebaseUid,
       name: user.name.value,
       email: user.email.value,
-      password: user.password?.value ?? null,
+      password: user.password?.value ??  null,
       provider: user.provider,
       profileType: user.profileType,
       isEmailVerified: user.isEmailVerified,

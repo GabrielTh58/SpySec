@@ -41,18 +41,23 @@ export class PrismaPlayerRepository implements PlayerRepository {
 
     await this.prisma.player.upsert({
       where: { userId: data.userId },
-      create: data,
+      create: data, // Cria com TUDO
       update: {
         currentLevel: data.currentLevel,
         currentXp: data.currentXp,
+        badges: data.badges,
+        completedMissionsCount: data.completedMissionsCount, 
+        totalStudySeconds: data.totalStudySeconds,
         streak: data.streak,
         maxStreak: data.maxStreak,
-        badges: data.badges,
         lastActivityDate: data.lastActivityDate,
+        playedCategories: data.playedCategories,
+        nickname: data.nickname, 
+        type: data.type, 
         updatedAt: new Date(), 
       },
     });
-  }
+}
 
   async getRankingPosition(userId: string, currentXp: number): Promise<number> {
     const countBetterPlayers = await this.prisma.player.count({

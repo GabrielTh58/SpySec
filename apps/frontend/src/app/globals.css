@@ -235,6 +235,33 @@
       0 0 0 2px rgba(0, 255, 255, 0.1),
       0 0 15px rgba(0, 255, 255, 0.2) inset;
   }
+
+  .scanline-overlay {
+    background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.3) 51%);
+    background-size: 100% 4px;
+    animation: scanline 10s linear infinite;
+    pointer-events: none;
+  }
+  .cyber-grid {
+    background-image: linear-gradient(rgba(6, 182, 212, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(6, 182, 212, 0.1) 1px, transparent 1px);
+    background-size: 30px 30px;
+  }
+  .text-glow {
+    text-shadow: 0 0 10px rgba(6, 182, 212, 0.7);
+  }
+  .clip-corner {
+    clip-path: polygon(
+      0 0, 
+      100% 0, 
+      100% calc(100% - 20px), 
+      calc(100% - 20px) 100%, 
+      0 100%
+    );
+  }
+  .animate-float {
+    animation: float 4s ease-in-out infinite;
+  }
 }
 /* ========================================= */
 /* 5. Animations                              */
@@ -289,4 +316,14 @@
 @keyframes pulse-line-vertical {
   0%, 100% { background-color: #0891b2; }
   50% { background-color: #22d3ee; }
+}
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
 }

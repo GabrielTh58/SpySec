@@ -5,3 +5,12 @@ Content-Type: application/json
   "chatId": "Teste123",
   "message": "bom dia"
 }
+
+###
+POST https://primary-production-6cbf8.up.railway.app/webhook/spybot
+Content-Type: application/json
+
+{
+  "chatId": "Teste123",
+  "message": "bom dia"
+}

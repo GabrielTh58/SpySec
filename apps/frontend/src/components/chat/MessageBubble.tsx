@@ -63,7 +63,7 @@ export function MessageBubble({ message, omitAuthor }: MessageBubbleProps) {
                     <div className="shrink-0 w-8 h-8 rounded-full bg-cyan-900/20 p-px border border-cyan-500/30 self-end mb-1">
                         <div className="w-full h-full rounded-full overflow-hidden">
                              {isBot ? (
-                                <img src="/Mascote.png" alt="Bot" />
+                                <img src="/Mascot.png" alt="Bot" />
                              ) : (
                                 <div className="w-full h-full bg-slate-700 flex items-center justify-center text-[8px] font-bold text-white">
                                     Você

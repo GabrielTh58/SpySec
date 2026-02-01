@@ -8,47 +8,50 @@ interface MenuProps {
     className?: string
 }
 
-const SIDEBAR_ITEMS = [
-    {
-        href: '/dashboard',
-        text: 'Dashboard',
-        icon: Home,
-    },
-    {
-        href: '/tracks',
-        text: 'Trilhas',
-        icon: Map,
-    },
-    {
-        href: '/badges',
-        text: 'Conquistas',
-        icon: Trophy,
-    },
-    {
-        href: '/settings',
-        text: 'Configurações',
-        icon: Settings,
-    },
-    {
-        href:'/login',
-        text: 'Sair',
-        icon: LogOut
-    }
-]
 
 
 export function Sidebar(props: MenuProps) {
-    const { mini, itemClickedMenu, open, drawer, closeMenu, toggleMenu } = useSideBar()
+    const { mini, itemClickedMenu, open, drawer, closeMenu, toggleMenu, logout } = useSideBar()
+
+    const SIDEBAR_ITEMS = [
+        {
+            href: '/dashboard',
+            text: 'Dashboard',
+            icon: Home,
+        },
+        {
+            href: '/tracks',
+            text: 'Trilhas',
+            icon: Map,
+        },
+        {
+            href: '/badges',
+            text: 'Conquistas',
+            icon: Trophy,
+        },
+        {
+            href: '/settings',
+            text: 'Configurações',
+            icon: Settings,        
+        },
+        {
+            href:'/login',
+            text: 'Sair',
+            icon: LogOut,
+            onClick: logout,
+        }
+    ]
+    
 
     function renderItems(mini: boolean) {
-        return SIDEBAR_ITEMS.map(({ href, text, icon: Icon }) => (
+        return SIDEBAR_ITEMS.map(({ href, text, icon: Icon, onClick }) => (
             <SidebarItem
                 key={href}
                 href={href}
                 text={text}
                 icon={<Icon size={20} />}
                 mini={mini}
-                onClick={itemClickedMenu}
+                onClick={onClick ? onClick : itemClickedMenu}
             />
         ))
     }
@@ -65,7 +68,7 @@ export function Sidebar(props: MenuProps) {
                     <div className={`flex justify-between items-center min-h-[74px] py-3 ${mini ? 'px-2 flex-col' : 'px-5'}`}>
                         <Logo mini={mini} />
                         <div 
-                            className={`hidden xl:flex items-center text-gray-400}`} 
+                            className={`hidden xl:flex items-center text-gray-400 cursor-pointer`} 
                             onClick={toggleMenu}
                         >
                             <ChevronLeft size={12} />

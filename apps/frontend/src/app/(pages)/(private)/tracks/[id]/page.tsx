@@ -1,9 +1,8 @@
 'use client'
 import React, { useEffect, use } from "react"; // Adicionado 'use' para Next 15
 import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import { AlertTriangle, Loader2 } from "lucide-react";
 
-// Componentes Visuais
 import { Connector } from "@/components/missions/Connector";
 import { EndPointMission } from "@/components/missions/EndPointMission";
 import { MissionCard } from "@/components/missions/MissionCard";
@@ -57,7 +56,7 @@ export default function TrackDetailsPage({ params }: TrackDetailsPageProps) {
                 <Connector status="COMPLETED" />
                 {currentTrack.missions.length === 0 ? (
                     <div className="p-8 border border-yellow-500/30 bg-yellow-500/10 rounded text-yellow-200 my-10">
-                        ⚠️ Nenhuma missão cadastrada nesta trilha ainda.
+                        <AlertTriangle />  Nenhuma missão cadastrada nesta trilha ainda.
                     </div>
                 ) : (
                   currentTrack.missions.map((mission, index) => {

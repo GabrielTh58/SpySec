@@ -3,7 +3,7 @@ import { PlayerRepository } from "../provider";
 import { LevelingService } from "../service/leveling.service";
 import { AchievementContext, AchievementRule, ActionStatus } from "../policies/AchievementRule.interface";
 
-interface InputDTO {
+export interface RegisterGameplayInputDTO {
     userId: string;
     action: ActionStatus;
     xpEarned: number; 
@@ -11,34 +11,30 @@ interface InputDTO {
     payload: { 
         trackId?: string;
         trackSlug?: string
-        missionCategory?: string[];
-        isPerfectScore?: boolean;
-        missionBlockCount?: number;
         isLastMission?: boolean
     }
 }
 
-interface OutputDTO {
+export interface RegisterGameplayOutputDTO {
     leveledUp: boolean;
     newLevel?: number;
     badgesEarned: string[]; 
     totalXp: number;
 }
 
-export class RegisterGameplay implements UseCase<InputDTO, OutputDTO> {
+export class RegisterGameplay implements UseCase<RegisterGameplayInputDTO, RegisterGameplayOutputDTO> {
     constructor(
         private readonly repoPlayer: PlayerRepository,
         private readonly levelingService: LevelingService,
         private readonly achievementRules: AchievementRule[] 
     ) {}
 
-    async execute(input: InputDTO): Promise<Result<OutputDTO>> {
+    async execute(input: RegisterGameplayInputDTO): Promise<Result<RegisterGameplayOutputDTO>> {
         let player = await this.repoPlayer.findByUserId(input.userId);
         if (!player) return Result.fail("PLAYER_NOT_FOUND");
 
         const badgesEarnedInThisSession: string[] = [];
 
-        // 2. Adiciona XP e Registra Atividade (Streak)
         if (input.xpEarned > 0) {
             const xpRes = player.addXp(input.xpEarned);
             if (xpRes.succeeded) player = xpRes.value!;
@@ -47,20 +43,16 @@ export class RegisterGameplay implements UseCase<InputDTO, OutputDTO> {
         player = player.registerActivity();
 
         if (input.timeSpent && input.timeSpent > 0) {
-            player.addStudyTime(input.timeSpent);   
+            player = player.addStudyTime(input.timeSpent);
         }
 
         if (input.action === ActionStatus.MISSION_COMPLETED) {
             player.incrementCompletedMissions(); 
        }
 
-        // 3. Processa Níveis (Loop do Service)
-        // Service retorna { leveledUp: boolean, updatedPlayer: Player }
         const levelResult = await this.levelingService.processLevelUp(player);
         player = levelResult.updatedPlayer;
 
-        // 4. Processa Regras (Badges) - Usando sua lógica de Rules!
-        // Montamos o contexto conforme sua interface
         const context: AchievementContext = {
             action: input.action,
             payload: {
@@ -80,7 +72,7 @@ export class RegisterGameplay implements UseCase<InputDTO, OutputDTO> {
             }
         }
 
-        const saveResult = await Result.tryAsync(() => this.repoPlayer.save(player));
+        const saveResult = await Result.tryAsync(() => this.repoPlayer.save(player));   
         if (saveResult.failed) return Result.fail("ERROR_SAVE_DB");
 
         return Result.ok({

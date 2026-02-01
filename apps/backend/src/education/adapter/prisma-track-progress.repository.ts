@@ -62,11 +62,13 @@ export class PrismaTrackProgressRepository extends TrackProgressRepository {
     }
 
     async countCompletedTracksByUserId(userId: string): Promise<number> {
-        const result = await this.prisma.trackProgress.aggregate({
-            where: { userId },
-            _sum: { lastCompletedOrder: true } 
+        const count = await this.prisma.trackProgress.count({
+            where: { 
+                userId,
+                status: 'COMPLETED' 
+            } 
         });
-        return result._sum.lastCompletedOrder ?? 0;
+        return count;
     }
 
     async findNextMissionToPlay(userId: string): Promise<NextMissionResult | null> {
@@ -75,7 +77,8 @@ export class PrismaTrackProgressRepository extends TrackProgressRepository {
                 userId,
                 track: { isActive: true }
             },
-            orderBy: { startedAt: "desc" }
+            orderBy: { startedAt: "desc" },
+            take: 5  
         });
 
         for (const progress of progresses) {
@@ -127,13 +130,22 @@ export class PrismaTrackProgressRepository extends TrackProgressRepository {
     }
 
     async countCompletedMissionsSince(userId: string, date: Date): Promise<number> {
+
         const result = await this.prisma.trackProgress.aggregate({  
-            where: { 
+
+            where: {
+
                 userId,
-                completedAt: { gte: date } 
+
+                completedAt: { gte: date }
+
             },
-            _sum: { lastCompletedOrder: true } 
+
+            _sum: { lastCompletedOrder: true }
+
         });
-        return result._sum.lastCompletedOrder ?? 0;     
+
+        return result._sum.lastCompletedOrder ?? 0;    
+
     }
 }

@@ -26,7 +26,7 @@ export function ChatWindow() {
             <div className="p-4 bg-slate-900/90 border-b border-white/5 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-cyan-500/20 overflow-hidden border border-cyan-500/30">
-                         <img src="/Mascote.png" className="w-full h-full" alt="Mascote" />
+                         <img src="/Mascot.png" className="w-full h-full" alt="Mascote" />
                     </div>
                     <div>
                         <h4 className="text-sm font-bold text-white font-orbitron">Tutor SpyBot</h4>

@@ -68,7 +68,7 @@ export default function Tracks() {
           <TrackCard
             key={track.id}
             id={track.id}
-            title={track.title}
+            title={track.title} 
             difficulty={track.difficulty} 
             progress={track.progressPercentage}
             status={track.status}

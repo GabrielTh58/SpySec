@@ -18,6 +18,10 @@ export interface CompleteMissionOutputDTO {
     nextMissionId?: string | null;
     isTrackFinished: boolean;
     feedback?: Record<string, string>;
+    trackId?: string;
+    trackSlug?: string;
+    timeSpent?: number;
+    isLastMission?: boolean
 }
 
 export class CompleteMission implements UseCase<CompleteMissionInputDTO, CompleteMissionOutputDTO> {
@@ -90,6 +94,7 @@ export class CompleteMission implements UseCase<CompleteMissionInputDTO, Complet
         const saveResult = await Result.tryAsync(() => this.repoProgress.save(progress));
         if (saveResult.failed) return Result.fail("ERROR_SAVE_DB");
 
+        const trackSlug = await this.repoEducation.findTrackSlugById(mission.trackId);
         if (isFirstCompletion) {
             DomainEvents.dispatch(new MissionCompletedEvent({
                 userId: input.userId,
@@ -102,8 +107,6 @@ export class CompleteMission implements UseCase<CompleteMissionInputDTO, Complet
             }));
 
             if (isLastMission) {
-                const trackSlug = await this.repoEducation.findTrackSlugById(mission.trackId);
-
                 DomainEvents.dispatch(new TrackCompletedEvent({
                     userId: input.userId,
                     trackId: mission.trackId,
@@ -118,7 +121,11 @@ export class CompleteMission implements UseCase<CompleteMissionInputDTO, Complet
             missionTitle: mission.title,
             nextMissionId: nextMission ? nextMission.id.toString() : null,
             xpEarned: isFirstCompletion ? mission.xpReward : 0,
-            isTrackFinished: isLastMission
+            isTrackFinished: isLastMission,
+            trackId: mission.trackId,
+            trackSlug: trackSlug || undefined,
+            timeSpent: mission.estimatedTime,
+            isLastMission
         });
     }
 }

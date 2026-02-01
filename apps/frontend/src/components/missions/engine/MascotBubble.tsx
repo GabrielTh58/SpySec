@@ -28,8 +28,8 @@ export function MascotBubble({ message, variant = 'neutral', title }: MascotBubb
                             onClick={() => setIsOpen(true)}
                             className="flex items-center gap-3 bg-cyan-950/40 border border-cyan-500/30 rounded-full pr-4 pl-1 py-1 cursor-pointer hover:bg-cyan-900/40 transition-colors group"
                         >
-                            <div className="w-10 h-10 rounded-full bg-cyan-900 overflow-hidden border border-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.3)]">
-                                <img src="/Mascote.png" alt="AI" className="w-full h-full object-cover" />
+                            <div className="w-12 h-12 rounded-full bg-cyan-900 overflow-hidden border border-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.3)]">
+                                <img src="/Mascot-hint.png" alt="AI" className="w-full h-full object-cover" />
                             </div>
                             <span className="text-xs font-orbitron text-cyan-400 uppercase tracking-widest group-hover:text-cyan-300">
                                 Dica Tática
@@ -48,8 +48,8 @@ export function MascotBubble({ message, variant = 'neutral', title }: MascotBubb
                             </button>
                             
                             <div className="flex gap-4">
-                                <div className="shrink-0 w-10 h-10 rounded-full bg-cyan-900 border border-cyan-500/30 overflow-hidden">
-                                     <img src="/Mascote.png" alt="AI" className="w-full h-full object-cover" />
+                                <div className="shrink-0 w-12 h-12 rounded-full bg-cyan-900 border border-cyan-500/30 overflow-hidden">
+                                     <img src="/Mascot-hint.png" alt="AI" className="w-full h-full object-cover" />
                                 </div>
                                 <div>
                                     <h4 className="text-[10px] font-orbitron text-cyan-500 uppercase tracking-widest mb-1">
@@ -75,7 +75,8 @@ export function MascotBubble({ message, variant = 'neutral', title }: MascotBubb
     
     const currentStyle = styles[variant as keyof typeof styles] || styles.neutral;
     const isNeutral = variant === 'neutral'
-
+    const isSuccess = variant === 'success'
+    const isError = variant === 'error'
     return (
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 mt-10 w-full">
             <motion.div 
@@ -86,7 +87,14 @@ export function MascotBubble({ message, variant = 'neutral', title }: MascotBubb
             >
                 <div className={`w-20 h-20 rounded-full p-[2px] bg-linear-to-tr ${currentStyle.border}`}>
                     <div className="w-full h-full bg-gray-900 rounded-full overflow-hidden">
-                        <img src="/Mascote.png" alt="AI" className="w-full h-full object-cover" />
+                        {isNeutral ? (
+                            <img src="/Mascot.png" alt="AI" className="w-full h-full object-cover animate-float" /> 
+                        ) : isSuccess ? (
+                            <img src="/Mascot-success.png" alt="AI" className="w-full h-full object-cover" /> 
+                        ) : isError ? (
+                            <img src="/Mascot-erro.jpeg" alt="AI" className="w-full h-full object-cover" /> 
+                        ): ''
+                        }
                     </div>
                 </div>
             </motion.div>

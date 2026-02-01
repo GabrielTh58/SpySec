@@ -14,14 +14,17 @@ interface Session {
 interface StartSessionInput {
     token: string;
     user: UserDTO;
+    isNewUser?: boolean;
 }
 
 interface SessionContextProps {
     loading: boolean
     token: string | null
     user: UserDTO | null
+    isNewUser: boolean
     startSession: (input: StartSessionInput) => void
     endSession: () => void
+    completeOnboarding: () => void;     
 }
 
 const TOKEN_COOKIE = '_spysec_token'
@@ -33,17 +36,22 @@ export const SessionContext = createContext<SessionContextProps>({} as any)
 export function SessionProvider(props: any) {
     const [loading, setLoading] = useState(true)
     const [session, setSession] = useState<Session>({ token: null, user: null })
+    const [isNewUser, setIsNewUser] = useState<boolean>(false)
 
     const startSession = useCallback((input: StartSessionInput) => {   
         cookie.set(TOKEN_COOKIE, input.token, { expires: 15 }) 
         setLocalStorage(USER_STORAGE, input.user)  
+
+        if (input.isNewUser) {
+            setIsNewUser(true);
+        }
 
         setSession({ 
             token: input.token, 
             user: input.user 
         })
     }, [])
-    
+        
     const endSession = useCallback(() => {
         cookie.remove(TOKEN_COOKIE)   
         removeLocalStorage(USER_STORAGE)     
@@ -72,6 +80,10 @@ export function SessionProvider(props: any) {
         }
     }, [endSession])
 
+    const completeOnboarding = useCallback(() => {
+        setIsNewUser(false);
+    }, []);
+
     useEffect(() => {
         async function initialize() {
             setLoading(true)
@@ -84,14 +96,13 @@ export function SessionProvider(props: any) {
                 setLoading(false)
                 return
             }
-        
+            
             setSession({ 
                 token, 
                 user: cachedUser || null 
             })
 
-            setLoading(false)
-        
+            setLoading(false)        
             await validateAndRefreshUser(token)
         }
 
@@ -102,10 +113,12 @@ export function SessionProvider(props: any) {
         <SessionContext.Provider
             value={{
                 loading,
+                isNewUser,
                 token: session.token,
                 user: session.user,
                 startSession,
                 endSession,
+                completeOnboarding,
             }}
         >
             {props.children}

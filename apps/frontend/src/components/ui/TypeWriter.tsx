@@ -51,7 +51,7 @@ export function Typewriter({
           key={index}
           style={{
             opacity: index < visibleCount ? 1 : 0,
-            transition: "opacity 0.1s ease-in-out", // Suaviza o aparecimento
+            transition: "opacity 0.1s ease-in-out", 
           }}
         >
           {char}

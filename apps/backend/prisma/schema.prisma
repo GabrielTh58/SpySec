@@ -55,7 +55,7 @@ model User {
   firebaseUid     String?         @unique @map("firebase_uid")
   name            String
   email           String          @unique
-  password        String
+  password        String?
   provider        ProviderType
   profileType     ProfileType     @map("profile_type")
   isEmailVerified Boolean         @default(false) @map("is_email_verified")

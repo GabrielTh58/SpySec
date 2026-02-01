@@ -1,6 +1,6 @@
 import { Module, OnModuleInit } from '@nestjs/common';
 import { GamificationController } from './gamification.controller';
-import { AchievementRule, AddXpOnMissionComplete, BadgeRepository, CreatePlayer, CreatePlayerOnSignup, LevelingService, LevelRepository, PlayerRepository, RegisterGameplay, AwardBadgesOnTrackComplete } from '@spysec/gamification';
+import { AchievementRule, BadgeRepository, CreatePlayer, CreatePlayerOnSignup, LevelingService, LevelRepository, PlayerRepository, RegisterGameplay} from '@spysec/gamification';
 import { PrismaPlayerRepository } from './adapter/prisma-player.repository';
 import { PrismaLevelRepository } from './adapter/prisma-level.repository';
 import { PrismaBadgeRepository } from './adapter/prisma-badge.repository';
@@ -20,12 +20,14 @@ import { AchievementRulesProvider, ACHIEVEMENT_RULES_TOKEN } from './provider/ac
       useFactory: (
         repoPlayer: PlayerRepository,
         repoBadge: BadgeRepository,
-        repoLevel: LevelRepository
+        repoLevel: LevelRepository,
+        levelingService: LevelingService,
+        achievementRules: AchievementRule[],    
       ) => {
-        return new GamificationFacade(repoPlayer, repoBadge, repoLevel)
+        return new GamificationFacade(repoPlayer, repoBadge, repoLevel, levelingService, achievementRules)
       },
-      inject: [PlayerRepository, BadgeRepository, LevelRepository]
-    },
+      inject: [PlayerRepository, BadgeRepository, LevelRepository, LevelingService, ACHIEVEMENT_RULES_TOKEN]
+  },
 
     // Domain Services & Use Cases 
     {
@@ -56,26 +58,15 @@ import { AchievementRulesProvider, ACHIEVEMENT_RULES_TOKEN } from './provider/ac
       useFactory: (useCase: CreatePlayer) => new CreatePlayerOnSignup(useCase),
       inject: [CreatePlayer],
     },
-    {
-      provide: AddXpOnMissionComplete,
-      useFactory: (useCase: RegisterGameplay) => new AddXpOnMissionComplete(useCase),
-      inject: [RegisterGameplay],
-    },
-    {
-      provide: AwardBadgesOnTrackComplete,
-      useFactory: (useCase: RegisterGameplay) => new AwardBadgesOnTrackComplete(useCase),
-      inject: [RegisterGameplay],
-  }
   ],
-  exports: [GamificationFacade]
+  exports: [GamificationFacade, BadgeRepository]
 })
 export class GamificationModule implements OnModuleInit{
   constructor(
     private readonly signupSubscriber: CreatePlayerOnSignup,
-    private readonly missionSubscriber: AddXpOnMissionComplete
 ) {}
 
 onModuleInit() {
-    console.log('Gamification Module Initialized & Listening to Events');
+    console.log('Gamification Module Initialized');
 }
 }

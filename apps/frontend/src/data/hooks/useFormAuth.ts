@@ -73,7 +73,8 @@ export default function useFormAuth() {
             
             startSession({
                 token: response.accessToken,
-                user: response.user
+                user: response.user,
+                isNewUser: response.isNewUser
             })           
 
         } catch (error: any) {
@@ -90,11 +91,12 @@ export default function useFormAuth() {
         setLoading(true);
 
         try {            
-            const data = await firebaseProvider.loginWithGoogle(currentProfileType);
+            const response = await firebaseProvider.loginWithGoogle(currentProfileType);
             
             startSession({
-                token: data.accessToken,
-                user: data.user
+                token: response.accessToken,
+                user: response.user,
+                isNewUser: response.isNewUser
             });
             toast.success("Autenticação Google", {
                 description: "Vínculo estabelecido com sucesso."

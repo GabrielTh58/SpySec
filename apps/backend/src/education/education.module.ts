@@ -5,12 +5,14 @@ import { EducationRepository, GamificationGateway, TrackProgressRepository } fro
 import { PrismaEducationRepository } from './adapter/prisma-education.repository';
 import { PrismaTrackProgressRepository } from './adapter/prisma-track-progress.repository';
 import { PrismaGamificationGateway } from './gateway/gamification.gateway';
-import { GamificationModule } from 'src/gamification/gamification.module';
+import { GamificationModule} from 'src/gamification/gamification.module';
+import { CompleteMissionFlow } from './service/CompleteMissionFlow.service';
 
 @Module({
   controllers: [EducationController],
   imports: [GamificationModule],
   providers: [
+    CompleteMissionFlow,
     {
       provide: EducationRepository,
       useClass: PrismaEducationRepository,
@@ -33,7 +35,7 @@ import { GamificationModule } from 'src/gamification/gamification.module';
         return new EducationFacade(repoEducation, repoProgress, gatewayGamification);
       },
       inject: [EducationRepository, TrackProgressRepository, GamificationGateway],
-    },
+    }
   ],
 })
 export class EducationModule {}

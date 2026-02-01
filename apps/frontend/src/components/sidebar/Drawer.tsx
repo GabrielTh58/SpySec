@@ -9,7 +9,7 @@ export function Drawer(){
     return(
         <button
             onClick={openMenu}
-            className="md:hidden p-1 text-white"
+            className="lg:hidden p-1 text-white"
             aria-label="Abrir menu"
         >
             <Menu size={24} />

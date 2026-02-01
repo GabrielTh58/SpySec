@@ -1,0 +1,42 @@
+POST https://primary-production-6cbf8.up.railway.app/webhook-test/feedback
+Content-Type: application/json
+
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "user": {
+    "id": "user_123_teste_uuid",
+    "email": "gabriel@zaytek.com",
+    "name": "Gabriel Developer",
+    "level": 5
+  },
+  "report": {
+    "type": "BUG",
+    "message": "Teste com ID fixo gerado pelo cliente.",
+    "mood": "NEUTRAL",
+    "page": "/dashboard",
+    "userAgent": "Mozilla/5.0"
+  },
+  "timestamp": "2024-03-20T10:00:00.000Z"
+}
+
+### Teste de Envio de Feedback (IDEIA / FELIZ)
+POST https://primary-production-6cbf8.up.railway.app/webhook-test/feedback
+Content-Type: application/json
+
+{
+  "id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",  
+  "user": {
+    "id": "user_456_teste",
+    "email": "tester@zaytek.com",
+    "name": "Agente Beta",
+    "level": 12
+  },
+  "report": {
+    "type": "IDEIA",
+    "message": "Seria legal se o Spy usasse óculos escuros quando a gente atinge o nível 10!",
+    "mood": "HAPPY",
+    "page": "/badges",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"
+  },
+  "timestamp": "2024-03-20T10:05:00.000Z"
+}

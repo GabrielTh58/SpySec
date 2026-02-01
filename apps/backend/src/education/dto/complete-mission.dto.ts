@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsObject, IsNotEmpty } from 'class-validator';
+import { IsObject, IsNotEmpty, IsNumber } from 'class-validator';
 
 export class CompleteMissionDto {
     @ApiProperty({
@@ -13,4 +13,12 @@ export class CompleteMissionDto {
     @IsObject({ message: 'Answers must be a JSON object mapping blockId to value' })
     @IsNotEmpty()
     answers!: Record<string, any>;
+    
+    @ApiProperty({
+        description: 'Total time spent on the mission attempt, in seconds',
+        example: 210
+    })
+    @IsNumber()
+    timeSpent!: number
+
 }

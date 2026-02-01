@@ -8,15 +8,7 @@ export function StatsSummary() {
   const completedTracks = progress?.completedTracksCount || 0;
   const totalTracks = progress?.totalTracksCount || 0;
 
-  const completionPercentage = totalTracks > 0 
-    ? Math.round((completedTracks / totalTracks) * 100) 
-    : 0;
-
-    console.log('completed', completedTracks);
-    console.log('totalTracks', totalTracks);
-    console.log('completion', completionPercentage);
-    
-
+  const completionPercentage = progress?.globalProgressPercent || 0;
   const nextTarget = tracks.find(t => t.status === 'LOCKED' || t.status === 'NOT_STARTED');
   
   const motivationText = nextTarget 
@@ -26,10 +18,10 @@ export function StatsSummary() {
   return(
     <div className="mt-12 mb-8 bg-linear-to-r from-gray-900/80 to-gray-900/50 border border-gray-800 rounded-2xl p-8 backdrop-blur-sm">
       <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-        <div>
+        <div className="flex-1"> 
           <h3 className="font-orbitron text-2xl mb-2 text-cyan-500">Resumo da Jornada</h3>
           <p className="text-gray-400 text-sm max-w-md">
-            Você completou <span className="text-cyan-400 font-bold">{completionPercentage}%</span> das trilhas disponíveis.
+            Você completou <span className="text-cyan-400 font-bold">{completionPercentage}%</span> de todo o conteúdo prático.
             {motivationText}
           </p>
 
@@ -64,4 +56,4 @@ export function StatsSummary() {
       </div>
     </div>
   )
-} 
+}

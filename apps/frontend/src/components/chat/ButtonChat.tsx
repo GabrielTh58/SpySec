@@ -22,7 +22,7 @@ export function ButtonChat(props: ButtonChatProps) {
                     <X className="text-white w-6 h-6 animate-in zoom-in duration-200" />
                 ) : (
                     <img 
-                        src="/Mascote.png" 
+                        src="/Mascot.png" 
                         alt="SpyBot" 
                         className="w-full h-full object-cover"
                     />

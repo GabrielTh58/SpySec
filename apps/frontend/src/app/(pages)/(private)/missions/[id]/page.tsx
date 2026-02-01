@@ -10,6 +10,7 @@ import { Loading } from "@/components/template/Loading";
 import { MissionSuccessModal } from "@/components/missions/MissionSuccessModal";
 import { MissionWorkspace } from "@/components/missions/engine/MissionWorkspace";
 import { BadgeRevealModal } from "@/components/badges/BadgeRevealModal";
+import { useStopwatch } from "@/data/hooks/useStopWatch";
 
 interface MissionPageProps {
     params: Promise<{ id: string }>
@@ -20,11 +21,13 @@ export default function MissionPage({ params }: MissionPageProps) {
     const missionId = id;
     const router = useRouter();
 
+    const { seconds, stop, formatTime } = useStopwatch();
+
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [showBadgeModal, setShowBadgeModal] = useState<boolean>(false);
     const [earnedBadge, setEarnedBadge] = useState<any | null>(null);
     const [xpEarnedResult, setXpEarnedResult] = useState(0);
-
+    
     const {
         activeMission,
         fetchMissionData,
@@ -51,21 +54,23 @@ export default function MissionPage({ params }: MissionPageProps) {
     }, [activeMission]);
 
     const handleMissionFinish = async (answers: Record<string, any>) => {
-        const result = await completeMission(missionId, answers);
+        stop();
+        const result = await completeMission(missionId, answers, seconds);
+        console.log(result);
+        
 
         if (result && result.success) {
             await refreshProfile();
             setXpEarnedResult(result.xpEarned);
-            setShowSuccessModal(true)
 
-            /*if (result.newBadge) {
+            if (result.newBadge) {
                 setEarnedBadge(result.newBadge);
                 setShowBadgeModal(true);
             } else {
                 setShowSuccessModal(true);
-            }*/
+            }
         } else {
-            toast.error("Erro ao validar missão. Verifique suas respostas.");
+            toast.error("Erro ao validar missão. Verifique suas respostas."); 
         }
     };
 

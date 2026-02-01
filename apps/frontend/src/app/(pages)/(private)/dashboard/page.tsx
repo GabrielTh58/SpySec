@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation";
 export default function Dashboard() {
     const { profile, isLoading, ranking, allBadges } = useGamification()
     
-    const { progress  } = useEducation()
+    const { progress } = useEducation()
     const studyTime = formatStudyTime(profile?.totalStudySeconds || 0);
     const router = useRouter()
 
@@ -25,7 +25,7 @@ export default function Dashboard() {
 
     const recentBadges = profile?.badges.slice(-5).reverse() || [];
     const hasActiveMission = !!progress?.nextMission;
-    
+
     const portalData = hasActiveMission ? {
         title: progress?.nextMission?.title,
         subtitle: `Continuar Trilha: ${progress?.nextMission?.description}`,
@@ -45,18 +45,18 @@ export default function Dashboard() {
     };
 
     return (
-        <div className="flex-1 overflow-y-auto sm:p-8 scroll-smooth">
+        <div className="flex-1 overflow-y-auto p-4 sm:py-10 sm:px-12 md:p-8 scroll-smooth">
             <Background />
-            <div className="grid grid-rows-1 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-[1440px] mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-[1440px] mx-auto">
                 <MissionPortal
                     title={portalData.title}
                     subtitle={portalData.subtitle}
                     ctaText={portalData.cta}
                     xpReward={hasActiveMission ? progress.nextMission?.xpReward : 100}
                     onEnter={handlePortalEnter}
-                    className="md:col-span-2 lg:col-span-2 lg:row-span-2"
+                    className="h-full"
                 />
-
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <GlassCard className="flex flex-col justify-between" hoverEffect>
                     <div className="flex items-center justify-between">
                         <h3 className="text-gray-400 font-medium font-orbitron text-sm">Progresso</h3>
@@ -101,7 +101,7 @@ export default function Dashboard() {
                     </div>
                 </GlassCard>
 
-                <GlassCard className="flex flex-col justify-between" hoverEffect>
+                <GlassCard className="flex flex-col justify-between" hoverEffect>   
                     <div className="flex items-center justify-between">
                         <h3 className="text-gray-400 font-medium text-sm font-orbitron">Sequência</h3>
                         <div className="p-2 bg-orange-500/10 rounded-lg text-orange-400">
@@ -109,14 +109,15 @@ export default function Dashboard() {
                         </div>
                     </div>
                     <div>
-                        <p className="text-3xl font-bold font-orbitron text-orange-400 mt-2">{profile?.streak}</p>
+                        <p className="text-3xl font-bold font-orbitron text-orange-400 mt-2">{profile?.streak || 0}</p>
                         <p className="text-xs text-gray-500 mt-1">Dias consecutivos</p>
                     </div>
                 </GlassCard>
+                </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 col-span-1 md:col-span-2 max-w-[1440px] mx-auto lg:col-span-4 mt-7">
-                <GlassCard className="md:col-span-1 flex flex-col border border-purple-500/20 h-full">
+                <GlassCard className="md:col-span-2 lg:col-span-1 flex flex-col border border-purple-500/20 h-full">
                     <div className="flex items-center justify-between mb-4">
                         <h3 className="font-orbitron text-lg text-purple-400 flex items-center gap-2 neon-text-magenta">
                             <Trophy size={18} />
@@ -159,10 +160,11 @@ export default function Dashboard() {
                         </h3>
                         <Link
                             href='/badges'
-                            className="text-[10px] text-cyan-400 hover:text-cyan-300 transition-colors uppercase font-bold tracking-wider border border-cyan-500/30 px-2 py-1 rounded hover:bg-cyan-500/10"
+                            className="text-[10px] text-center text-cyan-400 hover:text-cyan-300 transition-colors uppercase font-bold tracking-wider border
+                                border-cyan-500/30 px-2 py-1 rounded hover:bg-cyan-500/10"
                         >
                             Ver todas
-                        </Link> 
+                        </Link>
                     </div>
 
                     <div className="flex-1 flex flex-col gap-6 overflow-y-auto custom-scrollbar pr-1 max-h-[300px]">
@@ -177,7 +179,7 @@ export default function Dashboard() {
                                     return (
                                         <AchievementBadge
                                             key={badgeSlug}
-                                            icon={badgeDetails.iconUrl} 
+                                            icon={badgeDetails.iconUrl}
                                             title={badgeDetails.name}
                                             subtitle="Conquistado"
                                         />
@@ -198,31 +200,31 @@ export default function Dashboard() {
                             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 opacity-60 hover:opacity-100 transition-opacity">
                                 {allBadges
                                     .filter(badge => !profile?.badges.includes(badge.slug))
-                                    .slice(0, 5) 
+                                    .slice(0, 5)
                                     .map((badge) => (
                                         <AchievementBadge
                                             key={badge.slug}
                                             icon={<Lock />}
                                             title={badge.name}
                                             subtitle="Bloqueado"
-                                            locked={true} 
+                                            locked={true}
                                         />
                                     ))
                                 }
                             </div>
                         </div>
                     </div>
-                </GlassCard>             
+                </GlassCard>
             </div>
 
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-6 max-w-[1440px] mx-auto">    
-                    <div className="md:col-span-1 min-h-[250px]">
-                        <SecurityGoalsWidget />
-                    </div>
-                    <div className="md:col-span-2 min-h-[250px]">
-                        <ThreatRadarWidget />
-                    </div>                
-            </div>  
+            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-6 max-w-[1440px] mx-auto">
+                <div className="md:col-span-2 lg:col-span-1 min-h-[250px]">
+                    <SecurityGoalsWidget />
+                </div>
+                <div className="md:col-span-2 min-h-[250px]">
+                    <ThreatRadarWidget />
+                </div>
+            </div>
         </div>
     )
 }

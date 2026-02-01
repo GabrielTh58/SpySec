@@ -38,12 +38,11 @@ export class GetStudentProgressSummary implements UseCase<string, StudentProgres
         )       
         if (dataOrError.failed) return Result.fail(dataOrError.errors);
 
-        const [totalMissionsCount, userCompletedCount, completedThisMonth, totalTracks, completedTracks, nextMissionData] = dataOrError.value!
+        const [totalMissionsCount, userCompletedCount, completedMissionsThisMonth, totalTracks, completedTracks, nextMissionData] = dataOrError.value!
 
-        const monthlyGrowth = Math.round((completedThisMonth / totalMissionsCount) * 100);
-        const progressPercent = totalMissionsCount > 0 
-            ? Math.round((userCompletedCount / totalMissionsCount) * 100) 
-            : 0;
+        const safeTotalMissions = totalMissionsCount > 0 ? totalMissionsCount : 1;
+        const progressPercent = Math.min(100, Math.round((userCompletedCount / safeTotalMissions) * 100));
+        const monthlyGrowth = Math.min(100, Math.round((completedMissionsThisMonth / safeTotalMissions) * 100));
 
         return Result.ok({
             globalProgressPercent: progressPercent,

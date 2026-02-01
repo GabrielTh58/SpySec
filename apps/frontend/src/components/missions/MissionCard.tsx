@@ -1,4 +1,5 @@
 import { CheckCircle2, Lock, Play } from "lucide-react";
+import { DynamicIcon } from "../ui/DynamicIcon";
 
 interface MissionCardProps {
   mission: {
@@ -56,6 +57,14 @@ export function MissionCard({mission, onPlay}: MissionCardProps) {
       }
   };
 
+    const iconDynamicStyle = status === "AVAILABLE" 
+      ? visualConfig.AVAILABLE.textColor : status === 'COMPLETED' 
+      ? visualConfig.COMPLETED.textColor : visualConfig.LOCKED.textColor
+  
+    const blockIconDynamicStyle = status === 'AVAILABLE' 
+      ? 'bg-cyan-950/50 border border-cyan-500/30 animate-pulse' : status === 'COMPLETED'
+      ? 'bg-green-950/50 border border-green-500/30' : 'bg-gray-800/50 border border-gray-700/30'
+
     return (
       <div className={`mission-card-wrapper relative w-full max-w-2xl group ${status === 'AVAILABLE' ? 'transform scale-105' : ''}`}>
         {/* Balão de Dica
@@ -86,9 +95,12 @@ export function MissionCard({mission, onPlay}: MissionCardProps) {
         
           <div className={`
                 p-4 rounded-xl flex items-center justify-center
-                ${status === 'AVAILABLE' ? 'bg-cyan-950/50 border border-cyan-500/30 animate-pulse' : 'bg-gray-800/50 border border-gray-700/30'}
+                ${blockIconDynamicStyle}
           `}>
-            <img src={iconUrl} alt={title} className={`w-8 h-8 ${config.iconColor}`} />
+            <DynamicIcon 
+              name={iconUrl}
+              className={`w-8 h-8 ${iconDynamicStyle}`}
+            />
           </div>
   
           <div className="flex-1">

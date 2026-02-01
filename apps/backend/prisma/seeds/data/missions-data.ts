@@ -1,11 +1,9 @@
-const ICON_BASE_URL = "https://github.com/GabrielTh58/SpySec/blob/main/public/mission-icons";
-
 export const missionsEixo01_Track01 = [
     {
         title: "Quem quer meus dados?",
         description: "Você acha que não tem nada a esconder? Descubra o valor da sua vida digital no mercado negro.",
         xpReward: 35, estimatedTime: 3, category: "MINDSET", order: 1,
-        iconUrl: `${ICON_BASE_URL}/fingerprint-pattern.svg`,
+        iconUrl: `fingerprint-pattern`,
         content: [
             {
                 id: "m1_m1_b1", type: "INFO",
@@ -50,7 +48,7 @@ export const missionsEixo01_Track01 = [
         title: "O Dicionário do Crime",
         description: "Vírus é coisa do passado. Saiba diferenciar quem te vigia, quem te sequestra e quem te engana.",
         xpReward: 35, estimatedTime: 5, category: "MINDSET", order: 2,
-        iconUrl: `${ICON_BASE_URL}/book-type.svg`,
+        iconUrl: `book-type`,
         content: [
             {
                 id: "m1_m2_b1", type: "INFO",
@@ -99,7 +97,7 @@ export const missionsEixo01_Track01 = [
         title: "O Preço do 'Grátis'",
         description: "Se você não paga pelo produto, o produto é você. O quanto as empresas realmente sabem sobre sua vida?",
         xpReward: 35, estimatedTime: 3, category: "MINDSET", order: 3,
-        iconUrl: `${ICON_BASE_URL}/scan-eye.svg`,
+        iconUrl: `scan-eye`,
         content: [
             {
                 id: "m1_m3_b1", type: "INFO",
@@ -136,7 +134,7 @@ export const missionsEixo01_Track02 = [
         title: "123456 e a Ilusão de Segurança",
         description: "Sua senha complexa pode ser quebrada em segundos. Aprenda a matemática da defesa real.",
         xpReward: 35, estimatedTime: 5, category: "IDENTITY", order: 1,
-        iconUrl: `${ICON_BASE_URL}/lock-keyhole.svg`,
+        iconUrl: `lock-keyhole`,
         content: [
             {
                 id: "m2_m1_b1", type: "INFO",
@@ -179,7 +177,7 @@ export const missionsEixo01_Track02 = [
         title: "A Morte do SMS",
         description: "Por que usar SMS para receber códigos de segurança é uma falha crítica.",
         xpReward: 35, estimatedTime: 3, category: "IDENTITY", order: 2,
-        iconUrl: `${ICON_BASE_URL}/message-square-off.svg`,
+        iconUrl: `message-square-off`,
         content: [
             {
                 id: "m2_m2_b1", type: "INFO",
@@ -213,7 +211,7 @@ export const missionsEixo01_Track02 = [
         title: "O Kit de Emergência",
         description: "Você perdeu o celular hoje. E agora? Descubra como não ficar trancado fora da sua própria vida.",
         xpReward: 35, estimatedTime: 3, category: "IDENTITY", order: 3,
-        iconUrl: `${ICON_BASE_URL}/shield-plus.svg`,
+        iconUrl: `shield-plus`,
         content: [
             {
                 id: "m2_m3_b1", type: "INFO",
@@ -250,7 +248,7 @@ export const missionsEixo02_Track03 = [
         title: "Mac não pega vírus?",
         description: "Desmentindo mitos que custam caro. O que o Antivírus realmente faz por você.",
         xpReward: 50, estimatedTime: 3, category: "DEVICES", order: 1,
-        iconUrl: `${ICON_BASE_URL}/laptop-minimal.svg`,
+        iconUrl: `laptop-minimal`,
         content: [
             {
                 id: "m3_m1_b1", type: "INFO",
@@ -285,7 +283,7 @@ export const missionsEixo02_Track03 = [
         title: "A Porta dos Fundos",
         description: "Adiar atualizações é convidar um estranho para entrar. Entenda o Firewall.",
         xpReward: 50, estimatedTime: 5, category: "DEVICES", order: 2,
-        iconUrl: `${ICON_BASE_URL}/door-open.svg`,   
+        iconUrl: `door-open`,   
         content: [
             {
                 id: "m3_m2_b1", type: "INFO",
@@ -320,7 +318,7 @@ export const missionsEixo02_Track03 = [
         title: "O Perigo Mora ao Lado",
         description: "Nunca espete seu celular em um USB público. Cuidado com o Juice Jacking.",
         xpReward: 50, estimatedTime: 5, category: "DEVICES", order: 3,
-        iconUrl: `${ICON_BASE_URL}/cable.svg`,
+        iconUrl: `cable`,
         content: [
             {
                 id: "m3_m3_b1", type: "INFO",
@@ -357,7 +355,7 @@ export const missionsEixo02_Track04 = [
         title: "O Café Wi-Fi",
         description: "Como um hacker na mesa ao lado lê seus e-mails no Wi-Fi gratuito.",
         xpReward: 50, estimatedTime: 8, category: "DEVICES", order: 1,
-        iconUrl: `${ICON_BASE_URL}/wifi-off.svg`,
+        iconUrl: `wifi-off`,
         content: [
             {
                 id: "m4_m1_b1", type: "INFO",
@@ -411,7 +409,7 @@ export const missionsEixo02_Track04 = [
         title: "O QR Code da Morte",
         description: "Aquele cardápio ou boleto Pix pode ser uma armadilha visual.",
         xpReward: 75, estimatedTime: 3, category: "DEVICES", order: 2,
-        iconUrl: `${ICON_BASE_URL}/qr-code.svg`,
+        iconUrl: `qr-code`,
         content: [
             {
                 id: "m4_m2_b1", type: "INFO",
@@ -464,7 +462,7 @@ export const missionsEixo02_Track04 = [
         xpReward: 50,
         estimatedTime: 3,
         category: "DEVICES",
-        iconUrl: `${ICON_BASE_URL}/router.svg`,
+        iconUrl: `router`,
         order: 3,
         content: [
             {
@@ -504,7 +502,7 @@ export const missionsEixo03_Track05 = [
         title: "O Chefe Mandou?",
         description: "Um e-mail urgente do Diretor pedindo um pagamento... ou uma armadilha perfeita?",
         xpReward: 100, estimatedTime: 6, category: "CORPORATE", order: 1,
-        iconUrl: `${ICON_BASE_URL}/briefcase-business.svg`,
+        iconUrl: `briefcase-business`,
         content: [
             {
                 id: "m5_m1_b1", type: "INFO",
@@ -564,7 +562,7 @@ export const missionsEixo03_Track05 = [
         title: "O Suporte Amigo",
         description: "Uma ligação simpática do 'técnico' pode ser o início de um desastre.",
         xpReward: 100, estimatedTime: 7, category: "CORPORATE", order: 2,
-        iconUrl: `${ICON_BASE_URL}/headset.svg`,
+        iconUrl: `headset`,
         content: [
             {
                 id: "m5_m2_b1", type: "INFO",
@@ -601,7 +599,7 @@ export const missionsEixo03_Track05 = [
         title: "Vazamento em Tempo Real",
         description: "O perigo de compartilhar sua tela e o 'espião de ombro'.",
         xpReward: 100, estimatedTime: 3, category: "CORPORATE", order: 3,
-        iconUrl: `${ICON_BASE_URL}/cast.svg`,
+        iconUrl: `cast`,
         content: [
             {
                 id: "m5_m3_b1", type: "INFO",
@@ -641,7 +639,7 @@ export const missionsEixo03_Track06 = [
         title: "O Sequestro de Dados",
         description: "Seu computador travou e pediram Bitcoin. Descubra por que pagar é o pior negócio da sua vida.",
         xpReward: 150, estimatedTime: 8, category: "CORPORATE", order: 1,
-        iconUrl: `${ICON_BASE_URL}/file-lock.svg`,
+        iconUrl: `file-lock`,
         content: [
             {
                 id: "m6_m1_b1", type: "INFO",
@@ -695,7 +693,7 @@ export const missionsEixo03_Track06 = [
         title: "A Ferramenta Proibida",
         description: "Usar aquele 'conversor de PDF grátis' pode vazar o segredo da sua empresa.",
         xpReward: 100, estimatedTime: 6, category: "CORPORATE", order: 2,
-        iconUrl: `${ICON_BASE_URL}/ghost.svg`,
+        iconUrl: `ghost`,
         content: [
             {
                 id: "m6_m2_b1", type: "INFO",
@@ -733,7 +731,7 @@ export const missionsEixo03_Track06 = [
         title: "LGPD na Prática",
         description: "Dado Pessoal não é só CPF. Saiba como não causar uma multa milionária.",
         xpReward: 150, estimatedTime: 7, category: "CORPORATE", order: 3,
-        iconUrl: `${ICON_BASE_URL}/scale.svg`,
+        iconUrl: `scale`,
         content: [
             {
                 id: "m6_m3_b1", type: "INFO",
@@ -795,7 +793,7 @@ export const missionsEixo04_Track07 = [
         title: "O ChatGPT é X9?",
         description: "Tudo o que você digita na IA pode ser usado contra sua empresa. Aprenda a não vazar segredos.",
         xpReward: 120, estimatedTime: 6, category: "TRENDS", order: 1,
-        iconUrl: `${ICON_BASE_URL}/bot-message-square.svg`,
+        iconUrl: `bot-message-square`,
         content: [
             {
                 id: "m7_m1_b1", type: "INFO",
@@ -844,7 +842,7 @@ export const missionsEixo04_Track07 = [
         title: "Essa voz não é minha",
         description: "Áudios de WhatsApp e vídeos de reunião falsos. Saiba como identificar um Deepfake.",
         xpReward: 100, estimatedTime: 3, category: "TRENDS", order: 2,
-        iconUrl: `${ICON_BASE_URL}/venetian-mask.svg`,
+        iconUrl: `venetian-mask`,
         content: [
             {
                 id: "m7_m2_b1", type: "INFO",
@@ -882,7 +880,7 @@ export const missionsEixo04_Track07 = [
         title: "O Golpe Perfeito",
         description: "A IA escreve e-mails sem erros de português e altamente personalizados. Como notar?",
         xpReward: 150, estimatedTime: 3, category: "TRENDS", order: 3,
-        iconUrl: `${ICON_BASE_URL}/sparkles.svg`,
+        iconUrl: `sparkles`,
         content: [
             {
                 id: "m7_m3_b1", type: "INFO",
@@ -946,7 +944,7 @@ export const finalEpicMission = {
     category: "FINAL_CHALLENGE",
     order: 1, 
     estimatedTime: 15,
-    iconUrl: `${ICON_BASE_URL}/swords.svg`,
+    iconUrl: `swords`,
     content: [
         {
             id: "f_intro", type: "INFO",

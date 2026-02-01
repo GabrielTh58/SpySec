@@ -1,5 +1,4 @@
 import { TrackCategory, TrackDifficulty, TrackVisibility } from "@spysec/education"; 
-const ICON_BASE_URL = "https://github.com/GabrielTh58/SpySec/blob/main/public/track-icons";
 
 export const TRACK_IDS = {
   MINDSET: "550e8400-e29b-41d4-a716-446655440001",
@@ -18,7 +17,7 @@ export const tracksData = [
     id: TRACK_IDS.MINDSET, 
     title: "O Alvo Invisível",
     description: "Descubra por que hackers querem seus dados",
-    iconUrl: `${ICON_BASE_URL}/crosshair.svg`,
+    iconUrl: `crosshair`,
     category: TrackCategory.MINDSET,
     difficulty: TrackDifficulty.BASIC,
     targetProfile: TrackVisibility.ALL,
@@ -29,7 +28,7 @@ export const tracksData = [
     id: TRACK_IDS.IDENTITY,   
     title: "O Cofre de Identidade",
     description: "Aprenda a criar senhas inquebráveis",
-    iconUrl: `${ICON_BASE_URL}/shield-check.svg`,
+    iconUrl: `shield-check`,
     category: TrackCategory.MINDSET, 
     difficulty: TrackDifficulty.BASIC,
     targetProfile: TrackVisibility.ALL,
@@ -42,23 +41,23 @@ export const tracksData = [
     id: TRACK_IDS.DEVICES_HARDWARE,
     title: "Seus Dispositivos, Seus Espiões",
     description: "Transforme seu computador e celular em fortalezas",
-    iconUrl: `${ICON_BASE_URL}/monitor-smartphone.svg`,
+    iconUrl: `monitor-smartphone`,
     category: TrackCategory.DEVICES,
     difficulty: TrackDifficulty.INTERMEDIATE,
     targetProfile: TrackVisibility.ALL,
     tags: ["Antivirus", "Hardware", "Updates"],
-    minLevel: 3
+    minLevel: 2
   },
   {
     id: TRACK_IDS.DEVICES_NETWORKS,
     title: "O Campo Minado",
     description: "Navegue na web e use Wi-Fi público sem ser interceptado",
-    iconUrl: `${ICON_BASE_URL}/bomb.svg`,
+    iconUrl: `bomb`,
     category: TrackCategory.DEVICES,
     difficulty: TrackDifficulty.INTERMEDIATE,
     targetProfile: TrackVisibility.ALL,
     tags: ["Redes", "VPN", "Wi-Fi"],
-    minLevel: 3
+    minLevel: 2
   },
 
   // --- EIXO 3: PROFISSIONAL ---
@@ -66,7 +65,7 @@ export const tracksData = [
     id: TRACK_IDS.ENG_SOCIAL,
     title: "Hackeando Humanos",
     description: "Treinamento avançado contra Engenharia Social",
-    iconUrl: `${ICON_BASE_URL}/users.svg`,
+    iconUrl: `users`,
     category: TrackCategory.CORPORATE,
     difficulty: TrackDifficulty.ADVANCED,
     targetProfile: TrackVisibility.CORPORATE,
@@ -77,7 +76,7 @@ export const tracksData = [
     id: TRACK_IDS.JURIDICO,
     title: "O Jurídico e a Crise",
     description: "Como evitar multas milionárias da LGPD",
-    iconUrl: `${ICON_BASE_URL}/scale.svg`,
+    iconUrl: `scale`,
     category: TrackCategory.CORPORATE,
     difficulty: TrackDifficulty.ADVANCED,
     targetProfile: TrackVisibility.CORPORATE,
@@ -90,23 +89,23 @@ export const tracksData = [
     id: TRACK_IDS.TRENDS,
     title: "IA & Novos Riscos",
     description: "Deepfakes, ChatGPT e o futuro dos ataques",
-    iconUrl: `${ICON_BASE_URL}/bot.svg`,
+    iconUrl: `bot`,
     category: TrackCategory.TRENDS,
     difficulty: TrackDifficulty.INTERMEDIATE,
     targetProfile: TrackVisibility.ALL, 
     tags: ["IA", "Deepfake", "ChatGPT"],
-    minLevel: 5
+    minLevel: 3
   },
   
   {
     id: TRACK_IDS.FINAL_EXAM,
     title: "Protocolo Final: Black Ops",
     description: "A prova de fogo. Teste suas habilidades em um cenário de auditoria real. Apenas para quem sobreviveu ao treinamento.",
-    iconUrl: `${ICON_BASE_URL}/skull.svg`,
+    iconUrl: `skull`,
     category: TrackCategory.FINAL,
     difficulty: TrackDifficulty.ADVANCED,
     targetProfile: TrackVisibility.ALL,
     tags: ["Exame", "Certificação", "Hardcore"],
-    minLevel: 8, 
+    minLevel: 7, 
   }
 ];

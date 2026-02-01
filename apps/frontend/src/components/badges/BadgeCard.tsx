@@ -1,5 +1,6 @@
 import { UI_Badge } from "@/app/(pages)/(private)/badges/page";
 import { Lock } from "lucide-react";
+import { DynamicIcon } from "../ui/DynamicIcon";
 
 export function BadgeCard({ badge }: { badge: UI_Badge }) {
     const VARIANTS: Record<string, any> = {
@@ -66,11 +67,10 @@ export function BadgeCard({ badge }: { badge: UI_Badge }) {
                 ${badge.isUnlocked ? variant.bg : 'bg-gray-900 border border-gray-800'}
                 ${badge.isUnlocked ? 'ring-1 ring-white/10' : ''}
             `}>
-                <img 
-                    src={badge.iconUrl} 
-                    alt={badge.title} 
+                <DynamicIcon 
+                    name={badge.iconUrl}
                     className={`w-12 h-12 object-contain drop-shadow-md transition-all duration-500
-                        ${!badge.isUnlocked ? 'grayscale opacity-30 group-hover:grayscale-0 group-hover:opacity-80' : ''}
+                        ${!badge.isUnlocked ? `${variant.text} grayscale opacity-30 group-hover:grayscale-0 group-hover:opacity-80` : ''}
                     `} 
                 />
             </div>

@@ -31,7 +31,7 @@ export function MissionPortal(props: MissionPortalProps) {
             onMouseLeave={() => setIsHovered(false)}
         >
 
-            <div className="relative z-10 flex flex-col md:flex-row items-center p-6 md:p-8 gap-8">
+            <div className="relative z-10 flex flex-col md:flex-row lg:flex-col xl:flex-row items-center p-8 gap-8">
 
                 <div className="relative flex items-center justify-center shrink-0 w-32 h-32 md:w-40 md:h-40">
                     <motion.div
@@ -73,8 +73,8 @@ export function MissionPortal(props: MissionPortalProps) {
                     />
                 </div>
 
-                <div className="flex-1 w-full text-center md:text-left space-y-3">
-                    <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 text-xs font-mono uppercase tracking-wider">
+                <div className="flex-1 w-full text-center md:text-left lg:text-center xl:text-left space-y-3">
+                    <div className="flex flex-wrap items-center justify-center md:justify-start lg:justify-center xl:justify-start gap-3 text-xs font-mono uppercase tracking-wider">
                         <span className="px-2 py-0.5 rounded bg-cyan-950/60 border border-cyan-800 text-cyan-300 flex items-center gap-1">
                             <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse font-orbitron" /> 
                             {estimatedTime} min 
@@ -85,7 +85,7 @@ export function MissionPortal(props: MissionPortalProps) {
                         </span>
                     </div>
 
-                    <div className="space-y-3">
+                    <div className="space-y-3">     
                         <h2 className="text-2xl md:text-3xl font-bold text-white tracking-wide font-orbitron drop-shadow-md group-hover:text-cyan-50">
                             {title}
                         </h2>
@@ -94,12 +94,14 @@ export function MissionPortal(props: MissionPortalProps) {
                         </p>
                     </div>
 
-                    <div className="pt-4 flex flex-col sm:flex-row items-center gap-4">
+                    <div className="pt-4 flex flex-col sm:flex-row items-center justify-center md:justify-start lg:justify-center xl:justify-start gap-4">
                         <motion.button
                             onClick={onEnter}
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
-                            className="relative group/btn w-full sm:w-auto overflow-hidden rounded px-8 py-3 bg-cyan-950 text-cyan-300 border border-cyan-500/50 font-bold uppercase tracking-wider text-sm transition-all hover:bg-cyan-600 hover:text-white hover:border-cyan-400 hover:shadow-[0_0_30px_rgba(6,182,212,0.4)] cursor-pointer"
+                            className="relative group/btn w-full sm:w-auto overflow-hidden rounded px-8 py-3 bg-cyan-950 text-cyan-300 border
+                                border-cyan-500/50 font-bold uppercase tracking-wider text-sm transition-all hover:bg-cyan-600 hover:text-white 
+                                hover:border-cyan-400 hover:shadow-[0_0_30px_rgba(6,182,212,0.4)] cursor-pointer"
                         >
                             <span className="relative z-10 flex items-center justify-center gap-2">
                                 {ctaText} <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />

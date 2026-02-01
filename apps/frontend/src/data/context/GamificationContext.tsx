@@ -1,5 +1,5 @@
 'use client'
-import { createContext, ReactNode, useEffect, useState } from "react";
+import { createContext, ReactNode, useCallback, useEffect, useState } from "react";
 import { useAPI } from "../hooks/useAPI";
 import { BadgeDTO, PlayerProfileOutputDTO, RankingDTO } from "@spysec/gamification";
 import { useSession } from "../hooks/useSession";
@@ -15,6 +15,7 @@ interface GamificationContextProps {
     getAllBadges: () => Promise<void>;
     getRanking: (limit?: number) => Promise<void>;
     submitSettingsUpdate: (data: UpdateSettingsData) => Promise<void>;
+    updateLocalProfile: (data: Partial<PlayerProfileOutputDTO>) => void;
 }
 
 interface UpdateSettingsData {
@@ -31,6 +32,13 @@ export function GamificationProvider({ children }: { children: ReactNode }) {
     const [allBadges, setAllBadges] = useState<BadgeDTO[]>([])
     const [ranking, setRanking] = useState<RankingDTO[]>([])    
     const [isLoading, setIsLoading] = useState(true);
+
+    const updateLocalProfile = useCallback((partialData: Partial<PlayerProfileOutputDTO>) => {
+        setProfile((prev) => {
+            if (!prev) return null;
+            return { ...prev, ...partialData };
+        });
+    }, []);
 
     async function refreshProfile() {
         try {
@@ -123,7 +131,8 @@ export function GamificationProvider({ children }: { children: ReactNode }) {
             refreshProfile,
             getAllBadges,
             getRanking,
-            submitSettingsUpdate
+            submitSettingsUpdate,
+            updateLocalProfile
         }}>
             {children}
         </GamificationContext.Provider>

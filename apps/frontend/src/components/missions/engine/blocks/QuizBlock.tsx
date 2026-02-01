@@ -36,7 +36,8 @@ export function QuizBlock({ data, value, onChange, isLocked }: QuizBlockProps) {
                             onClick={() => onChange(option.id)}
                             disabled={isLocked}
                             className={`
-                                w-full text-left p-5 rounded-xl border-2 transition-all duration-200 flex items-center gap-4 group relative overflow-hidden
+                                w-full text-left p-5 rounded-xl border-2 transition-all duration-200 flex items-center gap-4 group relative overflow-hidden 
+                                cursor-pointer
                                 ${isSelected 
                                     ? 'bg-cyan-950/60 border-cyan-500 shadow-[0_0_20px_rgba(6,182,212,0.2)]' 
                                     : 'bg-gray-900/40 border-gray-800 hover:border-gray-600 hover:bg-gray-800/60'}

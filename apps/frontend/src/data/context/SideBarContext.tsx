@@ -1,6 +1,7 @@
 'use client'
 import { createContext, useEffect, useState } from "react"
 import useDimensions from "../hooks/useDimensions"
+import { useSession } from "../hooks/useSession"
 
 export interface SidebarContextProps {
     open: boolean
@@ -10,6 +11,7 @@ export interface SidebarContextProps {
     openMenu: () => void
     toggleMenu: () => void
     itemClickedMenu: () => void
+    logout: () => void
 }
 
 export const SideBarContext = createContext<SidebarContextProps>({
@@ -19,11 +21,13 @@ export const SideBarContext = createContext<SidebarContextProps>({
     closeMenu: () => { },
     openMenu: () => { },
     toggleMenu: () => { },
-    itemClickedMenu: () => { }
+    itemClickedMenu: () => { },
+    logout: () => { }
 })
 
 export function SideBarProvider({ children }: any) {
     const { smOrLess, lgOrLess } = useDimensions()
+    const { endSession } = useSession()
 
     const drawer = smOrLess
     const isTablet = !drawer && lgOrLess
@@ -67,6 +71,10 @@ export function SideBarProvider({ children }: any) {
         setOpen(true)
     }
 
+    function logout(){
+        endSession()
+    }
+
     return (
         <SideBarContext.Provider value={{
             open,
@@ -76,6 +84,7 @@ export function SideBarProvider({ children }: any) {
             closeMenu,
             openMenu,
             itemClickedMenu,
+            logout,
         }}>
             {children}
         </SideBarContext.Provider>

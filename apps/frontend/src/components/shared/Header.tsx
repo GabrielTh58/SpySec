@@ -16,9 +16,7 @@ export function Header(){
     const nextLevelXp = profile?.nextLevelXp || 100; 
     const progressPercent = Math.min(100, Math.max(0, (currentXp / nextLevelXp) * 100));
 
-    const displayInitials = user?.initials 
-        || profile?.nickname?.substring(0, 2).toUpperCase() 
-        || "AG";
+    const displayInitials = profile?.nickname?.substring(0, 2).toUpperCase() || "AG";
 
     let agentTitle = 'Agente Júnior';
     if (currentLevel >= 5) agentTitle = 'Agente Sênior';
@@ -27,9 +25,10 @@ export function Header(){
     return (
         <header className="w-full self-start flex items-center justify-between py-3 px-4 md:px-6 border-b border-b-cyan-500/20 ">
             <Drawer />
-            <div className="flex items-center gap-2">
+            
+            <div className="flex flex-row-reverse items-center md:flex-row gap-2 lg:ml-0">
                 <div className="rounded-full p-[2px] bg-gradient-border-cyan">
-                    <div className="w-10 h-10 rounded-full overflow-hidden bg-black flex items-center justify-center">
+                    <div className="w-7 h-7 md:w-10 md:h-10 rounded-full overflow-hidden bg-black flex items-center justify-center">
                     {user?.imageURL ? (
                             <img
                                 src={user.imageURL}
@@ -43,9 +42,9 @@ export function Header(){
                                 </span>
                             </div>
                         )}                                 
-                    </div>
+                    </div>  
                 </div>
-                    <div>
+                    <div className="hidden md:block">
                         <p className="font-inter font-semibold">
                             {profile?.nickname || 'Agente Desconhecido'}
                         </p>
@@ -55,7 +54,7 @@ export function Header(){
                     </div>
                 </div>
 
-            <div className="flex items-center gap-12">
+            <div className="hidden md:flex items-center gap-12">
                 <div className="flex items-center gap-2">
                     <Trophy className="text-yellow-500" size={24}/>
                     <span className="font-orbitron">
@@ -68,8 +67,7 @@ export function Header(){
                         <span className="text-[10px] text-cyan-500">Nível {currentLevel < 10 ? `0${currentLevel}` : currentLevel}</span>      
                         <span className="text-[8px] text-slate-400">{currentXp}/{nextLevelXp}</span>   
                     </div>
-                    <div>
-                        {/* progressbar  */}
+                    <div>                      
                         <div className="relative w-full bg-slate-600 h-[6px] rounded-full overflow-hidden border border-white/5">
                         <div 
                             className="absolute top-0 left-0 bg-cyan-500 h-full rounded-full shadow-[0_0_8px_cyan] transition-all duration-700 ease-out"

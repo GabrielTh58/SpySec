@@ -4,7 +4,7 @@ interface GlassCardProps {
     children: ReactNode;
     className?: string;
     hoverEffect?: boolean;
-  };
+};
   
 export function GlassCard(props: GlassCardProps){
     const { children, hoverEffect, className } = props

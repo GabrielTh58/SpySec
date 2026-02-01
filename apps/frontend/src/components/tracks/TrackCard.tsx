@@ -1,6 +1,7 @@
 import { TrackDifficulty } from "@spysec/education";
 import { CheckCircle2, Lock } from "lucide-react";
 import Link from "next/link";
+import { DynamicIcon } from "../ui/DynamicIcon";
 
 interface TrackCardProps {
   id: string;
@@ -76,11 +77,10 @@ export function TrackCard(props: TrackCardProps) {
       <div className="w-full flex flex-col items-center">
         <div className={`p-6 rounded-full mb-6 ring-1 transition-colors ${iconThemes[currentTheme]}`}>
           {iconUrl && (
-              <img 
-                src={iconUrl} 
-                alt={title}
-                className="w-12 h-12 object-contain"
-              />
+             <DynamicIcon 
+               name={iconUrl} 
+               className="w-12 h-12"  
+             />
           )}
         </div>
 

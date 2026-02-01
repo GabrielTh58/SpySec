@@ -9,6 +9,7 @@ import {
     StudentProgressSummaryOutputDTO
 } from '@spysec/education';
 import { useAPI } from "../hooks/useAPI";
+import { MissionCompletionResponse } from "../types/MissionCompletionResponse.interface";
 
 interface EducationContextProps {
     tracks: TrackDTO[];
@@ -23,7 +24,7 @@ interface EducationContextProps {
     getProgressSummary: () => Promise<void>;
     selectTrack: (trackId: string) => Promise<void>;
     fetchMissionData: (missionId: string) => Promise<void>
-    completeMission: (missionId: string, answers: Record<string, any>) => Promise<CompleteMissionOutputDTO | null>;
+    completeMission: (missionId: string, answers: Record<string, any>, timeSpent: number) => Promise<MissionCompletionResponse | null>;
 }
 
 export const EducationContext = createContext<EducationContextProps>({} as any);
@@ -81,12 +82,14 @@ export function EducationProvider({ children }: { children: ReactNode }) {
         }
     }
 
-    async function completeMission(missionId: string, answers: Record<string, any>) {
+    async function completeMission(missionId: string, answers: Record<string, any>, timeSpent: number) {
         setIsLoading(true); 
         try {
             const data = await httpPost<CompleteMissionOutputDTO>(
-                `/education/missions/${missionId}/complete`, 
-                { answers } 
+                `/education/missions/${missionId}/complete`, {
+                    answers,
+                    timeSpent
+                }  
             );
             
             if (data && data.success) { 
