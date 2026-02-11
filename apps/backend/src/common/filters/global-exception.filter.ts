@@ -9,7 +9,7 @@
     import { Response } from 'express';
     
     
-    @Catch(Error)
+    @Catch()
     export class GlobalExceptionFilter implements ExceptionFilter { 
       private readonly logger = new Logger(GlobalExceptionFilter.name);
       
@@ -62,13 +62,13 @@
           return response.status(status).json(exception.getResponse());
         }
     
-        const errorCode = this.extractErrorCode(exception.message);        
+        const errorCode = this.extractErrorCode(exception);        
         const status = this.errorStatusMap[errorCode] || HttpStatus.INTERNAL_SERVER_ERROR;
     
-        const message = this.errorMessageMap[errorCode] || exception.message;
+        const message = this.errorMessageMap[errorCode] || exception.message || 'Erro interno no servidor';
     
         const errorResponse = {
-          statusCode: status,
+          statusCode: status, 
           error: errorCode,
           message: message,
           timestamp: new Date().toISOString(),
@@ -81,8 +81,17 @@
         response.status(status).json(errorResponse);
       }
     
-      private extractErrorCode(message: string): string {
-        const parts = message.split(':');
-        return parts[0].trim();
+      private extractErrorCode(exception:any): string {
+        if (Array.isArray(exception) && exception.length > 0 && exception[0].type) {
+          return exception[0].type; 
+        }
+        if (exception.type) {
+          return exception.type;
+        }
+        if (exception.message) {
+          const parts = exception.message.split(':');
+          return parts[0].trim();
+        }
+        return 'INTERNAL_ERROR';
       }
-    }
+    } 
