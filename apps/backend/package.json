@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "0.0.1",
-  "description": "",
+  "description": "backend application for the spysec project",
   "author": "Gabriel Oliveira",
   "private": true,
   "license": "UNLICENSED",

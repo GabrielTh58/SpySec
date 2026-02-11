@@ -25,6 +25,8 @@
         'VALIDATION_ERROR': HttpStatus.BAD_REQUEST,
         'USER_NOT_FOUND': HttpStatus.NOT_FOUND,
         'EMAIL_ALREADY_EXISTS': HttpStatus.CONFLICT,
+        'PASSWORD_WEAK': HttpStatus.BAD_REQUEST,
+        'INVALID_GOOGLE_TOKEN': HttpStatus.UNAUTHORIZED,
         
         // --- GAMIFICATION (Novos) ---
         'PLAYER_NOT_FOUND': HttpStatus.NOT_FOUND,
@@ -43,7 +45,8 @@
         'INVALID_CREDENTIALS': 'Email ou senha inválidos',
         'TOKEN_EXPIRED': 'Sessão expirada. Faça login novamente',
         'EMAIL_ALREADY_EXISTS': 'Este email já está cadastrado',
-        
+        'PASSWORD_WEAK': 'A senha deve ser forte',
+        'INVALID_GOOGLE_TOKEN': 'Token de Google inválido',
         // --- GAMIFICATION ---
         'PLAYER_NOT_FOUND': 'Perfil de jogador não encontrado.',
         'LEVEL_NOT_FOUND': 'Nível não encontrado.',
