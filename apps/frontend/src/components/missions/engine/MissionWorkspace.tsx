@@ -38,8 +38,8 @@ export function MissionWorkspace({ missionContent, title, order, onFinish }: Mis
                     Missão {order} • {title}
                 </h2>
 
-                <div className="flex flex-col md:flex-row w-full items-start justify-center">
-                    <div className="w-full md:w-64 shrink-0">
+                <div className="flex flex-col lg:flex-row w-full items-start justify-center">
+                    <div className="w-full lg:w-64 shrink-0">   
                         <Steps
                             blocks={missionContent.blocks}
                             currentIndex={currentBlockIndex}
@@ -48,8 +48,10 @@ export function MissionWorkspace({ missionContent, title, order, onFinish }: Mis
                         />
                     </div>
 
-                    <div className="flex-1 max-w-3xl xl:max-w-5xl w-full">
-                        <div className="bg-[#0F1423]/80 backdrop-blur-md border border-gray-800 rounded-b-2xl rounded-r-2xl p-8 shadow-[0_0_50px_rgba(6,182,212,0.05)] min-h-[500px] flex flex-col justify-between transition-all duration-300">
+                    <div className="flex-1 max-w-3xl md:max-w-5xl w-full">
+                        <div className="bg-[#0F1423]/80 backdrop-blur-md border border-gray-800 rounded-b-2xl rounded-r-2xl p-8 
+                            shadow-[0_0_50px_rgba(6,182,212,0.05)] min-h-[500px] flex flex-col justify-between transition-all duration-300"
+                        >
                             <BlockDispatcher
                                 block={currentBlock}
                                 value={answers[currentBlock.id]}

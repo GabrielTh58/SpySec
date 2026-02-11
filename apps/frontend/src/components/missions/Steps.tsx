@@ -1,5 +1,6 @@
 import { Info, HelpCircle, Keyboard, MousePointerClick, BookOpen, Check } from "lucide-react";
 import { MissionBlock } from "@spysec/education";
+import useDimensions from "@/data/hooks/useDimensions";
 
 interface StepsProps {
     blocks: MissionBlock[];
@@ -50,15 +51,21 @@ function getStepStyles(isActive: boolean, isFailed: boolean | undefined, isCompl
 }
 
 export function Steps(props: StepsProps) {
-    const { blocks, currentIndex, failedBlockIds, onStepClick, isFinalMission } = props;
+    const { isFinalMission } = props;
+    const { smOrLess } = useDimensions()
 
     if (isFinalMission) {
         return <FinalQuizSteps {...props} />;
     }
 
+    return smOrLess ? <MobileSteps {...props} />: <DesktopSteps {...props} />
+}
+
+function DesktopSteps(props: StepsProps) {
+    const { blocks, currentIndex, failedBlockIds, onStepClick } = props
     return (
-        <div className="flex flex-col w-full md:w-64 shrink-0">
-            <div className="flex md:flex-col overflow-x-auto md:overflow-visible pb-4 gap-0 md:space-y-3 no-scrollbar">
+        <div className="flex flex-col w-full lg:w-64 shrink-0">
+            <div className="flex lg:flex-col overflow-x-auto lg:overflow-visible pb-4 lg:pb-0 gap-3 lg:gap-0 lg:space-y-3 no-scrollbar px-1">
                 {blocks.map((block, index) => {
                     const isActive = index === currentIndex;
                     const isCompleted = index < currentIndex;
@@ -75,9 +82,10 @@ export function Steps(props: StepsProps) {
                             onClick={() => onStepClick(index)}
                             disabled={index > currentIndex}
                             className={`
-                                step-card-base ${styles.stepClass} bg-[#0F1423]/80
-                                ${index > currentIndex ? 'cursor-not-allowed' : 'cursor-pointer'}
-                            `}
+                        step-card-base ${styles.stepClass} bg-[#0F1423]/80
+                        ${index > currentIndex ? 'cursor-not-allowed' : 'cursor-pointer'}
+                        min-w-[140px] lg:min-w-0 flex-1
+                    `}
                         >
                             <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${styles.iconBg}`}>
                                 <DisplayIcon className={`w-4 h-4 ${styles.iconColor}`} />
@@ -96,8 +104,51 @@ export function Steps(props: StepsProps) {
                 })}
             </div>
         </div>
-    );
+    )
 }
+
+function MobileSteps(props: StepsProps) {
+    const { blocks, currentIndex, failedBlockIds, onStepClick } = props
+
+    return (
+        <div className="flex flex-col w-full mb-8 lg:hidden animate-fade-in">
+
+            <div className="flex flex-wrap justify-start gap-2 px-2">
+                {blocks.map((block, index) => {
+                    const isActive = index === currentIndex;
+                    const isCompleted = index < currentIndex;
+                    const isFailed = failedBlockIds?.includes(block.id);
+
+                    let dotClass = "bg-gray-800 border-gray-700"; 
+
+                    if (isActive) {
+                        dotClass = "w-6 bg-cyan-500 border-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)]";
+                    } else if (isFailed) {
+                        dotClass = "bg-red-500/80 border-red-500 hover:bg-red-500"; 
+                    } else if (isCompleted) {
+                        dotClass = "bg-green-500/50 border-green-500 hover:bg-green-500";
+                    } else {
+                        dotClass += " opacity-50";
+                    }
+
+                    return (
+                        <button
+                            key={block.id}
+                            onClick={() => onStepClick(index)}
+                            disabled={index > currentIndex}
+                            className={`
+                                h-2 rounded-full transition-all duration-300 border
+                                ${isActive ? 'w-6' : 'w-2'} 
+                                ${dotClass}
+                            `}
+                        />
+                    );
+                })}
+            </div>
+        </div>
+    )
+}
+
 
 function FinalQuizSteps({ blocks, currentIndex, failedBlockIds, onStepClick }: StepsProps) {
     const currentBlock = blocks[currentIndex];
@@ -105,7 +156,7 @@ function FinalQuizSteps({ blocks, currentIndex, failedBlockIds, onStepClick }: S
 
     return (
         <div className="flex flex-col w-full md:w-64 shrink-0 gap-6 animate-fade-in">
-            
+
             <div className="bg-[#0F1423]/80 border border-gray-800 rounded-xl p-5 shadow-lg relative overflow-hidden">
                 <div className="flex items-center justify-between mb-2">
                     <span className="text-[10px] font-orbitron text-cyan-500 uppercase tracking-widest">
@@ -117,8 +168,8 @@ function FinalQuizSteps({ blocks, currentIndex, failedBlockIds, onStepClick }: S
                     {label}
                 </div>
                 <div className="absolute bottom-0 left-0 h-1 bg-cyan-500/20 w-full">
-                    <div 
-                        className="h-full bg-cyan-500 transition-all duration-500" 
+                    <div
+                        className="h-full bg-cyan-500 transition-all duration-500"
                         style={{ width: `${((currentIndex + 1) / blocks.length) * 100}%` }}
                     />
                 </div>
@@ -129,21 +180,21 @@ function FinalQuizSteps({ blocks, currentIndex, failedBlockIds, onStepClick }: S
                     <span>Progresso</span>
                     <span>{Math.round(((currentIndex) / blocks.length) * 100)}%</span>
                 </div>
-                
+
                 <div className="flex flex-wrap gap-3">
                     {blocks.map((block, index) => {
                         const isActive = index === currentIndex;
                         const isCompleted = index < currentIndex;
                         const isFailed = failedBlockIds?.includes(block.id);
 
-                        let dotClass = "bg-gray-800 border-gray-700 hover:border-gray-500"; 
+                        let dotClass = "bg-gray-800 border-gray-700 hover:border-gray-500";
 
                         if (isActive) {
-                            dotClass = "bg-cyan-500 border-cyan-300 shadow-[0_0_10px_rgba(6,182,212,0.6)] scale-125"; 
+                            dotClass = "bg-cyan-500 border-cyan-300 shadow-[0_0_10px_rgba(6,182,212,0.6)] scale-125";
                         } else if (isFailed) {
-                            dotClass = "bg-red-500 border-red-400 opacity-80"; 
+                            dotClass = "bg-red-500 border-red-400 opacity-80";
                         } else if (isCompleted) {
-                            dotClass = "bg-green-500 border-green-400 opacity-80"; 
+                            dotClass = "bg-green-500 border-green-400 opacity-80";
                         }
 
                         return (
