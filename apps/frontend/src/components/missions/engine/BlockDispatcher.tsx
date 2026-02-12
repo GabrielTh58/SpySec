@@ -65,7 +65,7 @@ export function BlockDispatcher(props: BlockDispatcherProps) {
                 {renderContent()}
             </div>
 
-            <div className="animate-fade-in">
+            <div className="animate-fade-in mt-4    ">
                 {showhintMessage && (
                     <div className="w-full flex justify-start pl-2">
                         <MascotBubble message={hintMessage} variant="hint" />
@@ -79,7 +79,7 @@ export function BlockDispatcher(props: BlockDispatcherProps) {
                                 <button
                                     onClick={onPrev}
                                     disabled={isFirstBlock}
-                                    className="px-6 py-3 text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors font-medium text-sm uppercase tracking-wide cursor-pointer"
+                                    className="sm:px-6 py-3 text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors font-medium text-sm uppercase tracking-wide cursor-pointer"
                                 >
                                     <div className="flex items-center justify-center gap-2">
                                         <ArrowLeft size={16} />
@@ -92,7 +92,7 @@ export function BlockDispatcher(props: BlockDispatcherProps) {
                                     disabled={isCheckDisabled}
                                     onClick={onCheck}
                                 >
-                                    Verificar Resposta
+                                    Verificar
                                 </NextStepButton>
                             </div>
 

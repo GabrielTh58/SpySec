@@ -1,5 +1,5 @@
 'use client'
-import { Trophy } from "lucide-react";
+import { Award } from "lucide-react";
 import { Drawer } from "../sidebar/Drawer";
 import { useGamification } from "@/data/hooks/useGamification";
 import { Loading } from "../template/Loading";
@@ -56,7 +56,7 @@ export function Header(){
 
             <div className="hidden md:flex items-center gap-12">
                 <div className="flex items-center gap-2">
-                    <Trophy className="text-yellow-500" size={24}/>
+                    <Award className="text-yellow-500" size={24}/>
                     <span className="font-orbitron">
                         {profile?.badges.length || 0}
                     </span>

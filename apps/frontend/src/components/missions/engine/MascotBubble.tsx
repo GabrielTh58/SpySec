@@ -26,7 +26,8 @@ export function MascotBubble({ message, variant = 'neutral', title }: MascotBubb
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                             onClick={() => setIsOpen(true)}
-                            className="flex items-center gap-3 bg-cyan-950/40 border border-cyan-500/30 rounded-full pr-4 pl-1 py-1 cursor-pointer hover:bg-cyan-900/40 transition-colors group"
+                            className="flex items-center gap-3 bg-cyan-950/40 border border-cyan-500/30 rounded-full pr-4 cursor-pointer hover:bg-cyan-900/40
+                                transition-colors group"
                         >
                             <div className="w-12 h-12 rounded-full bg-cyan-900 overflow-hidden border border-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.3)]">
                                 <img src="/Mascot-hint.png" alt="AI" className="w-full h-full object-cover" />

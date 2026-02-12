@@ -56,8 +56,10 @@ export function HotspotBlock({ data, isLocked, value = [], onChange }: HotspotBl
         const { sender, subject, body } = data.context;
 
         return (
-            <div className="relative w-full max-w-2xl mx-auto bg-[#0F1423] border border-gray-700 rounded-lg overflow-hidden shadow-2xl font-sans text-sm md:text-base">
-                <div className="bg-gray-800 border-b border-gray-700 p-4 space-y-3">
+            <div className="relative w-full max-w-2xl mx-auto bg-[#0F1423] border border-gray-700 rounded-lg overflow-hidden shadow-2xl
+                font-sans text-sm md:text-base"
+            >
+                <div className="bg-gray-800 border-b border-gray-700 p-3 md:p-4 space-y-2 md:space-y-3">
 
                     <div className="flex gap-2 items-center">
                         <span className="text-gray-400 w-16 text-right font-medium text-xs uppercase tracking-wide">De:</span>
@@ -83,11 +85,11 @@ export function HotspotBlock({ data, isLocked, value = [], onChange }: HotspotBl
 
                     <div className="flex gap-2 items-center">
                         <span className="text-gray-400 w-16 text-right font-medium text-xs uppercase tracking-wide">Assunto:</span>
-                        <span className="text-white font-bold truncate text-sm">{subject}</span>
+                        <span className="text-white font-bold truncate text-xs">{subject}</span>
                     </div>
                 </div>
 
-                <div className="p-6 text-gray-300 min-h-[200px] whitespace-pre-wrap leading-relaxed font-light font-sans">
+                <div className="p-4 md:p-6 font-sm text-gray-300 min-h-[200px] whitespace-pre-wrap leading-relaxed font-light font-sans">
                     {body}
                 </div>
 
@@ -138,8 +140,8 @@ export function HotspotBlock({ data, isLocked, value = [], onChange }: HotspotBl
 
     return (    
         <div className="space-y-6 animate-fade-in">
-            <div className="flex justify-between items-start">
-                <h3 className="text-xl font-medium text-white flex gap-3 font-orbitron">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <h3 className="md:text-xl font-medium text-white flex gap-3 font-orbitron">
                     {data.context.type === 'EMAIL'
                         ? <Mail className="text-cyan-500 shrink-0 mt-1" />
                         : <Scan className="text-green-500 shrink-0 mt-1" />
@@ -147,9 +149,9 @@ export function HotspotBlock({ data, isLocked, value = [], onChange }: HotspotBl
                     {data.context.type === 'EMAIL' ? 'Interceptação de E-mail' : 'Análise Forense'}
                 </h3>
 
-                <div className="flex items-center gap-2 px-3 py-1 bg-gray-800 rounded-full border border-gray-700">
+                <div className="flex-col items-center gap-2 px-3 py-1 bg-gray-800 rounded-full border border-gray-700">
                     <span className="text-xs text-gray-400 uppercase tracking-wider">Evidências:</span>
-                    <span className="text-sm font-bold text-cyan-400 font-mono">
+                    <span className="text-xs md:text-sm font-bold text-cyan-400 font-mono">
                         {value.length} / {data.regions.filter((r: any) => r.isCorrect).length}
                     </span>
                 </div>

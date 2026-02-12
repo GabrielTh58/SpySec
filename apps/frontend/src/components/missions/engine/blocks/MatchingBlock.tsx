@@ -67,7 +67,7 @@ export function MatchingBlock({ data, isLocked, value = {}, onChange }: Matching
                 {data.question}
             </h3>
 
-            <div className="grid grid-cols-2 gap-4 md:gap-16 relative">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-16 relative">
                 
                 <div className="space-y-4">
                     {data.pairs.map((pair: any, index: number) => {
@@ -93,7 +93,7 @@ export function MatchingBlock({ data, isLocked, value = {}, onChange }: Matching
                                 key={pair.leftId}
                                 onClick={() => handleLeftClick(pair.leftId)}
                                 className={`
-                                    w-full p-4 rounded-xl border-2 text-left text-sm md:text-base transition-all duration-200 relative group
+                                    w-full p-3 md:p-4 rounded-xl border-2 text-left text-sm md:text-base transition-all duration-200 relative group
                                     flex items-center justify-between
                                     ${cardStyle}
                                 `}
@@ -101,7 +101,7 @@ export function MatchingBlock({ data, isLocked, value = {}, onChange }: Matching
                                 <span className="font-mono z-10">{pair.leftText}</span>
                                 
                                 {isConnected && (
-                                    <span className="absolute -left-3 top-1/2 -translate-y-1/2 text-[10px] font-bold bg-gray-900 border border-gray-700 px-1.5 rounded text-gray-400 shadow-md">
+                                    <span className="absolute -left-2 top-1/2 -translate-y-1/2 text-[10px] font-bold bg-gray-900 border border-gray-700 px-1.5 rounded text-gray-400 shadow-md">
                                         {String.fromCharCode(65 + index)}
                                     </span>
                                 )}
@@ -150,18 +150,17 @@ export function MatchingBlock({ data, isLocked, value = {}, onChange }: Matching
                                 onClick={() => handleRightClick(pair.rightId)}
                                 disabled={!selectedLeft && !isConnected} 
                                 className={`
-                                    w-full p-4 rounded-xl border-2 text-left text-sm md:text-base transition-all duration-200 relative group
+                                    w-full p-3 md:p-4 rounded-xl border-2 text-left text-sm md:text-base transition-all duration-200 relative group
                                     flex items-center gap-4 cursor-p
                                     ${cardStyle}
                                 `}
-                            >
-                                {/* Ponto de Conexão */}
+                            >                                
                                 <div className={`w-3 h-3 rounded-full border-2 shrink-0 ${indicatorStyle}`}></div>
 
                                 <span className="font-mono">{pair.rightText}</span>
 
                                 {isConnected && leftIndex >= 0 && (
-                                    <span className="absolute -right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold bg-gray-900 border border-gray-700 px-1.5 rounded text-gray-400 shadow-md">
+                                    <span className="absolute -right-2 top-1/2 -translate-y-1/2 text-[10px] font-bold bg-gray-900 border border-gray-700 px-1.5 rounded text-gray-400 shadow-md">
                                         {String.fromCharCode(65 + leftIndex)}
                                     </span>
                                 )}

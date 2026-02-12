@@ -10,7 +10,7 @@ import { Loading } from "@/components/template/Loading";
 import { useEducation } from "@/data/hooks/useEducation";
 import { useGamification } from "@/data/hooks/useGamification";
 import { formatStudyTime } from "@/data/utils/formatDate";
-import { Award, ChartNoAxesColumnIncreasing, ChevronUp, Clock, Lock, Shield, Trophy, Zap } from "lucide-react";
+import { ArrowRight, Award, ChartNoAxesColumnIncreasing, ChevronUp, Clock, Lock, Shield, Trophy, Zap } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -152,59 +152,79 @@ export default function Dashboard() {
                     )}
                 </GlassCard>
 
-                <GlassCard className="md:col-span-2 h-full flex flex-col">
-                    <div className="flex items-center justify-between mb-4">
-                        <h3 className="font-orbitron text-lg text-white flex items-center gap-2">
-                            <Award className="text-yellow-400" size={20} />
-                            Central de Conquistas
+                <GlassCard className="md:col-span-2 h-full flex flex-col relative overflow-hidden group/card">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500/5 blur-[60px] rounded-full pointer-events-none" />
+
+                    <div className="flex items-center justify-between mb-6 relative z-10">
+                        <h3 className="font-orbitron text-lg md:text-xl text-white flex items-center gap-3">
+                            <div className="p-2 bg-yellow-500/10 rounded-lg border border-yellow-500/20 text-yellow-400">
+                                <Award size={20} />
+                            </div>
+                            <span className="bg-linear-to-r from-white to-gray-400 bg-clip-text text-transparent">
+                                Central de Conquistas
+                            </span>
                         </h3>
+                        
                         <Link
                             href='/badges'
-                            className="text-[10px] text-center text-cyan-400 hover:text-cyan-300 transition-colors uppercase font-bold tracking-wider border
-                                border-cyan-500/30 px-2 py-1 rounded hover:bg-cyan-500/10"
+                            className="text-[10px] md:text-xs flex items-center gap-2 text-cyan-400 hover:text-cyan-300 transition-all uppercase font-bold 
+                            tracking-wider border border-cyan-500/30 px-3 py-1.5 rounded-full hover:bg-cyan-500/10 hover:border-cyan-400 hover:pr-4 group"
                         >
                             Ver todas
+                            <ArrowRight size={12} className="w-0 group-hover:w-3 transition-all duration-300 overflow-hidden" />
                         </Link>
                     </div>
 
-                    <div className="flex-1 flex flex-col gap-6 overflow-y-auto custom-scrollbar pr-1 max-h-[300px]">
+                    <div className="flex-1 flex flex-col gap-8 overflow-y-auto custom-scrollbar pr-2 max-h-[400px]">
+                        {/* Seção: Adquiridas */}
                         <div>
-                            <p className="text-[10px] text-cyan-500 font-bold uppercase tracking-widest mb-3 pl-1 border-l-2 border-cyan-500">
-                                Adquiridas
-                            </p>
-                            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
-                                {recentBadges.map((badgeSlug) => {
-                                    const badgeDetails = allBadges.find(b => b.slug === badgeSlug);
-                                    if (!badgeDetails) return null;
-                                    return (
-                                        <AchievementBadge
-                                            key={badgeSlug}
-                                            icon={badgeDetails.iconUrl}
-                                            title={badgeDetails.name}
-                                            subtitle="Conquistado"
-                                        />
-                                    );
-                                })}
-                                {recentBadges.length === 0 && (
-                                    <div className="col-span-full text-gray-600 text-xs italic py-2">
-                                        Nenhuma conquista desbloqueada ainda.
+                            <div className="flex items-center gap-2 mb-4">
+                                <div className="h-px flex-1 bg-liner-to-r from-cyan-500/50 to-transparent"></div>
+                                <p className="text-[10px] text-cyan-400 font-orbitron font-bold uppercase tracking-[0.2em]">
+                                    Desbloqueadas
+                                </p>
+                            </div>
+
+                            <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+                                {recentBadges.length > 0 ? (
+                                    recentBadges.map((badgeSlug) => {
+                                        const badgeDetails = allBadges.find(b => b.slug === badgeSlug);
+                                        if (!badgeDetails) return null;
+                                        return (
+                                            <AchievementBadge
+                                                key={badgeSlug}
+                                                icon={badgeDetails.iconUrl}
+                                                title={badgeDetails.name}
+                                                subtitle="Conquistado"
+                                            />
+                                        );
+                                    })
+                                ) : (
+                                    <div className="col-span-full flex flex-col items-center justify-center py-8 border border-dashed border-gray-800 rounded-xl bg-black/20">
+                                        <Lock className="text-gray-600 mb-2" size={24} />
+                                        <span className="text-gray-500 text-xs">Nenhuma insígnia registrada.</span>
                                     </div>
                                 )}
                             </div>
                         </div>
 
+                        {/* Seção: Bloqueadas */}
                         <div>
-                            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-3 pl-1 border-l-2 border-slate-600">
-                                Próximos Alvos
-                            </p>
-                            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 opacity-60 hover:opacity-100 transition-opacity">
+                            <div className="flex items-center gap-2 mb-4">
+                                <div className="h-px flex-1 bg-linear-to-r from-gray-700 to-transparent"></div>
+                                <p className="text-[10px] text-gray-500 font-orbitron font-bold uppercase tracking-[0.2em]">
+                                    Próximos Alvos
+                                </p>
+                            </div>
+                            
+                            <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
                                 {allBadges
                                     .filter(badge => !profile?.badges.includes(badge.slug))
                                     .slice(0, 5)
                                     .map((badge) => (
                                         <AchievementBadge
                                             key={badge.slug}
-                                            icon={<Lock />}
+                                            icon={null} 
                                             title={badge.name}
                                             subtitle="Bloqueado"
                                             locked={true}

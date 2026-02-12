@@ -8,8 +8,8 @@ import { useEducation } from "@/data/hooks/useEducation";
 const CATEGORY_ORDER: Record<string, number> = {
   'MINDSET': 1,
   'DEVICES': 2,
-  'CORPORATE': 3,
-  'TRENDS': 4,
+  'TRENDS': 3,
+  'CORPORATE': 4,
   'FINAL': 5
 };
 
@@ -26,10 +26,17 @@ export default function Tracks() {
     if (!tracks) return [];
     
     return [...tracks].sort((a, b) => {
-      const catA = DIFFICULTY_ORDER[a.difficulty?.toUpperCase()] || 99;
-      const catB = DIFFICULTY_ORDER[b.difficulty?.toUpperCase()] || 99;
+      const catOrderA = CATEGORY_ORDER[a.category?.toUpperCase()] || 99;
+      const catOrderB = CATEGORY_ORDER[b.category?.toUpperCase()] || 99;
 
-      return catA - catB;
+      if (catOrderA !== catOrderB) {
+        return catOrderA - catOrderB;
+      }
+
+      const diffOrderA = DIFFICULTY_ORDER[a.difficulty?.toUpperCase()] || 99;
+      const diffOrderB = DIFFICULTY_ORDER[b.difficulty?.toUpperCase()] || 99;
+
+      return diffOrderA - diffOrderB;
     });
   }, [tracks]);
 
@@ -57,7 +64,7 @@ export default function Tracks() {
         </div>
       </div>
 
-      <div className="trail-card-container connected grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+      <div className="trail-card-container connected grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 xl:gap-8">
         {sortedTracks.length === 0 && (
             <div className="col-span-full text-center py-20 text-gray-500">
                 Nenhuma trilha encontrada. Conecte o cabo de rede, Agente.

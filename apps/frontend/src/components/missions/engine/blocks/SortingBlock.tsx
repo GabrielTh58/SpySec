@@ -1,7 +1,6 @@
 import { Reorder } from "framer-motion";
 import { useEffect, useState } from "react";
 import { GripVertical, ListOrdered } from "lucide-react";
-import { MascotBubble } from "../MascotBubble";
 
 interface SortingBlockProps {
     data: any;
@@ -41,7 +40,7 @@ export function SortingBlock({ data, isLocked, value, onChange }: SortingBlockPr
 
     return (
         <div className="space-y-8 animate-fade-in">
-            <h3 className="text-xl font-medium text-white flex gap-3 font-orbitron">
+            <h3 className="md:text-xl font-medium text-white flex gap-3 font-orbitron">
                 <ListOrdered className="text-orange-500 shrink-0 mt-1" />
                 {data.question}
             </h3>

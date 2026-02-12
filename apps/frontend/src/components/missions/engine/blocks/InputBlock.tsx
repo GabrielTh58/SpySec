@@ -1,5 +1,4 @@
 import { Keyboard } from "lucide-react";
-import { MascotBubble } from "../MascotBubble";
 
 interface InputBlockProps {
     data: {
@@ -14,9 +13,9 @@ interface InputBlockProps {
 
 export function InputBlock({ data, value, onChange, isLocked }: InputBlockProps) {
     return (
-        <div className="space-y-8">
-            <h3 className="text-xl font-inter font-medium text-white flex gap-3 leading-snug">
-                <Keyboard className="text-pink-500 shrink-0 mt-1 drop-shadow-[0_0_8px_rgba(236,72,153,0.5)]" />
+        <div className="space-y-6 md:space-y-8">
+            <h3 className="text-base md:text-xl font-inter font-medium text-white flex gap-3 leading-snug">
+                <Keyboard className="w-5 h-5 md:w-6 md:h-6 text-pink-500 shrink-0 mt-1 drop-shadow-[0_0_8px_rgba(236,72,153,0.5)]" />
                 {data.question}
             </h3>
 
@@ -30,10 +29,11 @@ export function InputBlock({ data, value, onChange, isLocked }: InputBlockProps)
                     disabled={isLocked}
                     onChange={(e) => onChange(e.target.value)}
                     placeholder={data.placeholder || "Digite a senha ou código..."}
-                    className="relative w-full bg-[#0F1423] border border-gray-700 text-white text-lg p-4 rounded-xl focus:outline-none focus:border-transparent placeholder:text-gray-600 shadow-xl"
+                    className="relative w-full bg-[#0F1423] border border-gray-700 text-white text-base md:text-lg p-3 md:p-4 rounded-xl focus:outline-none
+                        focus:border-transparent placeholder:text-gray-600 shadow-xl"
                     autoComplete="off"
                 />
             </div>
         </div>
-    );
+    );  
 }
