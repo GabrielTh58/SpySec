@@ -39,7 +39,7 @@ export function MissionWorkspace({ missionContent, title, order, onFinish }: Mis
                 </h2>
 
                 <div className="flex flex-col lg:flex-row w-full items-start justify-center">
-                    <div className="w-full lg:w-64 shrink-0">   
+                    <div className="w-full lg:w-64 shrink-0">
                         <Steps
                             blocks={missionContent.blocks}
                             currentIndex={currentBlockIndex}

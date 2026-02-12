@@ -155,9 +155,11 @@ function FinalQuizSteps({ blocks, currentIndex, failedBlockIds, onStepClick }: S
     const { icon: CurrentIcon, label } = getStepInfo(currentBlock?.type || '');
 
     return (
-        <div className="flex flex-col w-full md:w-64 shrink-0 gap-6 animate-fade-in">
+        <div className="flex flex-col w-full md:w-64 shrink-0 gap-6 animate-fade-in pb-4 lg:pb-0">
 
-            <div className="bg-[#0F1423]/80 border border-gray-800 rounded-xl p-5 shadow-lg relative overflow-hidden">
+            <div className="bg-[#0F1423]/80 border-l border-b border-t border-gray-800 rounded-l-xl rounded-br-xl p-5 shadow-lg relative 
+                overflow-hidden hidden lg:block"
+            >
                 <div className="flex items-center justify-between mb-2">
                     <span className="text-[10px] font-orbitron text-cyan-500 uppercase tracking-widest">
                         Questão {String(currentIndex + 1).padStart(2, '0')}
@@ -175,8 +177,8 @@ function FinalQuizSteps({ blocks, currentIndex, failedBlockIds, onStepClick }: S
                 </div>
             </div>
 
-            <div className="flex flex-col gap-2">
-                <div className="flex justify-between text-[10px] text-gray-500 uppercase tracking-wider px-1">
+            <div className="flex flex-col gap-2 w-fit">
+                <div className="flex justify-between text-[10px] text-gray-500 uppercase tracking-wider">
                     <span>Progresso</span>
                     <span>{Math.round(((currentIndex) / blocks.length) * 100)}%</span>
                 </div>
