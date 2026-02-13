@@ -10,63 +10,8 @@ interface MascotBubbleProps {
 }
 
 export function MascotBubble({ message, variant = 'neutral', title }: MascotBubbleProps) {
-    const [isOpen, setIsOpen] = useState(false); // Controle para o modo Hint
-    const  mascotName = "Spy"
-
-    if (variant === 'hint') {
-        return (
-            <div className="relative mt-4 z-10">
-                <AnimatePresence mode="wait">
-                    {!isOpen ? (
-                        <motion.button
-                            layoutId="mascot-container"
-                            initial={{ scale: 0, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0, opacity: 0 }}
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                            onClick={() => setIsOpen(true)}
-                            className="flex items-center gap-3 bg-cyan-950/40 border border-cyan-500/30 rounded-full pr-4 cursor-pointer hover:bg-cyan-900/40
-                                transition-colors group"
-                        >
-                            <div className="w-12 h-12 rounded-full bg-cyan-900 overflow-hidden border border-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.3)]">
-                                <img src="/Mascot-hint.png" alt="AI" className="w-full h-full object-cover" />
-                            </div>
-                            <span className="text-xs font-orbitron text-cyan-400 uppercase tracking-widest group-hover:text-cyan-300">
-                                Dica Tática
-                            </span>
-                        </motion.button>
-                    ) : (
-                        <motion.div
-                            layoutId="mascot-container"
-                            className="bg-blue-950/30 border border-cyan-500/30 rounded-xl p-4 max-w-lg relative backdrop-blur-sm"
-                        >
-                            <button 
-                                onClick={(e) => { e.stopPropagation(); setIsOpen(false); }}
-                                className="absolute top-2 right-2 text-cyan-500/50 hover:text-cyan-400"
-                            >
-                                <X size={14} />
-                            </button>
-                            
-                            <div className="flex gap-4">
-                                <div className="shrink-0 w-12 h-12 rounded-full bg-cyan-900 border border-cyan-500/30 overflow-hidden">
-                                     <img src="/Mascot-hint.png" alt="AI" className="w-full h-full object-cover" />
-                                </div>
-                                <div>
-                                    <h4 className="text-[10px] font-orbitron text-cyan-500 uppercase tracking-widest mb-1">
-                                        {mascotName}
-                                    </h4>
-                                    <p className="text-sm text-cyan-100/90 font-light leading-snug italic">
-                                        "{message}"
-                                    </p>
-                                </div>
-                            </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-            </div>
-        );
-    }
+    const [isOpen, setIsOpen] = useState(false); 
+    const isHint = variant === 'hint'
 
     const styles = {
         neutral: { border: "from-indigo-500 via-purple-500 to-cyan-500", text: "text-indigo-300", arrow: "bg-indigo-500" },
@@ -78,7 +23,14 @@ export function MascotBubble({ message, variant = 'neutral', title }: MascotBubb
     const isNeutral = variant === 'neutral'
     const isSuccess = variant === 'success'
     const isError = variant === 'error'
-    return (
+
+    return isHint ?  (
+        <MascotBubbleHint 
+                isOpen={isOpen}
+                setIsOpen={setIsOpen}
+                message={message}               
+            />
+    ):(
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 mt-10 w-full">
             <motion.div 
                 initial={{ scale: 0 }}
@@ -124,4 +76,68 @@ export function MascotBubble({ message, variant = 'neutral', title }: MascotBubb
             </motion.div>
         </div>
     );
+}
+
+interface MascotBubbleHint{
+    isOpen: boolean;
+    setIsOpen: (value: boolean) => void;
+    message: string;
+}
+
+function MascotBubbleHint(props: MascotBubbleHint){
+    const {isOpen, setIsOpen, message} = props
+    const  mascotName = "Spy"
+
+    return(
+        <div className="relative mt-4 z-10">
+        <AnimatePresence mode="wait">
+            {!isOpen ? (
+                <motion.button
+                    layoutId="mascot-container"
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0, opacity: 0 }}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => setIsOpen(true)}
+                    className="flex items-center gap-3 bg-cyan-950/40 border border-cyan-500/30 rounded-full pr-4 cursor-pointer hover:bg-cyan-900/40
+                        transition-colors group"
+                >
+                    <div className="w-12 h-12 rounded-full bg-cyan-900 overflow-hidden border border-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.3)]">
+                        <img src="/Mascot-hint.png" alt="AI" className="w-full h-full object-cover" />
+                    </div>
+                    <span className="text-xs font-orbitron text-cyan-400 uppercase tracking-widest group-hover:text-cyan-300">
+                        Dica Tática
+                    </span>
+                </motion.button>
+            ) : (
+                <motion.div
+                    layoutId="mascot-container"
+                    className="bg-blue-950/30 border border-cyan-500/30 rounded-xl p-4 max-w-lg relative backdrop-blur-sm"
+                >
+                    <button 
+                        onClick={(e) => { e.stopPropagation(); setIsOpen(false); }}
+                        className="absolute top-2 right-2 text-cyan-500/50 hover:text-cyan-400"
+                    >
+                        <X size={14} />
+                    </button>
+                    
+                    <div className="flex gap-4">
+                        <div className="shrink-0 w-12 h-12 rounded-full bg-cyan-900 border border-cyan-500/30 overflow-hidden">
+                             <img src="/Mascot-hint.png" alt="AI" className="w-full h-full object-cover" />
+                        </div>
+                        <div>
+                            <h4 className="text-[10px] font-orbitron text-cyan-500 uppercase tracking-widest mb-1">
+                                {mascotName}
+                            </h4>
+                            <p className="text-sm text-cyan-100/90 font-light leading-snug italic">
+                                "{message}"
+                            </p>
+                        </div>
+                    </div>
+                </motion.div>
+            )}
+        </AnimatePresence>
+    </div>
+    )
 }

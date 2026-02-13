@@ -15,7 +15,7 @@ export function ButtonChat(props: ButtonChatProps) {
             onMouseEnter={() => setShowBubble(true)}
             className="group relative w-14 h-14 rounded-full bg-linear-to-tr from-cyan-600 to-purple-600 p-[2px] 
 				shadow-[0_0_20px_rgba(6,182,212,0.4)] hover:shadow-[0_0_30px_rgba(6,182,212,0.6)] transition-all hover:scale-105
-				active:scale-95"
+				active:scale-95 cursor-pointer  "
         >
             <div className="w-full h-full rounded-full bg-black overflow-hidden relative flex items-center justify-center">
                 {isOpen ? (

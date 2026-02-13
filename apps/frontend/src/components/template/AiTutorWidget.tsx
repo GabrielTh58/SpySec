@@ -41,11 +41,14 @@ export function AiTutorWidget() {
     }, [isOpen]);
 
     return (
-        <div className="fixed bottom-6 right-6 z-9999 flex flex-col items-end gap-2 font-inter">
-            {isOpen && <ChatWindow />}
+        <div className="fixed bottom-6 right-6 z-9999 flex flex-col items-end gap-2 font-inter pointer-events-none">
+            <div className="pointer-events-auto">
+                {isOpen && <ChatWindow />}
+            </div>
+
             {!isOpen && (
                 <div 
-                    className={`transition-all duration-500 transform origin-bottom-right mb-2 mr-2
+                    className={`transition-all duration-500 transform origin-bottom-right mb-2 mr-2 pointer-events-auto hidden md:block
                         ${showBubble ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-90 translate-y-4 pointer-events-none'}
                     `}
                 >
@@ -59,11 +62,13 @@ export function AiTutorWidget() {
                 </div>
             )}
 
-            <ButtonChat 
-                isOpen={isOpen} 
-                setIsOpen={setIsOpen} 
-                setShowBubble={setShowBubble} 
-            />
+            <div className="pointer-events-auto">
+                <ButtonChat 
+                    isOpen={isOpen} 
+                    setIsOpen={setIsOpen} 
+                    setShowBubble={setShowBubble} 
+                />
+            </div>
         </div>
     )
 }

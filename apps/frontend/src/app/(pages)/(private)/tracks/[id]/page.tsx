@@ -1,13 +1,11 @@
 'use client'
-import React, { useEffect, use } from "react"; // Adicionado 'use' para Next 15
+import React, { useEffect, use } from "react"; 
 import { useRouter } from "next/navigation";
 import { AlertTriangle, Loader2 } from "lucide-react";
-
 import { Connector } from "@/components/missions/Connector";
 import { EndPointMission } from "@/components/missions/EndPointMission";
 import { MissionCard } from "@/components/missions/MissionCard";
 import { StartPointMission } from "@/components/missions/StartPointMission";
-
 import { useEducation } from "@/data/hooks/useEducation";
 import { Loading } from "@/components/template/Loading";
 
@@ -39,11 +37,11 @@ export default function TrackDetailsPage({ params }: TrackDetailsPageProps) {
     const isTrackCompleted = missions.length > 0 && missions.every(m => m.status === 'COMPLETED');
 
     return (
-        <div className="custom-scrollbar flex-1 overflow-y-auto particles-background p-8 lg:p-12 scroll-smooth">
+        <div className="custom-scrollbar flex-1 overflow-y-auto particles-background p-4 md:p-8 lg:p-12 scroll-smooth">
             <div className="flex flex-col items-center max-w-3xl mx-auto pb-20">
                 
                 <div className="mb-24 text-center animate-fade-in">
-                    <h2 className="text-4xl font-orbitron neon-text-glow text-white">
+                    <h2 className="text-2xl md:text-4xl font-orbitron neon-text-glow text-white">
                         {currentTrack.track.title}
                     </h2>
                     <p className="text-gray-400 mt-4 max-w-lg mx-auto text-lg leading-relaxed">

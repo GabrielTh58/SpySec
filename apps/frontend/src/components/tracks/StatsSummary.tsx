@@ -16,16 +16,16 @@ export function StatsSummary() {
     : <span>Parabéns! Você dominou todas as operações disponíveis.</span>;
 
   return(
-    <div className="mt-12 mb-8 bg-linear-to-r from-gray-900/80 to-gray-900/50 border border-gray-800 rounded-2xl p-8 backdrop-blur-sm">
-      <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+    <div className="mt-12 mb-8 bg-linear-to-r from-gray-900/80 to-gray-900/50 border border-gray-800 rounded-2xl p-6 md:p-8 backdrop-blur-sm">
+      <div className="flex flex-col md:flex-row items-center text-center justify-between gap-8">
         <div className="flex-1"> 
-          <h3 className="font-orbitron text-2xl mb-2 text-cyan-500">Resumo da Jornada</h3>
-          <p className="text-gray-400 text-sm max-w-md">
+          <h3 className="font-orbitron text-2xl mb-4 md:mb-2 text-cyan-500">Resumo da Jornada</h3>
+          <p className="text-gray-400 text-sm mx-auto md:mx-0 max-w-md">
             Você completou <span className="text-cyan-400 font-bold">{completionPercentage}%</span> de todo o conteúdo prático.
             {motivationText}
           </p>
 
-          <div className="w-full bg-gray-800 h-1.5 rounded-full mt-4 overflow-hidden max-w-xs">
+          <div className="w-full bg-gray-800 h-1.5 rounded-full mt-4 overflow-hidden max-w-xs mx-auto md:mx-0">
              <div 
                 className="h-full bg-cyan-500 shadow-[0_0_10px_cyan]" 
                 style={{ width: `${completionPercentage}%`, transition: 'width 1s ease-out' }}
@@ -33,22 +33,22 @@ export function StatsSummary() {
           </div>
         </div>
         
-        <div className="flex gap-12">
+        <div className="grid grid-cols-3 gap-2 w-full md:w-auto md:flex md:gap-12 justify-center">  
           <div className="text-center">
-            <p className="text-gray-500 text-xs uppercase tracking-wider mb-1">XP Total</p>
-            <p className="font-orbitron text-3xl text-transparent bg-clip-text bg-linear-to-b from-green-300 to-green-600 font-bold">
+            <p className="text-gray-500 text-[10px] md:text-xs uppercase tracking-wider mb-1">XP Total</p>
+            <p className="font-orbitron text-xl md:text-3xl text-transparent bg-clip-text bg-linear-to-b from-green-300 to-green-600 font-bold">
               {profile?.currentXp || 0}
             </p>
           </div>
           <div className="text-center">
-            <p className="text-gray-500 text-xs uppercase tracking-wider mb-1">Trilhas</p>
-            <p className="font-orbitron text-3xl text-transparent bg-clip-text bg-linear-to-b from-yellow-300 to-yellow-600 font-bold">
+            <p className="text-gray-500 text-[10px] md:text-xs uppercase tracking-wider mb-1">Trilhas</p>
+            <p className="font-orbitron text-xl md:text-3xl text-transparent bg-clip-text bg-linear-to-b from-yellow-300 to-yellow-600 font-bold">
               {completedTracks}/{totalTracks}
             </p>
           </div>
           <div className="text-center">
-            <p className="text-gray-500 text-xs uppercase tracking-wider mb-1">Conquistas</p>
-            <p className="font-orbitron text-3xl text-transparent bg-clip-text bg-linear-to-b from-purple-300 to-purple-600 font-bold">
+            <p className="text-gray-500 text-[10px] md:text-xs uppercase tracking-wider mb-1">Conquistas</p>
+            <p className="font-orbitron text-xl md:text-3xl text-transparent bg-clip-text bg-linear-to-b from-purple-300 to-purple-600 font-bold">
               {profile?.badges.length || 0}
             </p>
           </div>

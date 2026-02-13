@@ -66,18 +66,12 @@ export function MissionCard({mission, onPlay}: MissionCardProps) {
       ? 'bg-green-950/50 border border-green-500/30' : 'bg-gray-800/50 border border-gray-700/30'
 
     return (
-      <div className={`mission-card-wrapper relative w-full max-w-2xl group ${status === 'AVAILABLE' ? 'transform scale-105' : ''}`}>
-        {/* Balão de Dica
-        {status === 'available' && tutorMessage && (  
-          <div className="ai-tutor-bubble p-4 bg-gray-800 text-cyan-200 text-xs italic rounded-lg border border-gray-600 hidden lg:block shadow-xl z-20">
-            <p>"{tutorMessage}"</p>
-          </div>
-        )}
-        */}
+      <div className={`px-4 mission-card-wrapper relative w-full max-w-2xl group ${status === 'AVAILABLE' ? 'transform scale-105' : ''}`}>
         <div 
           onClick={handleClick}
           className={`
-            relative w-full p-6 rounded-xl glass-effect border-2 flex items-center gap-6 transition-all duration-300
+            flex flex-col md:flex-row items-center gap-4 md:gap-6 p-5 md:p-6 relative w-full rounded-xl glass-effect 
+            border-2 transition-all duration-300
             ${config.border} ${config.glow} ${status === 'LOCKED' ? 'filter grayscale opacity-60' : 'cursor-pointer'}
           `}
         >
@@ -94,7 +88,7 @@ export function MissionCard({mission, onPlay}: MissionCardProps) {
           )}
         
           <div className={`
-                p-4 rounded-xl flex items-center justify-center
+                p-2 md:p-4 rounded-xl flex items-center justify-center
                 ${blockIconDynamicStyle}
           `}>
             <DynamicIcon 
@@ -103,7 +97,7 @@ export function MissionCard({mission, onPlay}: MissionCardProps) {
             />
           </div>
   
-          <div className="flex-1">
+          <div className="flex-1 text-center">
             <h4 className={`font-orbitron text-xl ${status === 'AVAILABLE' ? 'text-glow-cyan' : 'text-white'}`}>
               {title}
             </h4>
@@ -112,7 +106,8 @@ export function MissionCard({mission, onPlay}: MissionCardProps) {
   
           <button 
             disabled={status === 'LOCKED'}
-            className={`font-bold py-2 px-6 rounded-lg transition-colors shadow-lg flex items-center gap-2 ${status !== 'LOCKED' && 'cursor-pointer'} text-sm ${config.button}`}
+            className={`font-bold py-2 px-6 rounded-lg transition-colors shadow-lg flex items-center gap-2 mt-2 md:mt-0
+              ${status !== 'LOCKED' && 'cursor-pointer'} text-sm ${config.button}`}
           >
             {config.buttonText}
             {status === 'AVAILABLE' && <Play size={14} fill="currentColor" />}

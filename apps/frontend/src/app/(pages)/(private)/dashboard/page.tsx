@@ -4,7 +4,7 @@ import { GlassCard } from "@/components/dashboard/GlassCard";
 import { MissionPortal } from "@/components/dashboard/MissionPortal";
 import { RankingItem } from "@/components/dashboard/RankingItem";
 import { SecurityGoalsWidget } from "@/components/dashboard/SecurityGoalsWidget";
-import { ThreatRadarWidget } from "@/components/dashboard/ThreatRadarWidget";
+import { ThreatFeedWidget } from "@/components/dashboard/ThreatFeedWidget";
 import { Background } from "@/components/template/Background";
 import { Loading } from "@/components/template/Loading";
 import { useEducation } from "@/data/hooks/useEducation";
@@ -237,12 +237,12 @@ export default function Dashboard() {
                 </GlassCard>
             </div>
 
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-6 max-w-[1440px] mx-auto">
+            <div className="mt-6 grid grid-cols-1 md:grid-cols-2  lg:grid-cols-3 gap-12 xl:gap-6 pb-6 max-w-[1440px] mx-auto xl:mt-8">
                 <div className="md:col-span-2 lg:col-span-1 min-h-[250px]">
                     <SecurityGoalsWidget />
                 </div>
                 <div className="md:col-span-2 min-h-[250px]">
-                    <ThreatRadarWidget />
+                    <ThreatFeedWidget />
                 </div>
             </div>
         </div>

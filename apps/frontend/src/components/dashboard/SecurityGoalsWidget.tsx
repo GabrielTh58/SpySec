@@ -34,7 +34,7 @@ export function SecurityGoalsWidget() {
     };
 
     return (
-        <div className="mt-6 p-5 bg-linear-to-b from-cyan-950/7 to-black/20 border border-cyan-500/20 rounded-xl h-full flex flex-col glass-effect">
+        <div className="p-5 bg-linear-to-b from-cyan-950/7 to-black/20 border border-cyan-500/20 rounded-xl h-full flex flex-col glass-effect">
             <h4 className="text-cyan-400 font-orbitron text-sm mb-4 uppercase tracking-wider font-bold flex items-center gap-2">
                 <CheckCircle2 size={16} />
                 Metas de Segurança
