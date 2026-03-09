@@ -8,6 +8,153 @@ datasource db {
   provider = "postgresql"
 }
 
+
+
+model User {
+  id              String          @id @default(uuid())
+  firebaseUid     String?         @unique @map("firebase_uid")
+  name            String
+  email           String          @unique
+  password        String?
+  provider        ProviderType
+  profileType     ProfileType     @map("profile_type")
+  isEmailVerified Boolean         @default(false) @map("is_email_verified")
+  imageURL        String?         @map("image_url")
+  lastLoginAt     DateTime?       @map("last_login_at")
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
+  trackProgresses TrackProgress[]
+  player          Player?
+
+
+  @@map("users")
+}
+
+model Track {
+  id                  String          @id @default(uuid())
+  title               String
+  slug                String          @unique
+  description         String
+  iconUrl             String
+  difficulty          TrackDifficulty
+  targetProfile       TrackVisibility
+  prerequisiteTrackId String?
+  isActive            Boolean         @default(true)
+  minLevel            Int
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  category            TrackCategory   @default(MINDSET)
+  tags                String[]        @default([])
+  missions            Mission[]
+  trackProgresses     TrackProgress[]
+
+  @@map("tracks")
+}
+
+model Mission {
+  id            String   @id @default(uuid())
+  title         String
+  slug          String   @unique
+  description   String
+  xpReward      Int
+  order         Int
+  category      String
+  content       Json
+  trackId       String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  estimatedTime Int      @default(180)
+  iconUrl       String
+  track         Track    @relation(fields: [trackId], references: [id], onDelete: Cascade)
+
+  @@unique([trackId, order])
+  @@map("missions")
+}
+
+model TrackProgress {
+  id                 String         @id @default(uuid())
+  userId             String
+  trackId            String
+  status             ProgressStatus
+  lastCompletedOrder Int            @default(0)
+  startedAt          DateTime       @default(now())
+  completedAt        DateTime?
+  earnedXp           Int            @default(0)
+  track              Track          @relation(fields: [trackId], references: [id])
+  user               User           @relation(fields: [userId], references: [id])
+
+  @@unique([userId, trackId])
+  @@map("track_progress")
+}
+
+model Player {
+  id                     String      @id @default(uuid())
+  userId                 String      @unique
+  user     User   @relation(fields: [userId], references: [id])
+  nickname               String
+  type                   ProfileType @map("profile_type")
+  currentLevel           Int         @default(1)
+  currentXp              Int         @default(0)
+  streak                 Int         @default(0)
+  maxStreak              Int         @default(0)
+  badges                 String[]
+  playedCategories       String[]
+  lastActivityDate       DateTime?
+  createdAt              DateTime    @default(now())
+  updatedAt              DateTime    @updatedAt
+  completedMissionsCount Int         @default(0)
+  totalStudySeconds      Int         @default(0)
+
+  @@map("players")
+}
+
+model Level {
+  id          String @id @default(uuid())
+  levelNumber Int    @unique
+  xpRequired  Int
+  title       String
+
+  @@map("gamification_levels")
+}
+
+model Badge {
+  id          String  @id @default(uuid())
+  slug        String  @unique
+  name        String
+  description String
+  iconUrl     String
+  condition   String?
+  rarity      Rarity  @default(COMMON)
+
+  @@map("badges")
+}
+
+model ChatSession {
+  id         Int    @id @default(autoincrement())
+  session_id String @db.VarChar(255)
+  message    Json
+
+  @@map("chat_session")
+}
+
+model SystemFeedback {
+  id          String           @id @default(uuid()) @db.Uuid
+  created_at  DateTime         @default(now()) @db.Timestamptz(6)
+  user_id     String?          @db.Uuid
+  user_email  String?
+  user_name   String?
+  user_level  Int?
+  type        feedback_type
+  message     String
+  mood        feedback_mood?
+  page_url    String?
+  user_agent  String?
+  status      feedback_status? @default(PENDING)
+  admin_notes String?
+
+  @@map("system_feedback")
+}
+
 enum ProviderType {
   EMAIL
   GOOGLE
@@ -44,124 +191,27 @@ enum Rarity {
 
 enum TrackCategory {
   MINDSET
+  IDENTITY
   DEVICES
   CORPORATE
   TRENDS
   FINAL
 }
 
-model User {
-  id              String          @id @default(uuid())
-  firebaseUid     String?         @unique @map("firebase_uid")
-  name            String
-  email           String          @unique
-  password        String?
-  provider        ProviderType
-  profileType     ProfileType     @map("profile_type")
-  isEmailVerified Boolean         @default(false) @map("is_email_verified")
-  imageURL        String?         @map("image_url")
-  lastLoginAt     DateTime?       @map("last_login_at")
-  createdAt       DateTime        @default(now()) @map("created_at")
-  updatedAt       DateTime        @updatedAt @map("updated_at")
-  trackProgresses TrackProgress[]
-
-  @@map("users")
+enum feedback_mood {
+  HAPPY
+  NEUTRAL
+  SAD
 }
 
-model Track {
-  id                  String          @id @default(uuid())
-  title               String
-  slug                String          @unique
-  description         String
-  iconUrl             String
-  difficulty          TrackDifficulty
-  targetProfile       TrackVisibility
-  prerequisiteTrackId String?
-  isActive            Boolean         @default(true)
-  minLevel            Int
-  missions            Mission[]
-  category            TrackCategory   @default(MINDSET)
-  tags                String[]        @default([])
-  createdAt           DateTime        @default(now())
-  updatedAt           DateTime        @updatedAt
-  trackProgresses     TrackProgress[]
-
-  @@map("tracks")
+enum feedback_status {
+  PENDING
+  REVIEWED
+  RESOLVED
 }
 
-model Mission {
-  id            String   @id @default(uuid())
-  title         String
-  slug          String   @unique
-  description   String
-  iconUrl       String  
-  xpReward      Int
-  order         Int
-  category      String
-  estimatedTime Int      @default(180)
-  content       Json
-  trackId       String
-  track         Track    @relation(fields: [trackId], references: [id], onDelete: Cascade)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  @@unique([trackId, order])  
-  @@map("missions")
-}
-
-model TrackProgress {
-  id                 String         @id @default(uuid())
-  userId             String
-  user               User           @relation(fields: [userId], references: [id])
-  trackId            String
-  track              Track          @relation(fields: [trackId], references: [id])
-  status             ProgressStatus
-  lastCompletedOrder Int            @default(0)
-  startedAt          DateTime       @default(now())
-  completedAt        DateTime?
-  earnedXp           Int            @default(0)
-
-  @@unique([userId, trackId])
-  @@map("track_progress")
-}
-
-model Player {
-  id                     String      @id @default(uuid())
-  userId                 String      @unique
-  nickname               String
-  type                   ProfileType @map("profile_type")
-  currentLevel           Int         @default(1)
-  currentXp              Int         @default(0)
-  streak                 Int         @default(0)
-  maxStreak              Int         @default(0)
-  badges                 String[]
-  playedCategories       String[]
-  lastActivityDate       DateTime?
-  completedMissionsCount Int         @default(0)
-  totalStudySeconds      Int         @default(0)
-  createdAt              DateTime    @default(now())
-  updatedAt              DateTime    @updatedAt
-
-  @@map("players")
-}
-
-model Level {
-  id          String @id @default(uuid())
-  levelNumber Int    @unique
-  xpRequired  Int
-  title       String
-
-  @@map("gamification_levels")
-}
-
-model Badge {
-  id          String  @id @default(uuid())
-  slug        String  @unique
-  name        String
-  rarity      Rarity  @default(COMMON)
-  description String
-  iconUrl     String
-  condition   String?
-
-  @@map("badges")
+enum feedback_type {
+  BUG
+  IDEIA
+  OUTRO
 }

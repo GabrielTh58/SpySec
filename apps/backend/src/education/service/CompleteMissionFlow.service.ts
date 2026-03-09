@@ -40,7 +40,7 @@ export class CompleteMissionFlow implements UseCase<CompleteMissionFlowInputDTO,
     async execute(input: CompleteMissionFlowInputDTO): Promise<Result<CompleteMissionFlowOutput>> {
         const { userId, missionId, answers, timeSpent } = input
 
-        const eduResult = await this.eduFacade.completeMission({ userId, missionId, answers });
+        const eduResult = await this.eduFacade.completeMission({ userId, missionId, answers, timeSpent });
 
         if (!eduResult.success) {
             return Result.ok({
@@ -49,7 +49,7 @@ export class CompleteMissionFlow implements UseCase<CompleteMissionFlowInputDTO,
                 nextMissionId: null,
                 feedback: eduResult.feedback, 
                 xpEarned: 0,
-                timeSpent: 0,
+                timeSpent: timeSpent || 0,
                 leveledUp: false,
                 newBadge: null
             });

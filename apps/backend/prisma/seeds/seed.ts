@@ -1,7 +1,7 @@
 import { seedLevels } from './data/levels';
 import { seedBadges } from './data/badges';
 import { PrismaService } from 'src/db/prisma.service';
-import { seedTracks } from './tracks-missions-seed';
+import { seedTracksAndMission } from './tracks-missions-seed';
 
 const prisma = new PrismaService()
 
@@ -10,7 +10,7 @@ async function main() {
   
   await seedLevels(prisma);
   await seedBadges(prisma);
-  await seedTracks(prisma)
+  await seedTracksAndMission(prisma)
   console.log('Database Seed Completed!');
 }
 

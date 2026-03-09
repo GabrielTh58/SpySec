@@ -1,111 +1,104 @@
 import { TrackCategory, TrackDifficulty, TrackVisibility } from "@spysec/education"; 
 
 export const TRACK_IDS = {
-  MINDSET: "550e8400-e29b-41d4-a716-446655440001",
-  IDENTITY: "550e8400-e29b-41d4-a716-446655440002",
-  DEVICES_HARDWARE: "550e8400-e29b-41d4-a716-446655440003",
-  DEVICES_NETWORKS: "550e8400-e29b-41d4-a716-446655440004",
-  ENG_SOCIAL: "550e8400-e29b-41d4-a716-446655440005",
-  JURIDICO: "550e8400-e29b-41d4-a716-446655440006",
-  TRENDS: "550e8400-e29b-41d4-a716-446655440007",
-  FINAL_EXAM: "550e8400-e29b-41d4-a716-446655440008"
+  MINDSET:              "550e8400-e29b-41d4-a716-446655440001",
+  DEVICES_NETWORKS:     "550e8400-e29b-41d4-a716-446655440003",
+  IDENTITY:             "550e8400-e29b-41d4-a716-446655440004",
+  CORPORATE_ENG_SOCIAL: "550e8400-e29b-41d4-a716-446655440005",
+  CORPORATE_POLICY:     "550e8400-e29b-41d4-a716-446655440006",
+  TRENDS:               "550e8400-e29b-41d4-a716-446655440007",
+  FINAL_EXAM:           "550e8400-e29b-41d4-a716-446655440008",
 };
 
 export const tracksData = [
-  // --- EIXO 1: INDIVÍDUO ---
+
+  /* EIXO 1 — CONSCIÊNCIA */
   {
-    id: TRACK_IDS.MINDSET, 
-    title: "O Alvo Invisível",
-    description: "Descubra por que hackers querem seus dados",
-    iconUrl: `crosshair`,
+    id: TRACK_IDS.MINDSET,
+    title: "Percepção de Ameaças",
+    description: "Entenda como ataques realmente acontecem e por que qualquer pessoa pode ser alvo.",
+    iconUrl: "brain-circuit",
     category: TrackCategory.MINDSET,
     difficulty: TrackDifficulty.BASIC,
     targetProfile: TrackVisibility.ALL,
-    tags: ["Mindset", "Privacidade", "Fundamentos"],
-    minLevel: 0
+    tags: ["Fundamentos", "Engenharia Social", "Consciência"],
+    minLevel: 0,
   },
+
+  /* EIXO 2 — IDENTIDADE */
   {
-    id: TRACK_IDS.IDENTITY,   
-    title: "O Cofre de Identidade",
-    description: "Aprenda a criar senhas inquebráveis",
-    iconUrl: `shield-check`,
-    category: TrackCategory.MINDSET, 
+    id: TRACK_IDS.IDENTITY,
+    title: "Controle de Acessos",
+    description: "Proteja contas, acessos e identidades digitais contra invasões.",
+    iconUrl: "user-lock",
+    category: TrackCategory.IDENTITY, 
     difficulty: TrackDifficulty.BASIC,
     targetProfile: TrackVisibility.ALL,
-    tags: ["Senhas", "MFA", "Vazamentos"],
-    minLevel: 0
+    tags: ["Senhas", "MFA", "Identidade"],
+    minLevel: 1,
   },
-  
-  // --- EIXO 2: MÁQUINA ---
-  {
-    id: TRACK_IDS.DEVICES_HARDWARE,
-    title: "Seus Dispositivos, Seus Espiões",
-    description: "Transforme seu computador e celular em fortalezas",
-    iconUrl: `monitor-smartphone`,
-    category: TrackCategory.DEVICES,
-    difficulty: TrackDifficulty.INTERMEDIATE,
-    targetProfile: TrackVisibility.ALL,
-    tags: ["Antivirus", "Hardware", "Updates"],
-    minLevel: 2
-  },
+
+  /* EIXO 3 — DISPOSITIVOS */
   {
     id: TRACK_IDS.DEVICES_NETWORKS,
-    title: "O Campo Minado",
-    description: "Navegue na web e use Wi-Fi público sem ser interceptado",
-    iconUrl: `bomb`,
+    title: "Dispositivos & Conexões Seguras",
+    description: "Transforme dispositivos e conexões em ambientes confiáveis.",
+    iconUrl: "monitor-smartphone",
     category: TrackCategory.DEVICES,
-    difficulty: TrackDifficulty.INTERMEDIATE,
+    difficulty: TrackDifficulty.BASIC,
     targetProfile: TrackVisibility.ALL,
-    tags: ["Redes", "VPN", "Wi-Fi"],
-    minLevel: 2
+    tags: ["Dispositivos", "WiFi", "Atualizações"],
+    minLevel: 2,
   },
 
-  // --- EIXO 3: PROFISSIONAL ---
+  /* EIXO 4 — CORPORATIVO */
   {
-    id: TRACK_IDS.ENG_SOCIAL,
-    title: "Hackeando Humanos",
-    description: "Treinamento avançado contra Engenharia Social",
-    iconUrl: `users`,
+    id: TRACK_IDS.CORPORATE_ENG_SOCIAL,
+    title: "Engenharia Social Corporativa",
+    description: "Ataques reais que exploram rotina, pressão e hierarquia empresarial.",
+    iconUrl: "users",
+    category: TrackCategory.CORPORATE,
+    difficulty: TrackDifficulty.INTERMEDIATE,
+    targetProfile: TrackVisibility.CORPORATE,
+    tags: ["Phishing", "BEC", "Vishing"],
+    minLevel: 4,
+  },
+
+  {
+    id: TRACK_IDS.CORPORATE_POLICY,
+    title: "Riscos Operacionais & Incidentes",
+    description: "Como agir corretamente diante de riscos, vazamentos e políticas internas.",
+    iconUrl: "shield-alert",
     category: TrackCategory.CORPORATE,
     difficulty: TrackDifficulty.ADVANCED,
     targetProfile: TrackVisibility.CORPORATE,
-    tags: ["Phishing", "Engenharia Social", "BEC"],
-    minLevel: 5
-  },
-  {
-    id: TRACK_IDS.JURIDICO,
-    title: "O Jurídico e a Crise",
-    description: "Como evitar multas milionárias da LGPD",
-    iconUrl: `scale`,
-    category: TrackCategory.CORPORATE,
-    difficulty: TrackDifficulty.ADVANCED,
-    targetProfile: TrackVisibility.CORPORATE,
-    tags: ["LGPD", "Ransomware", "Compliance"],
-    minLevel: 5
+    tags: ["LGPD", "Shadow IT", "Resposta"],
+    minLevel: 6, 
   },
 
-  // --- EIXO 4: TENDÊNCIAS ---
+  /* EIXO 5 — TENDÊNCIAS */
   {
     id: TRACK_IDS.TRENDS,
-    title: "IA & Novos Riscos",
-    description: "Deepfakes, ChatGPT e o futuro dos ataques",
-    iconUrl: `bot`,
+    title: "IA & Novas Ameaças",
+    description: "Como a Inteligência Artificial está mudando ataques e vazamentos.",
+    iconUrl: "bot",
     category: TrackCategory.TRENDS,
     difficulty: TrackDifficulty.INTERMEDIATE,
-    targetProfile: TrackVisibility.ALL, 
-    tags: ["IA", "Deepfake", "ChatGPT"],
-    minLevel: 3
+    targetProfile: TrackVisibility.ALL,
+    tags: ["IA", "Phishing IA", "Dados"],
+    minLevel: 7,
   },
-  
+
+  /* FINAL */
   {
     id: TRACK_IDS.FINAL_EXAM,
     title: "Protocolo Final: Black Ops",
-    description: "A prova de fogo. Teste suas habilidades em um cenário de auditoria real. Apenas para quem sobreviveu ao treinamento.",
-    iconUrl: `skull`,
+    description: "Simulação completa de incidente corporativo.",
+    iconUrl: "swords",
     category: TrackCategory.FINAL,
     difficulty: TrackDifficulty.ADVANCED,
-    targetProfile: TrackVisibility.ALL,
-    tags: ["Exame", "Certificação", "Hardcore"],
-    minLevel: 7, 
-  }
+    targetProfile: TrackVisibility.CORPORATE,
+    tags: ["Exame", "Certificação"],
+    minLevel: 10,
+  },
 ];

@@ -1,9 +1,15 @@
-import { Track as PrismaTrack, Mission as PrismaMission } from "../../../generated/prisma/client"; 
-import { 
-    Track,      
-    TrackCategory,      
-    TrackDifficulty, 
-    TrackVisibility 
+import {
+    Track as PrismaTrack,
+    Mission as PrismaMission,
+    TrackCategory as PrismaTrackCategory,
+    TrackDifficulty as PrismaTrackDifficulty,
+    TrackVisibility as PrismaTrackVisibility,
+} from "../../../generated/prisma/client";
+import {
+    Track,
+    TrackCategory,
+    TrackDifficulty,
+    TrackVisibility,
 } from "@spysec/education"; 
 import { MissionMapper } from "./mission.mapper";
 
@@ -40,19 +46,19 @@ export class TrackMapper {
         return trackOrError.value!;
     }
 
-    static toPersistence(track: Track) {  
+    static toPersistence(track: Track) {
         return {
             id: track.id.toString(),
             title: track.title,
             slug: track.slug,
             description: track.description,
             iconUrl: track.iconUrl,
-            difficulty: track.difficulty,
-            targetProfile: track.targetProfile,
+            difficulty: track.difficulty as PrismaTrackDifficulty,
+            targetProfile: track.targetProfile as PrismaTrackVisibility,
             minLevel: track.minLevel,
             prerequisiteTrackId: track.prerequisiteTrackId || null,
             isActive: track.isActive,
-            category: track.category,
+            category: track.category as PrismaTrackCategory,
             tags: track.tags,
             createdAt: track.createdAt,
             updatedAt: track.updatedAt,
