@@ -4,6 +4,31 @@ interface BaseBlockData {
   mascotMessage?: string;
 }
 
+interface ClassificationCategory {
+  id: string;
+  name: string;
+}
+
+interface ClassificationItem {
+  id: string;
+  text: string;
+  categoryId: string;
+}
+
+interface ClassificationData extends BaseBlockData {
+  question: string;
+  categories: ClassificationCategory[];
+  items: ClassificationItem[];
+  feedbackSuccess: string;
+  feedbackError: string;
+}
+
+interface HotspotRegion {
+  id: string;
+  feedback: string;
+  isCorrect: boolean;
+}
+
 interface MatchingData extends BaseBlockData {
   question: string;
   pairs: { leftId: string; leftText: string; rightId: string; rightText: string }[];
@@ -19,25 +44,6 @@ interface SortingData extends BaseBlockData {
   feedbackError: string;
 }
 
-interface EmailContent extends BaseBlockData {
-  type: 'EMAIL';
-  sender: string;
-  subject: string;
-  body: string;
-}
-
-interface ImageContent extends BaseBlockData {
-  type: 'IMAGE';
-  image: string;
-  altText: string;
-}
-
-interface TerminalContent extends BaseBlockData {
-  type: 'TERMINAL';
-  logs: string[];
-  hostname: string;
-}
-
 interface InfoData extends BaseBlockData {
   title?: string;
   text: string;
@@ -47,7 +53,6 @@ interface InfoData extends BaseBlockData {
 }
 
 interface QuizData extends BaseBlockData {
-  context?: HotspotContext
   question: string;
   options: { id: string; text: string }[];
   correctOptionId: string;
@@ -60,7 +65,6 @@ interface InputData extends BaseBlockData {
   question: string;
   description?: string;
   placeholder?: string;
-  context?: HotspotContext;
   validation: {
     type: 'EXACT_MATCH' | 'CONTAINS' | 'REGEX';
     expectedValue: string;
@@ -70,17 +74,79 @@ interface InputData extends BaseBlockData {
   feedbackError: string;
 }
 
-type HotspotContext = EmailContent | TerminalContent | ImageContent;
+interface ScenarioQuizQuestion {
+  id: string;
+  timestamp?: string;          // "Segunda-feira, 08h47" — ancora no cenário
+  location?: string;           // "Refeitório", "Home office", "Reunião"
+  context: string;             // situação em 1-3 linhas
+  question: string;            // o que o usuário deve decidir
+  options: {
+    id: string;                // "a" | "b" | "c"
+    text: string;
+  }[];
+  correctOptionId: string;
+  feedbackSuccess: string;     // curto — máximo 2 linhas
+  feedbackError: string;       // curto — explica por que errou
+  mascotMessage: string;       // aparece junto com o feedback
+}
+
+interface ScenarioQuizData {
+  scenarioName: string;        // "Uma segunda-feira qualquer"
+  questions: ScenarioQuizQuestion[];
+  summary: {
+    title: string;
+    passingScore: number;       // mínimo para "aprovado" — ex: 7
+    resultMessages: {
+      excellent: string;        // 10 acertos
+      good: string;             // 7-9 acertos
+      needsWork: string;        // abaixo de 7
+    };
+    mascotMessage: string;
+    xpReward: number;
+    bonusXp?: number;           // XP extra por score perfeito
+  };
+}
+
+interface SummaryData extends BaseBlockData {
+  title: string;
+  summary: string;
+  keyTakeaway: string;
+  xpEarned?: number;
+  nextMissionTeaser?: string;
+}
+
+type BodyNode =
+  | { type: 'text'; content: string }
+  | { type: 'hotspot'; content: string; regionId: string };
+
+type HotspotContext =
+    | {
+      type: 'EMAIL';
+      sender?: BodyNode[];
+      subject?: string;
+      avatarUrl?: string;
+    }
+    | {
+      type: 'BROWSER';       // barra de endereço + página
+      addressBar?: BodyNode[]   
+      pageTitle?: string;
+      isHttps?: boolean;    // exibe cadeado verde ou aviso "Não seguro"
+      favicon?: string;
+    }
+    | {
+      type: 'CHAT';          
+      sender?: string;
+      platform?: 'whatsapp' | 'telegram' | 'sms';
+      avatarUrl?: string;
+    }
 
 interface HotspotData {
-  context: HotspotContext;
   feedbackError?: string;
-  regions: {
-    id: string;
-    rect: { x: number, y: number, w: number, h: number };
-    feedback: string;
-    isCorrect: boolean;
-  }[];
+  requiredSelections?: number;
+  allowMultiple?: boolean;
+  context: HotspotContext;
+  body: BodyNode[];
+  regions: HotspotRegion[];
 }
 
 export type MissionBlock =
@@ -89,7 +155,10 @@ export type MissionBlock =
   | { id: string; type: 'HOTSPOT'; data: HotspotData }
   | { id: string; type: 'INPUT'; data: InputData }
   | { id: string; type: 'MATCHING'; data: MatchingData }
-  | { id: string; type: 'SORTING'; data: SortingData };
+  | { id: string; type: 'SORTING'; data: SortingData }
+  | { id: string; type: 'CLASSIFICATION'; data: ClassificationData }
+  | { id: string; type: 'SUMMARY'; data: SummaryData }
+  | { id: string; type: 'SCENARIO_QUIZ', data: ScenarioQuizData}
 
 export class MissionContent extends VO<MissionBlock[]> {
   static readonly ERROR_MISSION_CONTENT_MUST_BE_NON_EMPTY_LIST = "MISSION_CONTENT_MUST_BE_NON_EMPTY_LIST";
@@ -99,6 +168,8 @@ export class MissionContent extends VO<MissionBlock[]> {
   static readonly ERROR_HOTSPOT_INVALID_STRUCTURE = "ERROR_HOTSPOT_INVALID_STRUCTURE";
   static readonly ERROR_HOTSPOT_NEEDS_REGIONS = "ERROR_HOTSPOT_NEEDS_REGIONS";
   static readonly ERROR_INPUT_MISSING_VALIDATION = "INPUT_MISSING_VALIDATION";
+  static readonly ERROR_HOTSPOT_REGION_MISSING_ID = "ERROR_HOTSPOT_REGION_MISSING_ID";
+  static readonly ERROR_SUMMARY_MISSING_REQUIRED_FIELDS = "SUMMARY_MISSING_REQUIRED_FIELDS";
 
   private constructor(blocks: MissionBlock[]) {
     super(blocks);
@@ -115,44 +186,96 @@ export class MissionContent extends VO<MissionBlock[]> {
         return Result.fail(MissionContent.ERROR_BLOCK_MISSING_ID_OR_TYPE);
       }
 
-      if (block.type === 'MATCHING') {
-        const data = block.data as Partial<MatchingData>;
-        if (!Array.isArray(data.pairs) || data.pairs.length < 2) return Result.fail("MATCHING_NEEDS_AT_LEAST_TWO_PAIRS");
-      }
-  
-      if (block.type === 'SORTING') {
-        const data = block.data as Partial<SortingData>;
-        if (!Array.isArray(data.items) || !Array.isArray(data.correctOrder)) return Result.fail("SORTING_INVALID_STRUCTURE");
+      switch (block.type) {
+        case 'MATCHING': {
+          const data = block.data as Partial<MatchingData>;
+          if (!Array.isArray(data.pairs) || data.pairs.length < 2) {
+            return Result.fail("MATCHING_NEEDS_AT_LEAST_TWO_PAIRS");
+          }
+          break;
+        }
+        case 'SORTING': {
+          const data = block.data as Partial<SortingData>;
+          if (!Array.isArray(data.items) || !Array.isArray(data.correctOrder)) {
+            return Result.fail("SORTING_INVALID_STRUCTURE");
+          }
+          break;
+        }
+        case 'QUIZ': {
+          const quiz = block.data as Partial<QuizData>;
+          if (!quiz.correctOptionId) {
+            return Result.fail(MissionContent.ERROR_QUIZ_MISSING_CORRECT_OPTION);
+          }
+          if (!Array.isArray(quiz.options) || quiz.options.length < 2) {
+            return Result.fail(MissionContent.ERROR_QUIZ_NEEDS_TWO_OPTIONS);
+          }
+          break;
+        }
+        case 'INPUT': {
+          const inputData = block.data as Partial<InputData>;
+          if (!inputData.validation || !inputData.validation.expectedValue) {
+            return Result.fail(MissionContent.ERROR_INPUT_MISSING_VALIDATION);
+          }
+          break;
+        }
+        case 'HOTSPOT': {
+          const hotspot = block.data as Partial<HotspotData>;
+          if (!hotspot.context || !hotspot.context.type) {
+            return Result.fail(MissionContent.ERROR_HOTSPOT_INVALID_STRUCTURE);
+          }
+          if (!Array.isArray(hotspot.regions) || hotspot.regions.length === 0) {
+            return Result.fail(MissionContent.ERROR_HOTSPOT_NEEDS_REGIONS);
+          }
+          const invalidRegion = hotspot.regions.find(r => !r.id || typeof r.id !== 'string');
+          if (invalidRegion) {
+            return Result.fail(MissionContent.ERROR_HOTSPOT_REGION_MISSING_ID);
+          }
+          break;
+        }
+        case 'CLASSIFICATION': {
+          const data = block.data as Partial<ClassificationData>;
+          if (!Array.isArray(data.categories) || data.categories.length < 2) {
+            return Result.fail("CLASSIFICATION_NEEDS_AT_LEAST_TWO_CATEGORIES");
+          }
+          if (!Array.isArray(data.items) || data.items.length === 0) {
+            return Result.fail("CLASSIFICATION_NEEDS_ITEMS");
+          }
+          const categoryIds = data.categories.map(c => c.id);
+          const invalidItem = data.items.find(item => !categoryIds.includes(item.categoryId));
+          if (invalidItem) {
+            return Result.fail("CLASSIFICATION_ITEM_HAS_INVALID_CATEGORY_ID");
+          }
+          break;
+        }
+        case 'SUMMARY': {
+          const data = block.data as Partial<SummaryData>;
+          if (!data.title || !data.summary || !data.keyTakeaway) {
+            return Result.fail(MissionContent.ERROR_SUMMARY_MISSING_REQUIRED_FIELDS);
+          }
+          break;
+        }
+        case 'SCENARIO_QUIZ': {
+          const data = block.data as Partial<ScenarioQuizData>;
+          if (!Array.isArray(data.questions) || data.questions.length === 0) {
+            return Result.fail("SCENARIO_QUIZ_NEEDS_QUESTIONS");
+          }
+
+          if (typeof data.summary?.passingScore !== 'number') {
+            return Result.fail("SCENARIO_QUIZ_MISSING_PASSING_SCORE");
+          }
+
+          const invalidQuestion = data.questions.find(
+            q => !q.id || !q.correctOptionId || !Array.isArray(q.options) || q.options.length < 2
+          );
+          if (invalidQuestion) {
+            return Result.fail("SCENARIO_QUIZ_QUESTION_INVALID_STRUCTURE");
+          }
+          break;
+        }
+        default:
+          break;
       }
 
-      if (block.type === 'QUIZ') {
-        const quiz = block.data as Partial<QuizData>;
-        if (!quiz.correctOptionId) return Result.fail(MissionContent.ERROR_QUIZ_MISSING_CORRECT_OPTION);
-        if (!Array.isArray(quiz.options) || quiz.options.length < 2) {
-          return Result.fail(MissionContent.ERROR_QUIZ_NEEDS_TWO_OPTIONS);
-        }
-      }
-
-      if (block.type === 'INPUT') {
-        const inputData = block.data as Partial<InputData>;
-        if (!inputData.validation || !inputData.validation.expectedValue) {
-          return Result.fail(MissionContent.ERROR_INPUT_MISSING_VALIDATION);
-        }
-      }
-
-      if (block.type === 'HOTSPOT') {
-        const hotspot = block.data as Partial<HotspotData>;
-        if (!hotspot.context || !hotspot.context.type) {
-          return Result.fail(MissionContent.ERROR_HOTSPOT_INVALID_STRUCTURE);
-        }
-        if (!Array.isArray(hotspot.regions) || hotspot.regions.length === 0) {
-          return Result.fail(MissionContent.ERROR_HOTSPOT_NEEDS_REGIONS);
-        }
-        const invalidRegion = hotspot.regions.find(r => !r.rect || typeof r.rect.x !== 'number');
-        if (invalidRegion) {
-          return Result.fail("HOTSPOT_REGION_INVALID_COORDINATES");
-        }
-      }
     }
 
     return Result.ok(new MissionContent(rawBlocks as MissionBlock[]));
@@ -168,14 +291,14 @@ export class MissionContent extends VO<MissionBlock[]> {
   }
 
   hasInteraction(): boolean {
-    return this.value.some(b => ['INPUT', 'HOTSPOT', 'QUIZ'].includes(b.type));
+    return this.value.some(b => ['INPUT', 'HOTSPOT', 'QUIZ', 'MATCHING', 'SORTING', 'CLASSIFICATION', 'SCENARIO_QUIZ'].includes(b.type));
   }
 
   validateUserAnswers(answers: Record<string, any>): { isValid: boolean, failedBlockIds: string[] } {
     const failedBlockIds: string[] = [];
 
     for (const block of this.value) {
-      if (block.type === 'INFO') continue;
+      if (block.type === 'INFO' || block.type === 'SUMMARY') continue;
 
       const userAnswer = answers[block.id];
 
@@ -184,78 +307,128 @@ export class MissionContent extends VO<MissionBlock[]> {
         continue;
       }
 
-      // 3. Validação de QUIZ
-      if (block.type === 'QUIZ') {
-        // No Quiz, a resposta deve ser o ID da opção
-        if (userAnswer !== block.data.correctOptionId) {
-          failedBlockIds.push(block.id);
-        }
-      }
-
-      // 4. Validação de INPUT
-      if (block.type === 'INPUT') {
-        const validation = block.data.validation;
-        const userText = String(userAnswer).trim();
-        const expectedText = validation.expectedValue.trim();
-
-        if (validation.type === 'EXACT_MATCH') {
-          const isCaseSensitive = (validation as any).isCaseSensitive ?? false;
-
-          if (isCaseSensitive) {
-            if (userText !== expectedText) failedBlockIds.push(block.id);
-          } else {
-            if (userText.toLowerCase() !== expectedText.toLowerCase()) failedBlockIds.push(block.id);
-          }
-        }
-
-        else if (validation.type === 'CONTAINS') {
-          if (!userText.includes(expectedText)) failedBlockIds.push(block.id);
-        }
-
-        else if (validation.type === 'REGEX') {
-          try {
-            const regex = new RegExp(expectedText);
-            if (!regex.test(userText)) failedBlockIds.push(block.id);
-          } catch (e) {
-            console.error(`Invalid Regex in block ${block.id}`);
+      switch (block.type) {
+        case 'QUIZ': {
+          if (userAnswer !== block.data.correctOptionId) {
             failedBlockIds.push(block.id);
           }
-        }
-      }
-
-      // 5. Validação de HOTSPOT
-      if (block.type === 'HOTSPOT') {
-        // Assumimos que a resposta é um array de IDs das regiões clicadas: ['r1', 'r2']
-        if (!Array.isArray(userAnswer)) {
-          failedBlockIds.push(block.id);
-          continue;
+          break;
         }
 
-        const requiredRegionIds = block.data.regions
-          .filter(r => r.isCorrect)
-          .map(r => r.id);
+        case 'INPUT': {
+          const validation = block.data.validation;
+          const userText = String(userAnswer).trim();
+          const expectedText = validation.expectedValue.trim();
 
-        const foundAllCorrect = requiredRegionIds.every(id => userAnswer.includes(id));
-        const clickedWrong = userAnswer.some(id => {
-          const region = block.data.regions.find(r => r.id === id);
-          return region ? !region.isCorrect : false;
-        });
-
-        if (!foundAllCorrect || clickedWrong) {
-          failedBlockIds.push(block.id);
+          switch (validation.type) {
+            case 'EXACT_MATCH': {
+              const isCaseSensitive = (validation as any).isCaseSensitive ?? false;
+              if (isCaseSensitive) {
+                if (userText !== expectedText) failedBlockIds.push(block.id);
+              } else {
+                if (userText.toLowerCase() !== expectedText.toLowerCase()) failedBlockIds.push(block.id);
+              }
+              break;
+            }
+            case 'CONTAINS': {
+              if (!userText.includes(expectedText)) failedBlockIds.push(block.id);
+              break;
+            }
+            case 'REGEX': {
+              try {
+                const regex = new RegExp(expectedText);
+                if (!regex.test(userText)) failedBlockIds.push(block.id);
+              } catch (e) {
+                console.error(`Invalid Regex in block ${block.id}`);
+                failedBlockIds.push(block.id);
+              }
+              break;
+            }
+          }
+          break;
         }
-      }
 
-      if (block.type === 'MATCHING') {
-        const isCorrect = block.data.pairs.every(pair => userAnswer[pair.leftId] === pair.rightId);
-        if (!isCorrect) failedBlockIds.push(block.id);
-      }
+        case 'HOTSPOT': {
+          if (!Array.isArray(userAnswer)) {
+            failedBlockIds.push(block.id);
+            break;
+          }
 
-      if (block.type === 'SORTING') {
-        const isCorrect = Array.isArray(userAnswer) &&
-          userAnswer.length === block.data.correctOrder.length &&
-          userAnswer.every((id, idx) => id === block.data.correctOrder[idx]);
-        if (!isCorrect) failedBlockIds.push(block.id);
+          const requiredRegionIds = block.data.regions
+            .filter(r => r.isCorrect)
+            .map(r => r.id);
+
+          const foundAllCorrect = requiredRegionIds.every(id => userAnswer.includes(id));
+          const clickedWrong = userAnswer.some(id => {
+            const region = block.data.regions.find(r => r.id === id);
+            return region ? !region.isCorrect : false;
+          });
+
+          if (!foundAllCorrect || clickedWrong) {
+            failedBlockIds.push(block.id);
+          }
+          break;
+        }
+
+        case 'MATCHING': {
+          const isCorrect = block.data.pairs.every(pair => userAnswer[pair.leftId] === pair.rightId);
+          if (!isCorrect) failedBlockIds.push(block.id);
+          break;
+        }
+
+        case 'SORTING': {
+          const isCorrect = Array.isArray(userAnswer) &&
+            userAnswer.length === block.data.correctOrder.length &&
+            userAnswer.every((id, idx) => id === block.data.correctOrder[idx]);
+          if (!isCorrect) failedBlockIds.push(block.id);
+          break;
+        }
+
+        case 'CLASSIFICATION': {
+          if (typeof userAnswer !== 'object' || Array.isArray(userAnswer)) {
+            failedBlockIds.push(block.id);
+            break;
+          }
+
+          const data = block.data as ClassificationData;
+          const answeredItemIds = Object.keys(userAnswer);
+          if (answeredItemIds.length !== data.items.length) {
+            failedBlockIds.push(block.id);
+            break;
+          }
+
+          const isAllCorrect = data.items.every(item => {
+            return userAnswer[item.id] === item.categoryId;
+          });
+
+          if (!isAllCorrect) {
+            failedBlockIds.push(block.id);
+          }
+          break;
+        }
+
+        case 'SCENARIO_QUIZ': {
+          const data = block.data as ScenarioQuizData;
+
+          if (typeof userAnswer !== 'object' || Array.isArray(userAnswer)) {
+            failedBlockIds.push(block.id);
+            break;
+          }
+
+          const correctAnswers = data.questions.filter(
+            q => userAnswer[q.id] === q.correctOptionId
+          ).length;
+
+          const passed = correctAnswers >= data.summary.passingScore;
+
+          if (!passed) {
+            failedBlockIds.push(block.id);
+          }
+          break;
+        }
+
+        default:
+          break;
       }
     }
 
@@ -274,10 +447,13 @@ export class MissionContent extends VO<MissionBlock[]> {
     const block = this.findBlockById(id);
     if (!block) return "UNKNOWN_ERROR";
 
-    if (['QUIZ', 'INPUT', 'MATCHING', 'SORTING', 'HOTSPOT'].includes(block.type)) {
+    if (['QUIZ', 'INPUT', 'MATCHING', 'SORTING', 'HOTSPOT', 'CLASSIFICATION'].includes(block.type)) {
       return (block.data as any).feedbackError || "INCORRECT_ANSWER";
     }
 
+    if (block.type === 'SCENARIO_QUIZ') {
+      return (block.data as ScenarioQuizData).summary.resultMessages.needsWork || "YOU_DID_NOT_REACH_THE_MINIMUM_PASSING_SCORE";
+  }
     return "INCORRECT_ANSWER";
   }
 

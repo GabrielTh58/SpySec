@@ -9,6 +9,7 @@ export interface CompleteMissionInputDTO {
     userId: string;
     missionId: string;
     answers: Record<string, any>
+    timeSpent: number;
 }
 
 export interface CompleteMissionOutputDTO {
@@ -102,7 +103,7 @@ export class CompleteMission implements UseCase<CompleteMissionInputDTO, Complet
                 xpEarned: mission.xpReward,
                 trackId: mission.trackId,
                 missionCategory: mission.category,
-                timeSpent: mission.estimatedTime || 180,
+                timeSpent: input.timeSpent || mission.estimatedTime || 180,
                 isLastMission: isLastMission
             }));
 
@@ -124,7 +125,7 @@ export class CompleteMission implements UseCase<CompleteMissionInputDTO, Complet
             isTrackFinished: isLastMission,
             trackId: mission.trackId,
             trackSlug: trackSlug || undefined,
-            timeSpent: mission.estimatedTime,
+            timeSpent: input.timeSpent || mission.estimatedTime || 180,
             isLastMission
         });
     }

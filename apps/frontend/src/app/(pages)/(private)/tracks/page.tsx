@@ -5,14 +5,6 @@ import { StatsSummary } from "@/components/tracks/StatsSummary";
 import { TrackCard } from "@/components/tracks/TrackCard";
 import { useEducation } from "@/data/hooks/useEducation";
 
-const CATEGORY_ORDER: Record<string, number> = {
-  'MINDSET': 1,
-  'DEVICES': 2,
-  'TRENDS': 3,
-  'CORPORATE': 4,
-  'FINAL': 5
-};
-
 const DIFFICULTY_ORDER: Record<string, number> = {
   'BASIC': 1,
   'INTERMEDIATE': 2,
@@ -26,13 +18,6 @@ export default function Tracks() {
     if (!tracks) return [];
     
     return [...tracks].sort((a, b) => {
-      const catOrderA = CATEGORY_ORDER[a.category?.toUpperCase()] || 99;
-      const catOrderB = CATEGORY_ORDER[b.category?.toUpperCase()] || 99;
-
-      if (catOrderA !== catOrderB) {
-        return catOrderA - catOrderB;
-      }
-
       const diffOrderA = DIFFICULTY_ORDER[a.difficulty?.toUpperCase()] || 99;
       const diffOrderB = DIFFICULTY_ORDER[b.difficulty?.toUpperCase()] || 99;
 

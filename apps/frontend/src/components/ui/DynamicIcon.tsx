@@ -38,12 +38,23 @@ import {
   Crosshair,
   MonitorSmartphone,
   Users,
-
+  Vault,
+  MessageCircleWarning,
+  MailQuestionMark,
+  ArrowUpToLine,
+  MousePointerClick,
+  TriangleAlert,
+  UserLock,
+  ShieldAlert,
+  MicOff,
 } from 'lucide-react';
 
 const ICON_MAP = {
   shield: Shield,
   'brain-circuit': BrainCircuit,
+  'mic-off': MicOff,
+  'user-lock': UserLock,
+  'shield-alert': ShieldAlert,
   'brick-wall-shield': BrickWallShield,
   'fishing-hook': FishIcon,
   'shield-check': ShieldCheck,
@@ -80,6 +91,12 @@ const ICON_MAP = {
   crosshair: Crosshair,
   'monitor-smartphone': MonitorSmartphone,
   users: Users,
+  vault: Vault,
+  'message-circle-warning': MessageCircleWarning,
+  'mail-question-mark': MailQuestionMark,
+  'arrow-up-to-line': ArrowUpToLine,
+  'mouse-pointer-click': MousePointerClick,
+  'triangle-alert': TriangleAlert,
   default: Shield
 };
 

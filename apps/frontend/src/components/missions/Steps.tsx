@@ -1,4 +1,4 @@
-import { Info, HelpCircle, Keyboard, MousePointerClick, BookOpen, Check } from "lucide-react";
+import { Info, HelpCircle, Keyboard, MousePointerClick, BookOpen, Check, ListOrdered, Layers, ShieldAlert, Trophy } from "lucide-react";
 import { MissionBlock } from "@spysec/education";
 import useDimensions from "@/data/hooks/useDimensions";
 
@@ -17,6 +17,10 @@ function getStepInfo(type: string) {
         case 'INPUT': return { icon: Keyboard, label: 'Decodificar' };
         case 'MATCHING': return { icon: MousePointerClick, label: 'Conexão' };
         case 'HOTSPOT': return { icon: MousePointerClick, label: 'Investigação' };
+        case 'SORTING': return { icon: ListOrdered, label: 'Sequência' };
+        case 'CLASSIFICATION': return { icon: Layers, label: 'Classificação' }; 
+        case 'SCENARIO_QUIZ': return { icon: ShieldAlert, label: 'Simulação' };
+        case 'SUMMARY': return { icon: Trophy, label: 'Relatório' };
         default: return { icon: Info, label: 'Etapa' };
     }
 }

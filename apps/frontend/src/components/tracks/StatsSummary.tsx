@@ -9,7 +9,9 @@ export function StatsSummary() {
   const totalTracks = progress?.totalTracksCount || 0;
 
   const completionPercentage = progress?.globalProgressPercent || 0;
-  const nextTarget = tracks.find(t => t.status === 'LOCKED' || t.status === 'NOT_STARTED');
+  const nextTarget = tracks.find(t => t.status === 'LOCKED');
+  console.log(tracks);
+  
   
   const motivationText = nextTarget 
     ? <span> Mantenha o foco para desbloquear o módulo <span className="text-gray-200 font-medium">{nextTarget.title}</span>.</span>

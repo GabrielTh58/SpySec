@@ -28,7 +28,7 @@ export default function Dashboard() {
 
     const portalData = hasActiveMission ? {
         title: progress?.nextMission?.title,
-        subtitle: `Continuar Trilha: ${progress?.nextMission?.description}`,
+        subtitle: `${progress?.nextMission?.description}`,
         cta: "Continuar Missão",
         targetUrl: `/missions/${progress?.nextMission?.id}`
     } : {

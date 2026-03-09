@@ -20,6 +20,7 @@ export enum TrackCategory {
   DEVICES = "DEVICES",       
   CORPORATE = "CORPORATE",   
   TRENDS = "TRENDS",
+  IDENTITY = "IDENTITY",
   FINAL = "FINAL"       
 }
 

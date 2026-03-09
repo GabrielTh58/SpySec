@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 export function useMission(missionId: string) {
     const router = useRouter();
 
-    const { seconds, stop, formatTime } = useStopwatch();
+    const { seconds, stop } = useStopwatch();
 
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [showBadgeModal, setShowBadgeModal] = useState<boolean>(false);

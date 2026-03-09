@@ -12,11 +12,10 @@ interface MissionSuccessModalProps {
 
 export function MissionSuccessModal({ xpEarned, onNextMission, onBackToTrack, hasNextMission }: MissionSuccessModalProps) {
     
-    // Efeito de Confete (Mantido igual, pois funciona bem)
     useEffect(() => {
         const duration = 3000;
         const end = Date.now() + duration;
-        const colors = ['#06b6d4', '#8b5cf6', '#d946ef']; // Cyan, Roxo, Pink Neon
+        const colors = ['#06b6d4', '#8b5cf6', '#d946ef']; 
 
         (function frame() {
             confetti({
@@ -55,7 +54,7 @@ export function MissionSuccessModal({ xpEarned, onNextMission, onBackToTrack, ha
                 transition={{ type: "spring", duration: 0.6, bounce: 0.4 }}
                 className="relative w-full max-w-md bg-[#0F1423] rounded-3xl overflow-hidden border border-cyan-500/30 shadow-[0_0_100px_-20px_rgba(6,182,212,0.3)]"
             >
-                {/* --- HEADER VISUAL (Topo do Card) --- */}
+                {/* --- HEADER  --- */}
                 <div className="relative h-32 bg-linear-to-b from-cyan-900/20 to-[#0F1423] flex items-center justify-center overflow-hidden">
                     {/* Elementos Decorativos de Fundo */}
                     <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-20" />

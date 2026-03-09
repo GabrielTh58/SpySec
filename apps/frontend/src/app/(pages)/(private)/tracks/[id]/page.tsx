@@ -1,19 +1,20 @@
 'use client'
 import React, { useEffect, use } from "react"; 
 import { useRouter } from "next/navigation";
-import { AlertTriangle, Loader2 } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 import { Connector } from "@/components/missions/Connector";
 import { EndPointMission } from "@/components/missions/EndPointMission";
 import { MissionCard } from "@/components/missions/MissionCard";
 import { StartPointMission } from "@/components/missions/StartPointMission";
 import { useEducation } from "@/data/hooks/useEducation";
 import { Loading } from "@/components/template/Loading";
+import { useMission } from "@/data/hooks/useMission";
 
 interface TrackDetailsPageProps {
     params: Promise<{ id: string }>
 }
 
-export default function TrackDetailsPage({ params }: TrackDetailsPageProps) {
+export default function TrackDetailsPage({ params }: TrackDetailsPageProps) {       
     const { id: trackId } = use(params);
     
     const router = useRouter();

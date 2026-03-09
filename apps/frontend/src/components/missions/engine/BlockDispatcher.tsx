@@ -5,11 +5,13 @@ import { InputBlock } from "./blocks/InputBlock";
 import { InfoBlock } from "./blocks/InfoBlock";
 import { MatchingBlock } from "./blocks/MatchingBlock";
 import { SortingBlock } from "./blocks/SortingBlock";
-import { HotspotBlock } from "./blocks/HotspotBlock";
+import { HotspotBlock } from "./blocks/hotspot/HotspotBlock";
 import { FeedbackDisplay } from "../FeedbackDisplay";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { NextStepButton } from "../NextStepButton";
-
+import { ClassificationBlock } from "./blocks/ClassificationBlock";
+import { SummaryBlock } from "./blocks/SummaryBlock";
+import { ScenarioQuizBlock } from "./blocks/ScenarioQuizBlock";
 
 interface BlockDispatcherProps {
     block: MissionBlock;
@@ -48,16 +50,26 @@ export function BlockDispatcher(props: BlockDispatcherProps) {
             case 'HOTSPOT':
                 return <HotspotBlock data={block.data} value={value} onChange={onChange} isLocked={isLocked} />;
 
+            case 'CLASSIFICATION':
+                return <ClassificationBlock data={block.data} value={value} onChange={onChange} isLocked={isLocked} />;
+
+            case 'SUMMARY':
+                return <SummaryBlock data={block.data} />
+                
+            case "SCENARIO_QUIZ":
+                return <ScenarioQuizBlock data={block.data} value={value} onChange={onChange} isLocked={isLocked}/>
+
             default:
                 return <div className="text-red-500 p-4 border border-red-500 rounded">Erro: Tipo de bloco desconhecido</div>;
         }
     };
 
-    const hintMessage = (block.data as any).mascotMessage;
-    const showhintMessage = !feedback && hintMessage && block.type !== 'INFO';
-    const showCheckBtn = !feedback && block.type !== 'INFO';
+    const isPassThroughBlock = block.type === 'INFO' || block.type === 'SUMMARY';
+    const commsSpyMessage = (block.data as any).mascotMessage;
+    const showCommsSpyMessage = !feedback && commsSpyMessage && !isPassThroughBlock && block.type !== 'SCENARIO_QUIZ';
+    const showCheckBtn = !feedback && !isPassThroughBlock && block.type !== 'SCENARIO_QUIZ';
     const isCheckDisabled = !value && block.type !== 'HOTSPOT';
-    const isInfoBlock = block.type === 'INFO';
+
 
     return (
         <div className="w-full animate-fade-in flex flex-col h-full">
@@ -66,9 +78,9 @@ export function BlockDispatcher(props: BlockDispatcherProps) {
             </div>
 
             <div className="animate-fade-in mt-4    ">
-                {showhintMessage && (
+                {showCommsSpyMessage && (
                     <div className="w-full flex justify-start pl-2">
-                        <MascotBubble message={hintMessage} variant="hint" />
+                        <MascotBubble message={commsSpyMessage} variant="comms" />
                     </div>
                 )}
 
@@ -100,10 +112,10 @@ export function BlockDispatcher(props: BlockDispatcherProps) {
 
                     )}
 
-                    {isInfoBlock && (
-                        <div>
-                            <div className="w-full flex justify-start pl-2">
-                                <MascotBubble message={hintMessage} variant="neutral" />
+                    {isPassThroughBlock && (
+                        <div className="w-full">
+                            <div className="w-fit flex justify-start pl-2">
+                                <MascotBubble message={commsSpyMessage} variant="neutral" />
                             </div>
 
                             <div className="w-full flex justify-end mt-10">
@@ -111,7 +123,7 @@ export function BlockDispatcher(props: BlockDispatcherProps) {
                                     onClick={onNext}
                                     className="flex items-center gap-2"
                                 >
-                                    Continuar
+                                    {block.type === 'SUMMARY' ? 'Finalizar Missão' : 'Continuar'}
                                     <ArrowRight size={16} />
                                 </NextStepButton>
                             </div>

@@ -1,4 +1,3 @@
-// src/data/hooks/useMissionEngine.ts
 import { useState, useEffect } from 'react';
 import { MissionContent } from '@spysec/education';
 
@@ -56,7 +55,7 @@ export function useMissionEngine({ missionContentVO, onCompleteMission }: Missio
   };
 
   const checkAnswer = () => {
-    if (currentBlock.type === 'INFO') {
+    if (currentBlock.type === 'INFO' || currentBlock.type === 'SUMMARY') {
       proceedToNext();
       return;
     }
@@ -79,7 +78,7 @@ export function useMissionEngine({ missionContentVO, onCompleteMission }: Missio
     setFeedback({
       type: 'success',
       message: blockData.feedbackSuccess || "Resposta correta!",
-      explanation: blockData.explanation // AQUI ESTÁ: Salvamos a explicação para a UI mostrar
+      explanation: blockData.explanation 
     });
 
     setIsBlockCompleted(true);
@@ -119,16 +118,16 @@ export function useMissionEngine({ missionContentVO, onCompleteMission }: Missio
     totalBlocks: blocks.length,
     answers,
 
-    feedback,          // Contém message, type E explanation
-    isBlockCompleted,  // Booleano para saber se mostramos o botão "Verificar" ou "Continuar"
+    feedback,          
+    isBlockCompleted,  
 
     isFirstBlock: currentBlockIndex === 0,
     isLastBlock,
 
     actions: {
       setAnswer,
-      checkAnswer,   // Conecte isso ao botão "Verificar Resposta"
-      proceedToNext, // Conecte isso ao botão "Continuar / Próximo"
+      checkAnswer,   
+      proceedToNext, 
       handlePrev,
       jumpToBlock
     }

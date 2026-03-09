@@ -4,20 +4,22 @@ import { ChatWindow } from "../chat/ChatWindow";
 import { ButtonChat } from "../chat/ButtonChat";
 
 const TIPS = [
-    "Vai pegar café? Bloqueie a tela (Win + L). Espiões amam telas abertas.",
-    "Recebeu um e-mail urgente do 'CEO' pedindo pix? Desconfie. É golpe.",
-    "Nunca conecte um pendrive achado no estacionamento. É uma armadilha clássica.",
-    "Wi-Fi do aeroporto/café? Só use com a VPN da empresa ligada.",
-    "Classifique seus arquivos. Nem tudo deve ser público na rede da empresa.",
-    
-    "Sua senha é '123456' ou sua data de aniversário? Mude agora.",
-    "O banco NUNCA liga pedindo sua senha ou código do token.",
-    "Passe o mouse sobre o link antes de clicar. O texto mente, a URL não.",
-    "Ative a verificação em duas etapas (2FA) no WhatsApp e Instagram.",
-    "Promoção boa demais para ser verdade no Instagram? Provavelmente é golpe.",
-    "Atualizações do Windows/Celular corrigem falhas de segurança. Não adie.",
-    "Compras online? Verifique se o site tem o cadeado (HTTPS) e reputação."
-];
+    "Bloqueie a tela antes de sair da mesa. Segundos são suficientes para quem está olhando.",
+    "E-mail perfeito, sem erros, pedindo ação urgente. Esse é exatamente o padrão moderno.",
+    "O link diz 'empresa.com'. A URL diz 'empresa-security.co'. Só um deles é real.",
+    "Verificação em duas etapas no WhatsApp leva 2 minutos. Clonar sua conta, menos.",
+    "Pendrive achado é pendrive plantado. Sempre foi.",
+    "Wi-Fi com senha não é rede privada para quem já está conectado nela.",
+    "Urgência num e-mail existe para impedir que você pense. Funciona.",
+    "Seu banco nunca precisa da sua senha para proteger sua conta.",
+    "Atualização pendente é vulnerabilidade documentada. Quem adia, anuncia.",
+    "Nome do gestor, projeto em andamento, sistema correto. LinkedIn entrega tudo isso de graça.",
+    "Deletar o arquivo depois do upload não apaga nada do servidor.",
+    "Ligação pedindo para não falar com mais ninguém antes de resolver. Esse é o sinal.",
+    "Responder o e-mail suspeito pelo mesmo e-mail não é verificação.",
+    "SMS de banco com link. O app do banco mostra o mesmo alerta sem o link.",
+    "Dois fatores via SMS depende da operadora. App autenticador depende só de você.",
+  ];
 
 export function AiTutorWidget() {
     const [isOpen, setIsOpen] = useState(false);
@@ -35,7 +37,7 @@ export function AiTutorWidget() {
             setCurrentTip(randomTip);
             setShowBubble(true);
             setTimeout(() => setShowBubble(false), 5000);
-        }, 15000);
+        }, 20000);
 
         return () => clearInterval(interval);
     }, [isOpen]);
