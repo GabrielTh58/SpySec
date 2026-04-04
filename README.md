@@ -35,7 +35,7 @@
 
 ## 🛡️ Sobre
 
-O **SpySec** é uma plataforma de educação em cibersegurança (SaaS) projetada para treinar o "Human Firewall" (o usuário final). Diferente de cursos tradicionais e massantes, utilizamos **Gamificação** e **IA** para ensinar funcionários e indivíduos a se protegerem de ameaças reais como Phishing, Engenharia Social e Vazamento de Dados.
+O **SpySec** é uma plataforma de treinamento em cibersegurança (SaaS) projetada para fortalecer o elo humano da segurança. Diferente de cursos tradicionais e massantes, utilizamos **Gamificação** e **IA** para ensinar funcionários e indivíduos a se protegerem de ameaças reais como Phishing, Engenharia Social e Vazamento de Dados.
 
 O projeto conta com um guia virtual, **"Spy"**, um ex-vírus reconfigurado que atua não apenas como mascote, mas como um tutor inteligente em tempo real.
 

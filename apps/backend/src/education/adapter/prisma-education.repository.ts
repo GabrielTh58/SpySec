@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { EducationRepository, Track, Mission } from "@spysec/education";
 import { PrismaService } from "src/db/prisma.service";
-import { TrackMapper } from "../mappers/track.mapper";
-import { MissionMapper } from "../mappers/mission.mapper";
+import { TrackMapper } from "../mapper/track.mapper";
+import { MissionMapper } from "../mapper/mission.mapper";
 
 @Injectable()
 export class PrismaEducationRepository implements EducationRepository {

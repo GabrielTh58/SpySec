@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Level, LevelRepository } from '@spysec/gamification';
 import { PrismaService } from 'src/db/prisma.service';
-import { LevelMapper } from '../mappers/level.mapper';
+import { LevelMapper } from '../mapper/level.mapper';
 
 @Injectable()
 export class PrismaLevelRepository implements LevelRepository {

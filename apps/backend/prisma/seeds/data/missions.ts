@@ -988,12 +988,12 @@ export const missionsEixo02_Track02 = [
       feedbackError:
         "Pense em onde cada código é gerado. " +
         "SMS sai da operadora. App sai do seu celular. " +
-        "Chave física não gera nada remotamente — exige presença física.",
+        "Chave física não gera nada remotamente, exige presença física.",
       mascotMessage:
         "Cada intermediário entre você e o código " +
         "é uma oportunidade que não é sua.",
     },
-  },
+      },
       {
         id: "t2_m2_b4",
         type: "QUIZ",
@@ -1144,7 +1144,26 @@ export const missionsEixo02_Track02 = [
           "feedbackError": "Força da senha não impede reutilização entre serviços.",
           "explanation": "Gerenciadores permitem isolamento total entre contas. Um vazamento deixa de comprometer todo o restante."
         }
-      }
+      },
+
+      {
+        id: "t3_m3_summary",
+        type: "SUMMARY",
+        data: {
+          title: "Missão concluída.",
+          summary:
+            "Você entendeu por que reutilizar senha é o maior risco digital da maioria das pessoas " +
+            "e como gerenciadores eliminam esse risco sem exigir que você memorize nada. " +
+            "Um cofre criptografado, uma senha mestra forte, senhas únicas para cada conta. " +
+            "Um vazamento deixa de ser um dominó.",
+          keyTakeaway:
+            "Senha forte não protege se for reutilizada. Senha única por serviço, sim.",
+          xpEarned: 60,
+          mascotMessage:
+            "Cofre com criptografia forte, senha mestra bem escolhida, nenhuma repetição. " +
+            "É o suficiente para sair da lista dos alvos fáceis.",
+        },
+      },
     ]
   }
 ];
@@ -3785,7 +3804,7 @@ export const finalEpicMission = {
           "Eles misturam pressão, distração e urgência " +
           "numa segunda-feira completamente normal.\n\n" +
           "Dez situações. Dez decisões.\n\n" +
-          "O que você aprendeu virou reflexo — ou não virou.",
+          "O que você aprendeu virou reflexo, ou não virou.",
         highlightBox:
           "Pontuação mínima: 7 de 10.",
         mascotMessage:
@@ -4295,17 +4314,32 @@ export const finalEpicMission = {
           xpReward: 150,
           mascotMessage:
             "Você passou por um dia inteiro de segunda-feira " +
-            "sem cometer nenhum dos erros que eu esperava.\n\n" +
-            "E-mail perfeito. Rede com senha. Auditor prestativo. " +
-            "Banco preocupado com você. " +
             "Cada situação tinha uma razão boa para tomar a decisão errada.\n\n" +
-            "Eu trabalhei com pessoas mais experientes que você. " +
-            "A diferença não era conhecimento. " +
-            "Era parar um segundo antes de agir.\n\n" +
             "Boa sorte na próxima segunda-feira. " +
             "Ela vai ser diferente desta.",
           },
 
+      },
+    },
+
+    {
+      id: "final_b3",
+      type: "SUMMARY",
+      data: {
+        title: "Missão concluída.",
+        summary:
+          "Dez situações reais. Um dia inteiro.\n\n" +
+          "Não havia trilha indicada, nem tema avisado. " +
+          "Cada decisão apareceu no meio de uma rotina normal, " +
+          "que é exatamente como acontece fora daqui.",
+        keyTakeaway:
+          "Segurança não é sobre reconhecer ataques óbvios. " +
+          "É sobre o que você faz quando nada parece suspeito.",
+        xpEarned: 150,
+        nextMissionTeaser: null,
+        mascotMessage:
+          "Dez situações. Um dia comum.\n\n" +
+          "A próxima segunda-feira vai ser diferente desta.",
       },
     },
 

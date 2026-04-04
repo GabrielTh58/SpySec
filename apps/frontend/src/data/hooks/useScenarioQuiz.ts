@@ -2,32 +2,39 @@ import { useState, useMemo, useEffect } from "react";
 
 export type QuizStatus = 'INTRO' | 'PLAYING' | 'FEEDBACK' | 'SUMMARY';
 
+export interface ActionsQuiz {
+    handleStart: () => void;
+    handleSelectOption: (optionId: string) => void;
+    handleNextStep: () => void;
+}
+
 export function useScenarioQuiz(data: any, value: Record<string, string>, onChange: (val: Record<string, string>) => void, isLocked?: boolean) {
-    // Se a missão já estiver trancada (concluída), vai direto pro resumo
     const [status, setStatus] = useState<QuizStatus>(isLocked ? 'SUMMARY' : 'INTRO');
     const [currentIndex, setCurrentIndex] = useState(0);
-    
-    // Armazena as respostas localmente até o fim do cenário
     const [localAnswers, setLocalAnswers] = useState<Record<string, string>>(value || {});
 
-    const currentQuestion = data.questions[currentIndex];
-    const totalQuestions = data.questions.length;
+    const questions = data?.questions || [];
+    const totalQuestions = questions.length;
+    const currentQuestion = questions[currentIndex];
 
-    // Calcula a pontuação em tempo real
-    const score = useMemo(() => {
-        return data.questions.filter((q: any) => localAnswers[q.id] === q.correctOptionId).length;
-    }, [localAnswers, data.questions]);
+    useEffect(() => {
+        if (isLocked) setStatus('SUMMARY');
+    }, [isLocked]);
 
-    const passed = score >= data.summary.passingScore;
-
-    // Sincroniza caso o componente pai mande um valor novo
     useEffect(() => {
         if (value && Object.keys(value).length > 0 && status === 'INTRO') {
             setLocalAnswers(value);
         }
-    }, [value]);
+    }, [value, status]);
 
-    // --- AÇÕES ---
+    const score = useMemo(() => {
+        return questions.filter((q: any) => localAnswers[q.id] === q.correctOptionId).length;
+    }, [localAnswers, questions]);
+    
+    const passingScore = data?.summary?.passingScore ?? totalQuestions; 
+    const passed = score >= passingScore;
+
+    // --- ACTIONS ---
 
     const handleStart = () => {
         setStatus('PLAYING');
@@ -47,6 +54,7 @@ export function useScenarioQuiz(data: any, value: Record<string, string>, onChan
             setStatus('PLAYING');
         } else {
             setStatus('SUMMARY');
+            // Só dispara o onChange global quando o usuário termina todas as perguntas do cenário!
             onChange(localAnswers); 
         }
     };

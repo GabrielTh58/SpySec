@@ -44,8 +44,6 @@ export function useMission(missionId: string) {
     const handleMissionFinish = async (answers: Record<string, any>) => {
         stop();
         const result = await completeMission(missionId, answers, seconds);
-        console.log(result);
-        
 
         if (result && result.success) {
             await refreshProfile();
@@ -58,7 +56,7 @@ export function useMission(missionId: string) {
                 setShowSuccessModal(true);
             }
         } else {
-            toast.error("Erro ao validar missão. Verifique suas respostas."); 
+            toast.error("Você não atingiu a pontuação mínima. Tente novamente!")
         }
     };
 

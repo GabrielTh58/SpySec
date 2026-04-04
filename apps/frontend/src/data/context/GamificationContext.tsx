@@ -94,12 +94,12 @@ export function GamificationProvider({ children }: { children: ReactNode }) {
     async function submitSettingsUpdate(data: UpdateSettingsData) {
         setIsLoading(true);
         try {
-            console.log("Enviando dados:", data);
-
             const response = await httpPatch('/gamification/nickname', data);
-            await loadInitialData();
-
-            toast.success('Codinome atualizado com sucesso!');
+            
+            if(response){
+                toast.success('Codinome atualizado com sucesso!');
+                await loadInitialData(); 
+            }
         } catch (e: any) {
             console.error("Erro ao atualizar:", e);
             let errorMessage = 'Falha ao atualizar o Codinome. Tente novamente.';

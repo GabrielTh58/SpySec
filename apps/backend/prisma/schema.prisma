@@ -25,6 +25,7 @@ model User {
   updatedAt       DateTime        @updatedAt @map("updated_at")
   trackProgresses TrackProgress[]
   player          Player?
+  riskLogs         Risklog[]
 
 
   @@map("users")
@@ -153,6 +154,19 @@ model SystemFeedback {
   admin_notes String?
 
   @@map("system_feedback")
+}
+
+model Risklog{
+  id                String      @id @default(uuid())
+  userId            String      
+  user              User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  missionId         String
+  category          String
+  failedConcepts    String[]
+  occurredAt        DateTime    @default(now())
+
+  @@index([userId]) 
+  @@map("risk_logs")
 }
 
 enum ProviderType {

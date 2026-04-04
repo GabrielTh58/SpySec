@@ -12,7 +12,6 @@ export class Id extends VO<string>{
         super(value)
     }
     
-    // Cria instancia de ID
     static create(value?: string | null): Result<Id> {                 
         const trimmedValue = value?.trim();
          

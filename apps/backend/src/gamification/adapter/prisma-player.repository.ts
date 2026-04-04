@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { IPlayerUpdateParams, Player, PlayerRepository } from '@spysec/gamification';
 import { PrismaService } from 'src/db/prisma.service';
-import { PlayerMapper } from '../mappers/player.mapper';
+import { PlayerMapper } from '../mapper/player.mapper';
 import { Prisma } from 'generated/prisma/browser';
 
 @Injectable()

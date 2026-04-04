@@ -37,5 +37,6 @@ import { CompleteMissionFlow } from './service/CompleteMissionFlow.service';
       inject: [EducationRepository, TrackProgressRepository, GamificationGateway],
     }
   ],
+  exports:[EducationRepository]
 })
 export class EducationModule {}

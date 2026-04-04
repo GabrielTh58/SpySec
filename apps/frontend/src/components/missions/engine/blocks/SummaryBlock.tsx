@@ -1,7 +1,8 @@
-import { Trophy, Target, ArrowRight, Zap, Check } from "lucide-react";
+import { SummaryData } from "@spysec/education";
+import { Trophy, Target, ArrowRight, Zap } from "lucide-react";
 
 interface SummaryBlockProps {
-    data: any; 
+    data: SummaryData; 
 }
 
 export function SummaryBlock({ data }: SummaryBlockProps) {
@@ -12,7 +13,7 @@ export function SummaryBlock({ data }: SummaryBlockProps) {
                 <div className="w-20 h-20 bg-cyan-500/10 rounded-full flex items-center justify-center border-2 border-cyan-500/30
                     shadow-[0_0_30px_rgba(6,182,212,0.2)]"
                 >
-                    <Check className="text-cyan-400 w-10 h-10" />
+                    <Trophy className="text-cyan-400 w-10 h-10" />
                 </div>
                 <h2 className="text-2xl md:text-3xl font-orbitron font-bold text-white text-glow-cyan">
                     {data.title}

@@ -40,6 +40,7 @@ export default function MissionPage({ params }: MissionPageProps) {
                 title={activeMission?.title || "Missão"}
                 order={activeMission?.order || 0}
                 onFinish={handleMissionFinish}
+                missionId={missionId}
             />
 
             {showBadgeModal && earnedBadge && (

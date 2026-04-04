@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { MissionContent } from '@spysec/education';
+import { useAPI } from './useAPI';
 
 interface MissionEngineProps {
+  missionId: string
   missionContentVO: MissionContent | null;
-  onCompleteMission: (answers: Record<string, any>) => void;
+  onFinishMission: (answers: Record<string, any>) => void;
 }
 
 export interface FeedbackState {
@@ -12,18 +14,32 @@ export interface FeedbackState {
   explanation?: string;
 }
 
-export function useMissionEngine({ missionContentVO, onCompleteMission }: MissionEngineProps) {
+export interface AiAnalyzeResponse {
+  mascotInsight: string | null;
+  isAnalyzingInsight: boolean;
+}
+
+export function useMissionEngine({ missionContentVO, onFinishMission, missionId }: MissionEngineProps) {
+  const { httpPost } = useAPI();
+
   const [currentBlockIndex, setCurrentBlockIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, any>>({});
 
   const [isBlockCompleted, setIsBlockCompleted] = useState(false);
   const [feedback, setFeedback] = useState<FeedbackState | null>(null);
 
+  const [mascotInsight, setMascotInsight] = useState<string | null>(null);
+  const [isAnalyzingInsight, setIsAnalyzingInsight] = useState(false);
+  const firstAttempts = useRef<Record<string, any>>({});
+
   useEffect(() => {
     setCurrentBlockIndex(0);
     setAnswers({});
     setFeedback(null);
     setIsBlockCompleted(false);
+    setMascotInsight(null);
+    firstAttempts.current = {}; 
+    setIsAnalyzingInsight(false);
   }, [missionContentVO]);
 
   if (!missionContentVO) {
@@ -36,6 +52,7 @@ export function useMissionEngine({ missionContentVO, onCompleteMission }: Missio
       isBlockCompleted: false,
       isFirstBlock: true,
       isLastBlock: true,
+      aiInsightData: { mascotInsight: null, isAnalyzingInsight: false },
       actions: { setAnswer: () => { }, checkAnswer: () => { }, proceedToNext: () => { } }
     };
   }
@@ -46,7 +63,6 @@ export function useMissionEngine({ missionContentVO, onCompleteMission }: Missio
 
   const setAnswer = (blockId: string, value: any) => {
     if (isBlockCompleted) return;
-
     setAnswers(prev => ({ ...prev, [blockId]: value }));
 
     if (feedback?.type === 'error') {
@@ -60,12 +76,16 @@ export function useMissionEngine({ missionContentVO, onCompleteMission }: Missio
       return;
     }
 
+    if (!(currentBlock.id in firstAttempts.current)) {
+      firstAttempts.current[currentBlock.id] = answers[currentBlock.id];
+   }
+
     const currentAnswerObj = { [currentBlock.id]: answers[currentBlock.id] };
     const validation = missionContentVO.validateUserAnswers(currentAnswerObj);
 
     if (validation.failedBlockIds.includes(currentBlock.id)) {
       const errorMsg = missionContentVO.getBlockErrorFeedback(currentBlock.id);
-
+      
       setFeedback({
         type: 'error',
         message: errorMsg,
@@ -89,9 +109,18 @@ export function useMissionEngine({ missionContentVO, onCompleteMission }: Missio
     setIsBlockCompleted(false);
 
     if (isLastBlock) {
-      onCompleteMission(answers);
+      onFinishMission(answers);
     } else {
-      setCurrentBlockIndex(prev => prev + 1);
+      setCurrentBlockIndex(prev => {
+        const nextIndex = prev + 1;
+        const nextBlock = blocks[nextIndex];
+        
+        if (nextBlock && nextBlock.type === 'SUMMARY') {
+          aiAnalyzeErrors();  
+        }
+        
+        return nextIndex;
+      });
     }
   };
 
@@ -111,6 +140,31 @@ export function useMissionEngine({ missionContentVO, onCompleteMission }: Missio
         setIsBlockCompleted(false);
     }
   }
+ 
+  const aiAnalyzeErrors = () => {
+      const payloadToAnalyze = { ...answers, ...firstAttempts.current };
+      const validation = missionContentVO.validateUserAnswers(payloadToAnalyze);
+      console.log('payload',payloadToAnalyze);
+
+      
+      if (validation.isValid) {
+        setMascotInsight(null); 
+        return;   
+      } 
+
+      setIsAnalyzingInsight(true);  
+
+      httpPost<AiAnalyzeResponse>(`/analytics/missions/${missionId}/analyze`, { answers: payloadToAnalyze })
+          .then((res:any) => {
+            setMascotInsight(res.mascotInsight);
+      })
+      .catch ((error: any) => {
+        console.error("Falha ao analisar IA:", error);
+        setMascotInsight(null);
+      })
+      .finally( () => setIsAnalyzingInsight(false))
+  }
+
 
   return {
     currentBlock,
@@ -123,6 +177,10 @@ export function useMissionEngine({ missionContentVO, onCompleteMission }: Missio
 
     isFirstBlock: currentBlockIndex === 0,
     isLastBlock,
+    aiInsightData: {
+      mascotInsight,
+      isAnalyzingInsight
+    },
 
     actions: {
       setAnswer,

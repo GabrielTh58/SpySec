@@ -1,21 +1,21 @@
 import { Result, VO } from "@spysec/shared";
 
-interface BaseBlockData {
+export interface BaseBlockData {
   mascotMessage?: string;
 }
 
-interface ClassificationCategory {
+export interface ClassificationCategory {
   id: string;
   name: string;
 }
 
-interface ClassificationItem {
+export interface ClassificationItem {
   id: string;
   text: string;
   categoryId: string;
 }
 
-interface ClassificationData extends BaseBlockData {
+export interface ClassificationData extends BaseBlockData {
   question: string;
   categories: ClassificationCategory[];
   items: ClassificationItem[];
@@ -23,20 +23,20 @@ interface ClassificationData extends BaseBlockData {
   feedbackError: string;
 }
 
-interface HotspotRegion {
+export interface HotspotRegion {
   id: string;
   feedback: string;
   isCorrect: boolean;
 }
 
-interface MatchingData extends BaseBlockData {
+export interface MatchingData extends BaseBlockData {
   question: string;
   pairs: { leftId: string; leftText: string; rightId: string; rightText: string }[];
   feedbackSuccess: string;
   feedbackError: string;
 }
 
-interface SortingData extends BaseBlockData {
+export interface SortingData extends BaseBlockData {
   question: string;
   items: { id: string; text: string }[];
   correctOrder: string[];
@@ -44,7 +44,7 @@ interface SortingData extends BaseBlockData {
   feedbackError: string;
 }
 
-interface InfoData extends BaseBlockData {
+export interface InfoData extends BaseBlockData {
   title?: string;
   text: string;
   deepDive?: string
@@ -52,7 +52,7 @@ interface InfoData extends BaseBlockData {
   highlightBox?: string;
 }
 
-interface QuizData extends BaseBlockData {
+export interface QuizData extends BaseBlockData {
   question: string;
   options: { id: string; text: string }[];
   correctOptionId: string;
@@ -61,7 +61,7 @@ interface QuizData extends BaseBlockData {
   explanation?: string
 }
 
-interface InputData extends BaseBlockData {
+export interface InputData extends BaseBlockData {
   question: string;
   description?: string;
   placeholder?: string;
@@ -74,40 +74,40 @@ interface InputData extends BaseBlockData {
   feedbackError: string;
 }
 
-interface ScenarioQuizQuestion {
+export interface ScenarioQuizQuestion {
   id: string;
-  timestamp?: string;          // "Segunda-feira, 08h47" — ancora no cenário
-  location?: string;           // "Refeitório", "Home office", "Reunião"
-  context: string;             // situação em 1-3 linhas
-  question: string;            // o que o usuário deve decidir
+  timestamp?: string;
+  location?: string;
+  context: string;
+  question: string;
   options: {
-    id: string;                // "a" | "b" | "c"
+    id: string;
     text: string;
   }[];
   correctOptionId: string;
-  feedbackSuccess: string;     // curto — máximo 2 linhas
-  feedbackError: string;       // curto — explica por que errou
-  mascotMessage: string;       // aparece junto com o feedback
+  feedbackSuccess: string;
+  feedbackError: string;
+  mascotMessage: string;
 }
 
-interface ScenarioQuizData {
-  scenarioName: string;        // "Uma segunda-feira qualquer"
+export interface ScenarioQuizData {
+  scenarioName: string;
   questions: ScenarioQuizQuestion[];
   summary: {
     title: string;
-    passingScore: number;       // mínimo para "aprovado" — ex: 7
+    passingScore: number;
     resultMessages: {
-      excellent: string;        // 10 acertos
-      good: string;             // 7-9 acertos
-      needsWork: string;        // abaixo de 7
+      excellent: string;
+      good: string;
+      needsWork: string;
     };
     mascotMessage: string;
     xpReward: number;
-    bonusXp?: number;           // XP extra por score perfeito
+    bonusXp?: number;
   };
 }
 
-interface SummaryData extends BaseBlockData {
+export interface SummaryData extends BaseBlockData {
   title: string;
   summary: string;
   keyTakeaway: string;
@@ -120,27 +120,27 @@ type BodyNode =
   | { type: 'hotspot'; content: string; regionId: string };
 
 type HotspotContext =
-    | {
-      type: 'EMAIL';
-      sender?: BodyNode[];
-      subject?: string;
-      avatarUrl?: string;
-    }
-    | {
-      type: 'BROWSER';       // barra de endereço + página
-      addressBar?: BodyNode[]   
-      pageTitle?: string;
-      isHttps?: boolean;    // exibe cadeado verde ou aviso "Não seguro"
-      favicon?: string;
-    }
-    | {
-      type: 'CHAT';          
-      sender?: string;
-      platform?: 'whatsapp' | 'telegram' | 'sms';
-      avatarUrl?: string;
-    }
+  | {
+    type: 'EMAIL';
+    sender?: BodyNode[];
+    subject?: string;
+    avatarUrl?: string;
+  }
+  | {
+    type: 'BROWSER';       // barra de endereço + página
+    addressBar?: BodyNode[]
+    pageTitle?: string;
+    isHttps?: boolean;    // exibe cadeado verde ou aviso "Não seguro"
+    favicon?: string;
+  }
+  | {
+    type: 'CHAT';
+    sender?: string;
+    platform?: 'whatsapp' | 'telegram' | 'sms';
+    avatarUrl?: string;
+  }
 
-interface HotspotData {
+export interface HotspotData {
   feedbackError?: string;
   requiredSelections?: number;
   allowMultiple?: boolean;
@@ -158,7 +158,7 @@ export type MissionBlock =
   | { id: string; type: 'SORTING'; data: SortingData }
   | { id: string; type: 'CLASSIFICATION'; data: ClassificationData }
   | { id: string; type: 'SUMMARY'; data: SummaryData }
-  | { id: string; type: 'SCENARIO_QUIZ', data: ScenarioQuizData}
+  | { id: string; type: 'SCENARIO_QUIZ', data: ScenarioQuizData }
 
 export class MissionContent extends VO<MissionBlock[]> {
   static readonly ERROR_MISSION_CONTENT_MUST_BE_NON_EMPTY_LIST = "MISSION_CONTENT_MUST_BE_NON_EMPTY_LIST";
@@ -306,6 +306,11 @@ export class MissionContent extends VO<MissionBlock[]> {
         failedBlockIds.push(block.id);
         continue;
       }
+      
+      if (typeof userAnswer === 'object' && !Array.isArray(userAnswer) && Object.keys(userAnswer).length === 0) {
+        failedBlockIds.push(block.id);
+        continue;
+     }
 
       switch (block.type) {
         case 'QUIZ': {
@@ -453,12 +458,108 @@ export class MissionContent extends VO<MissionBlock[]> {
 
     if (block.type === 'SCENARIO_QUIZ') {
       return (block.data as ScenarioQuizData).summary.resultMessages.needsWork || "YOU_DID_NOT_REACH_THE_MINIMUM_PASSING_SCORE";
-  }
+    }
     return "INCORRECT_ANSWER";
+  }
+
+  getUserActionAsText(blockId: string, answer: any): string {
+    const block = this.findBlockById(blockId);
+    if (!block) return String(answer);
+
+    try {
+      switch (block.type) {
+        case 'QUIZ':
+          const opt = (block.data as any).options?.find((opt: any) => opt.id === answer);
+          return opt ? opt.text : "No answer";
+
+        case 'MATCHING':
+          return this.translateMatching(block.data, answer);
+
+        case 'SORTING':
+          return this.translateSorting(block.data, answer);
+
+        case 'CLASSIFICATION':
+          return this.translateClassification(block.data, answer);
+
+        case 'SCENARIO_QUIZ':
+          return this.translateScenarioQuiz(block.data, answer);
+
+        case 'INPUT':
+          return String(answer);
+
+        default:
+          return JSON.stringify(answer);
+      }
+    } catch (error) {
+      console.error(`Error translating block action ${blockId}:`, error);
+      return "Action not identified.";
+    }
+  }
+  
+  // --- Auxiliary Translation Functions ---
+
+  private translateMatching(data: any, answer: Record<string, string>): string {
+    if (typeof answer !== 'object' || Array.isArray(answer)) return "INVALID_ANSWER";
+  
+    return data.pairs
+      ?.map((pair: any) => {
+        const selectedRightId = answer[pair.leftId]; 
+        if (selectedRightId === pair.rightId) return null;
+
+        const selectedRight = data.pairs.find((p: any) => p.rightId === selectedRightId);
+        const selectedText = selectedRight?.rightText ?? `unknown option (${selectedRightId})`;
+
+        return `Matched "${pair.leftText}" with "${selectedText}"`;
+      })
+      .filter(Boolean)
+      .join(' | ') ?? "INVALID_ANSWER";
+  }
+
+  private translateClassification(data: any, answer: Record<string, string>): string {
+    if (typeof answer !== 'object' || Array.isArray(answer)) return "INVALID_CLASSIFICATION";
+  
+    return data.items
+      ?.map((item: any) => {
+        const selectedCatId = answer[item.id];
+        const selectedCat = data.categories?.find((c: any) => c.id === selectedCatId);
+        const correctCat = data.categories?.find((c: any) => c.id === item.categoryId);
+        const isCorrect = selectedCatId === item.categoryId;
+        if (isCorrect) return null;
+        return `"${item.text}" classified as "${selectedCat?.name ?? selectedCatId}" (correct: "${correctCat?.name ?? item.categoryId}")`;
+      })
+      .filter(Boolean)
+      .join(' | ') ?? "INVALID_CLASSIFICATION";
+  }
+
+  private translateSorting(data: any, answer: string[]): string {
+    if (!Array.isArray(answer)) return "INVALID_SORTING";
+
+    const sortedTexts = answer.map(itemId => {
+      const itemDef = data.items?.find((i: any) => i.id === itemId);
+      return itemDef ? itemDef.text : itemId;
+    });
+
+    return `Sorted in the following order: ${sortedTexts.join(' -> ')}`;
+  }
+
+  private translateScenarioQuiz(data: any, answer: Record<string, string>): string {
+    if (typeof answer !== 'object' || Array.isArray(answer)) return "INVALID_SCENARIO";
+  
+    const wrongQuestions = data.questions?.filter(
+      (q: any) => answer[q.id] !== q.correctOptionId
+    ) ?? [];
+  
+    if (wrongQuestions.length === 0) return "Answered all scenario questions correctly";
+  
+    return wrongQuestions.map((q: any) => {
+      const selectedOpt = q.options?.find((o: any) => o.id === answer[q.id]);
+      const correctOpt = q.options?.find((o: any) => o.id === q.correctOptionId);
+      return `"${q.question}" → selected "${selectedOpt?.text ?? answer[q.id]}" (correct: "${correctOpt?.text ?? q.correctOptionId}")`;
+    }).join(' | ');
   }
 
   get blocks(): MissionBlock[] {
     return this.value;
-  }
+  } 
 }
 

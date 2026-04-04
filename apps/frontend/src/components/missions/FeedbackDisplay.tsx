@@ -1,6 +1,6 @@
 import { Info, ArrowRight, RotateCcw, Rocket } from "lucide-react";
 import { motion } from "framer-motion";
-import { MascotBubble } from "./engine/MascotBubble";
+import { MascotBubble } from "./mascot/MascotBubble";
 
 interface FeedbackDisplayProps {
     feedback: {

@@ -1,9 +1,10 @@
 import { Reorder } from "framer-motion";
 import { useEffect, useState } from "react";
 import { GripVertical, ListOrdered } from "lucide-react";
+import { SortingData } from "@spysec/education";
 
 interface SortingBlockProps {
-    data: any;
+    data: SortingData;
     value: string[];
     onChange: (val: string[]) => void;
     isLocked: boolean;

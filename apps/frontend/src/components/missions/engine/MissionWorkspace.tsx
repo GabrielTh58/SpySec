@@ -6,10 +6,11 @@ interface MissionWorkspaceProps {
     missionContent: any;
     title: string;
     order: number | string;
+    missionId: string
     onFinish: (answers: Record<string, any>) => void;
 }
 
-export function MissionWorkspace({ missionContent, title, order, onFinish }: MissionWorkspaceProps) {
+export function MissionWorkspace({ missionContent, title, order, missionId, onFinish }: MissionWorkspaceProps) {
     const {
         currentBlock,
         currentBlockIndex,
@@ -18,10 +19,12 @@ export function MissionWorkspace({ missionContent, title, order, onFinish }: Mis
         isBlockCompleted,
         isLastBlock,
         isFirstBlock,
-        actions
+        actions,
+        aiInsightData
     } = useMissionEngine({ 
         missionContentVO: missionContent, 
-        onCompleteMission: onFinish 
+        onFinishMission: onFinish, 
+        missionId
     });
 
     if (!currentBlock) return null;
@@ -34,7 +37,9 @@ export function MissionWorkspace({ missionContent, title, order, onFinish }: Mis
             </div>
 
             <div className="max-w-[1440px] mx-auto">
-                <h2 className="font-orbitron text-2xl md:text-3xl text-transparent bg-clip-text bg-linear-to-r from-cyan-400 to-purple-400 text-center mb-16 capitalize tracking-widest drop-shadow-[0_0_10px_rgba(6,182,212,0.5)]">
+                <h2 className="font-orbitron text-2xl md:text-3xl text-transparent bg-clip-text bg-linear-to-r from-cyan-400 to-purple-400 text-center
+                    mb-16 capitalize tracking-widest drop-shadow-[0_0_10px_rgba(6,182,212,0.5)]"
+                >
                     Missão {order} • {title}
                 </h2>
 
@@ -63,6 +68,7 @@ export function MissionWorkspace({ missionContent, title, order, onFinish }: Mis
                                 onCheck={actions.checkAnswer}
                                 onNext={actions.proceedToNext}
                                 onPrev={actions.handlePrev}
+                                aiInsightData={aiInsightData}
                             />                         
                         </div>
                     </div>

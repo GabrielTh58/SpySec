@@ -35,9 +35,12 @@
         'XP_REWARD_MUST_BE_POSITIVE': HttpStatus.BAD_REQUEST,
         'SLUG_ALREADY_EXISTS': HttpStatus.CONFLICT,
         
-        // --- GENÉRICOS ---
+        // --- GENERICS ---
         'INTERNAL_ERROR': HttpStatus.INTERNAL_SERVER_ERROR,
         'INVALID_INPUT': HttpStatus.BAD_REQUEST,
+
+        // ANALYTICS
+        "RISK_LOG_MUST_HAVE_FAILED_CONCEPTS": HttpStatus.BAD_REQUEST,
       };
     
       private readonly errorMessageMap: Record<string, string> = {
@@ -51,6 +54,8 @@
         'PLAYER_NOT_FOUND': 'Perfil de jogador não encontrado.',
         'LEVEL_NOT_FOUND': 'Nível não encontrado.',
         'XP_REWARD_MUST_BE_POSITIVE': 'A recompensa de XP deve ser positiva.',
+         // ANALYTICS
+        "RISK_LOG_MUST_HAVE_FAILED_CONCEPTS": "Pelo menos um conceito/falha deve ser informado para o log de risco.",
       }  
 
       catch(exception: Error, host: ArgumentsHost) {

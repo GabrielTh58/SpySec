@@ -1,11 +1,8 @@
+import { InputData } from "@spysec/education";
 import { Keyboard } from "lucide-react";
 
 interface InputBlockProps {
-    data: {
-        question: string;
-        placeholder?: string;
-        mascotMessage?: string;
-    };
+    data: InputData
     value: string;
     onChange: (v: string) => void;
     isLocked: boolean;  

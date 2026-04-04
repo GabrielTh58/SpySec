@@ -7,6 +7,7 @@ import { FirebaseModule } from './firebase/firebase.module';
 import { ConfigModule } from '@nestjs/config';
 import { EducationModule } from './education/education.module';
 import { GamificationModule } from './gamification/gamification.module';
+import { AnalyticsModule } from './analytics/analytics.module';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { GamificationModule } from './gamification/gamification.module';
     DbModule,
     FirebaseModule.forRoot(),
     EducationModule,
-    GamificationModule,    
+    GamificationModule,
+    AnalyticsModule,    
   ],
   controllers: [AppController],
   providers: [AppService],

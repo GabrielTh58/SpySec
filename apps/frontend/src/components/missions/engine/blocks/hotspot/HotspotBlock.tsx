@@ -3,13 +3,14 @@ import { Mail, AlertTriangle, CheckCircle2, MousePointerClick, Globe, MessageCir
 import { EmailContext } from "./contexts/EmailContext";
 import { BrowserContext } from "./contexts/BrowserContext";
 import { ChatContext } from "./contexts/ChatContext";
+import { HotspotData } from "@spysec/education";
 
 export type BodyNode = 
   | { type: 'text'; content: string }
   | { type: 'hotspot'; content: string; regionId: string };
 
 interface HotspotBlockProps {
-    data: any; 
+    data: HotspotData; 
     value: string[];
     onChange: (val: string[]) => void;
     isLocked?: boolean; 

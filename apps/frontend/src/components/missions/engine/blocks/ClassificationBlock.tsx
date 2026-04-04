@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Layers, Tag, RotateCcw, Box } from "lucide-react";
+import { ClassificationData } from "@spysec/education";
 
 interface ClassificationBlockProps {
-    data: any;
+    data: ClassificationData;
     value: Record<string, string>; 
     onChange: (val: Record<string, string>) => void;
     isLocked?: boolean;

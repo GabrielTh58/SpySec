@@ -1,0 +1,11 @@
+POST http://localhost:4000/analytics/missions/5090ffd7-a862-4a00-bea3-239d14ae360c/analyze
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiZDdmM2ZhNy03MzAxLTQwZDUtOWQ3MS1kZDFmY2U3ODlkODgiLCJlbWFpbCI6InRlc3RHYW1lQHRlc3QuY29tIiwic2NvcGUiOiJQRVJTT05BTCIsImlhdCI6MTc3MzcwMTc0MywiZXhwIjoxNzc0OTk3NzQzfQ.wsdvE_UDnE8NJ4RGSxsA4Zv2suFcVUfXBnpPzH3CthI
+
+{
+  "answers": {
+    "t2_m1_b2": ["op1", "op2", "op3", "op4"],
+    "t2_m1_b3": "passfraresa-vasdascasas-asdasdasdas-dasdasdas",
+    "t2_m1_b4": "b"
+  }
+}

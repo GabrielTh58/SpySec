@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { Badge, BadgeRepository } from "@spysec/gamification";
 import { PrismaService } from "src/db/prisma.service";
-import { BadgeMapper } from "../mappers/badges.mapper";
+import { BadgeMapper } from "../mapper/badges.mapper";
 
 @Injectable()
 export class PrismaBadgeRepository implements BadgeRepository {

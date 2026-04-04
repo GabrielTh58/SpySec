@@ -1,5 +1,5 @@
 'use client'
-import { ChevronLeft, ChevronRight, Home, LogOut, Map, Settings, Trophy, X } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Home, LogOut, Map, Award, Settings, X } from 'lucide-react'
 import { SidebarItem } from './SidebarItem'
 import { Logo } from '../shared/Logo'
 import { useSideBar } from '../../data/hooks/useSideBar'
@@ -27,7 +27,7 @@ export function Sidebar(props: MenuProps) {
         {
             href: '/badges',
             text: 'Conquistas',
-            icon: Trophy,
+            icon: Award,
         },
         {
             href: '/settings',

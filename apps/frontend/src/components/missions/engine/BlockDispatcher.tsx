@@ -1,5 +1,5 @@
 import { MissionBlock } from "@spysec/education";
-import { MascotBubble } from "./MascotBubble";
+import { MascotBubble } from "../mascot/MascotBubble";
 import { QuizBlock } from "./blocks/QuizBlock";
 import { InputBlock } from "./blocks/InputBlock";
 import { InfoBlock } from "./blocks/InfoBlock";
@@ -11,7 +11,8 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { NextStepButton } from "../NextStepButton";
 import { ClassificationBlock } from "./blocks/ClassificationBlock";
 import { SummaryBlock } from "./blocks/SummaryBlock";
-import { ScenarioQuizBlock } from "./blocks/ScenarioQuizBlock";
+import { ScenarioQuizBlock } from "./blocks/scenario-quiz-block/ScenarioQuizBlock";
+import { AiAnalyzeResponse } from "@/data/hooks/useMissionEngine";
 
 interface BlockDispatcherProps {
     block: MissionBlock;
@@ -19,6 +20,8 @@ interface BlockDispatcherProps {
     isLastBlock: boolean;
     isFirstBlock: boolean;
     isBlockCompleted: boolean;
+    aiInsightData: AiAnalyzeResponse
+
     feedback: { type: 'success' | 'error'; message: string; explanation?: string } | null;
     onChange: (val: any) => void;
     onCheck: () => void;
@@ -27,7 +30,7 @@ interface BlockDispatcherProps {
 }
 
 export function BlockDispatcher(props: BlockDispatcherProps) {
-    const { block, value, isLastBlock, feedback, isBlockCompleted, onChange, onCheck, onNext, isFirstBlock, onPrev } = props;
+    const { block, value, isLastBlock, feedback, isBlockCompleted, onChange, onCheck, onNext, isFirstBlock, onPrev, aiInsightData } = props;
     const isLocked = isBlockCompleted;
 
     const renderContent = () => {
@@ -55,9 +58,9 @@ export function BlockDispatcher(props: BlockDispatcherProps) {
 
             case 'SUMMARY':
                 return <SummaryBlock data={block.data} />
-                
+
             case "SCENARIO_QUIZ":
-                return <ScenarioQuizBlock data={block.data} value={value} onChange={onChange} isLocked={isLocked}/>
+                return <ScenarioQuizBlock data={block.data} value={value} onChange={onChange} isLocked={isLocked} onNext={onNext} />
 
             default:
                 return <div className="text-red-500 p-4 border border-red-500 rounded">Erro: Tipo de bloco desconhecido</div>;
@@ -65,8 +68,21 @@ export function BlockDispatcher(props: BlockDispatcherProps) {
     };
 
     const isPassThroughBlock = block.type === 'INFO' || block.type === 'SUMMARY';
-    const commsSpyMessage = (block.data as any).mascotMessage;
-    const showCommsSpyMessage = !feedback && commsSpyMessage && !isPassThroughBlock && block.type !== 'SCENARIO_QUIZ';
+    const spyMessageDb = (block.data as any).mascotMessage
+    let commsSpyMessage = spyMessageDb;
+    let isSpyAnalyzing = false;
+
+    if (block.type === 'SUMMARY') {
+        if (aiInsightData.isAnalyzingInsight) {
+            commsSpyMessage = "Analisando seu padrão de decisões...";
+            isSpyAnalyzing = true;
+        } else if (aiInsightData.mascotInsight) {
+            commsSpyMessage = aiInsightData.mascotInsight;
+        }
+    }
+
+
+    const showCommsSpyMessage = !feedback && spyMessageDb && !isPassThroughBlock && block.type !== 'SCENARIO_QUIZ';
     const showCheckBtn = !feedback && !isPassThroughBlock && block.type !== 'SCENARIO_QUIZ';
     const isCheckDisabled = !value && block.type !== 'HOTSPOT';
 
@@ -80,7 +96,7 @@ export function BlockDispatcher(props: BlockDispatcherProps) {
             <div className="animate-fade-in mt-4    ">
                 {showCommsSpyMessage && (
                     <div className="w-full flex justify-start pl-2">
-                        <MascotBubble message={commsSpyMessage} variant="comms" />
+                        <MascotBubble message={spyMessageDb} variant="comms" />
                     </div>
                 )}
 
@@ -115,13 +131,18 @@ export function BlockDispatcher(props: BlockDispatcherProps) {
                     {isPassThroughBlock && (
                         <div className="w-full">
                             <div className="w-fit flex justify-start pl-2">
-                                <MascotBubble message={commsSpyMessage} variant="neutral" />
+                                <MascotBubble
+                                    message={commsSpyMessage}
+                                    variant="default"
+                                    isSpyAnalyzing={isSpyAnalyzing}
+                                />
                             </div>
 
                             <div className="w-full flex justify-end mt-10">
                                 <NextStepButton
                                     onClick={onNext}
                                     className="flex items-center gap-2"
+                                    disabled={aiInsightData.isAnalyzingInsight}
                                 >
                                     {block.type === 'SUMMARY' ? 'Finalizar Missão' : 'Continuar'}
                                     <ArrowRight size={16} />

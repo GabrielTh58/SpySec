@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, Info, BookOpen, Terminal, Sparkles, Brain } from "lucide-react";
-import { MascotBubble } from "../MascotBubble";
+import { ChevronDown, BookOpen, Terminal, Sparkles } from "lucide-react";
 
 interface InfoBlockData {
     title?: string;
@@ -35,7 +34,7 @@ export function InfoBlock({ data }: InfoBlockProps) {
             )}
 
             <div className="prose prose-invert max-w-none">
-                <p className="text-gray-300 text-lg leading-relaxed whitespace-pre-line font-light tracking-wide">
+                <p className="text-white text-lg leading-relaxed whitespace-pre-line font-light tracking-wide">
                     {data.text}
                 </p>
             </div>
@@ -109,7 +108,7 @@ export function InfoBlock({ data }: InfoBlockProps) {
                                 transition={{ duration: 0.3, ease: "easeInOut" }}
                             >
                                 <div className="p-6 pt-0 border-t border-indigo-500/20 bg-indigo-950/15">
-                                    <div className="mt-4 prose prose-invert prose-sm text-indigo-100/80 leading-relaxed font-mono rounded-lg">
+                                    <div className="mt-4 prose prose-invert prose-sm text-white leading-relaxed font-mono rounded-lg">
                                         {data.deepDive}
                                     </div>
                                 </div>

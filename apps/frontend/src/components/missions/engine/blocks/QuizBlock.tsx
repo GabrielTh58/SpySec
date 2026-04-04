@@ -1,18 +1,8 @@
+import { QuizData } from "@spysec/education";
 import { HelpCircle } from "lucide-react";
 
-interface QuizOption {
-    id: string;
-    text: string;
-}
-
-interface QuizBlockData {
-    question: string;
-    options: QuizOption[];
-    mascotMessage?: string;
-}
-
 interface QuizBlockProps {
-    data: QuizBlockData;
+    data: QuizData;
     value: string;
     onChange: (v: string) => void;
     isLocked: boolean;  

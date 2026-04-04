@@ -1,8 +1,9 @@
 import { useState, useMemo } from "react";
 import { ArrowRightLeft } from "lucide-react";
+import { MatchingData } from "@spysec/education";
 
 interface MatchingBlockProps {
-    data: any;
+    data: MatchingData;
     value: any; 
     onChange: (val: any) => void;
     isLocked: boolean;

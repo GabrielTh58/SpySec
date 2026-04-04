@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { NextMissionResult, TrackProgress, TrackProgressRepository } from "@spysec/education";
 import { PrismaService } from "src/db/prisma.service";
-import { TrackProgressMapper } from "../mappers/track-progress.mapper";
+import { TrackProgressMapper } from "../mapper/track-progress.mapper";
 
 @Injectable()
 export class PrismaTrackProgressRepository extends TrackProgressRepository {
