@@ -42,7 +42,7 @@ export function GamificationProvider({ children }: { children: ReactNode }) {
 
     async function refreshProfile() {
         try {
-            const data = await httpGet<PlayerProfileOutputDTO>('/gamification/profile');
+            const data = await httpGet<PlayerProfileOutputDTO>('/profile');
             if (data) {
                 setProfile(data);
             } else {
@@ -55,7 +55,7 @@ export function GamificationProvider({ children }: { children: ReactNode }) {
 
     async function getAllBadges() {
         try {
-            const data = await httpGet<BadgeDTO[]>('/gamification/badges')
+            const data = await httpGet<BadgeDTO[]>('/badges')
             if (data) setAllBadges(data)
         } catch (error) {
             console.error("Erro ao buscar Badges")
@@ -64,7 +64,7 @@ export function GamificationProvider({ children }: { children: ReactNode }) {
 
     async function getRanking(limit: number = 10) {
         try {
-            const data = await httpGet<RankingDTO[]>(`/gamification/ranking`, { limit: limit });
+            const data = await httpGet<RankingDTO[]>(`/ranking`, { limit: limit });
             if (data) setRanking(data)
         } catch (error) {
             console.error('Erro ao buscar Ranking', error)
@@ -94,7 +94,7 @@ export function GamificationProvider({ children }: { children: ReactNode }) {
     async function submitSettingsUpdate(data: UpdateSettingsData) {
         setIsLoading(true);
         try {
-            const response = await httpPatch('/gamification/nickname', data);
+            const response = await httpPatch('/nickname', data);
             
             if(response){
                 toast.success('Codinome atualizado com sucesso!');

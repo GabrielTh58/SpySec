@@ -154,7 +154,7 @@ export function useMissionEngine({ missionContentVO, onFinishMission, missionId 
 
       setIsAnalyzingInsight(true);  
 
-      httpPost<AiAnalyzeResponse>(`/analytics/missions/${missionId}/analyze`, { answers: payloadToAnalyze })
+      httpPost<AiAnalyzeResponse>(`/missions/${missionId}/analyze`, { answers: payloadToAnalyze })
           .then((res:any) => {
             setMascotInsight(res.mascotInsight);
       })

@@ -42,7 +42,7 @@ export function EducationProvider({ children }: { children: ReactNode }) {
     async function loadTracks() {
         setIsLoading(true);
         try {
-            const data = await httpGet<BrowseTracksOutputDTO>('/education/tracks'); 
+            const data = await httpGet<BrowseTracksOutputDTO>('/tracks'); 
             setTracks(data.tracks || []);
             setTracksSummary({
                 total: data.summary.totalTracks,
@@ -58,7 +58,7 @@ export function EducationProvider({ children }: { children: ReactNode }) {
     async function selectTrack(trackId: string) {
         setIsLoading(true);
         try {
-            const data = await httpGet<GetTrackDetailsOutputDTO>(`/education/tracks/${trackId}`);
+            const data = await httpGet<GetTrackDetailsOutputDTO>(`/tracks/${trackId}`);
             setCurrentTrack(data);
         } catch (error) {   
             console.error("Erro ao carregar trilha", error);
@@ -72,7 +72,7 @@ export function EducationProvider({ children }: { children: ReactNode }) {
 
         setIsLoading(true); 
         try {
-            const data = await httpGet<GetMissionDataOutputDTO>(`/education/missions/${missionId}`);
+            const data = await httpGet<GetMissionDataOutputDTO>(`/missions/${missionId}`);
            setActiveMission(data)
         } catch (error) {
             console.error("Erro ao carregar missão", error);
@@ -86,7 +86,7 @@ export function EducationProvider({ children }: { children: ReactNode }) {
         setIsLoading(true); 
         try {
             const data = await httpPost<CompleteMissionOutputDTO>(
-                `/education/missions/${missionId}/complete`, {
+                `/missions/${missionId}/complete`, {
                     answers,
                     timeSpent
                 }  
@@ -108,7 +108,7 @@ export function EducationProvider({ children }: { children: ReactNode }) {
     async function getProgressSummary(){
         setIsLoading(true)
         try{
-            const data = await httpGet<StudentProgressSummaryOutputDTO>('/education/summary')
+            const data = await httpGet<StudentProgressSummaryOutputDTO>('/summary')
             setProgress(data)
         }catch(e){
             console.error("Erro ao buscar progresso", e)

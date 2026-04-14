@@ -11,6 +11,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect } from 'react'
 import { InputPassword } from './InputPassword'
+import Image from 'next/image'
 
 const loginSchema = z.object({
     email: z.email("Email inválido"),
@@ -66,7 +67,7 @@ export default function FormAuth() {
 
             <header className="absolute -top-16 left-1/2 -translate-x-1/2 w-full flex flex-col items-center">
                 <div className="w-24 h-24 flex items-center justify-center rounded-full bg-[#050810] border-2 border-cyan-400 neon-glow-cyan shadow-lg z-20">
-                    <Bot size={48} className="text-cyan-300" strokeWidth={1.5} />
+                    <Image src="/favicon.png" alt="Spy" width={48} height={48} />
                 </div>
                 <div className="mt-3 px-4 py-2 bg-black/60 backdrop-blur-md rounded-md border border-cyan-500/30">
                     <p className="font-orbitron text-xs tracking-widest text-cyan-300 typewriter-text">

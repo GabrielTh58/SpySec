@@ -5,7 +5,7 @@ import { AuthGuard } from 'src/auth/guards/auth-guard.guard';
 import { UserLogged } from 'src/common/decorators/user.decorator';
 
 @UseGuards(AuthGuard)
-@Controller('gamification')
+@Controller()
 export class GamificationController {
   constructor(private readonly gamificationFacade: GamificationFacade) {}
 

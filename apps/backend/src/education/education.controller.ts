@@ -10,7 +10,7 @@ import { CompleteMissionDto } from './dto/complete-mission.dto';
 import { CompleteMissionFlow } from './service/CompleteMissionFlow.service';
 
 @UseGuards(AuthGuard)
-@Controller('education')
+@Controller()
 export class EducationController {
   constructor(
     private readonly educationFacade: EducationFacade,

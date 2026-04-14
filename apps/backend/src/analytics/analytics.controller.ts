@@ -6,7 +6,7 @@ import { AnalyzeMissionDto } from './dto/AnalyzeMission.dto';
 import { AuthGuard } from 'src/auth/guards/auth-guard.guard';
 
 @UseGuards(AuthGuard)
-@Controller('analytics')
+@Controller()
 export class AnalyticsController {
     constructor(
         private readonly analyticsFacade: AnalyticsFacade

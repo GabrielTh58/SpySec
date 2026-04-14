@@ -23,7 +23,7 @@ POST https://spysec-production.up.railway.app/auth/login
 Content-Type: application/json
 
 {
-  "email": "joao@test.com",
+  "email": "testGame@test.com",
   "password": "#Senha123"
 }
 
